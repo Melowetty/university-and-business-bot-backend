@@ -1,4 +1,4 @@
-package ru.sigma.hse.business.bot.persistance.impl
+package ru.sigma.hse.business.bot.persistence.impl
 
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.CompanyEntity

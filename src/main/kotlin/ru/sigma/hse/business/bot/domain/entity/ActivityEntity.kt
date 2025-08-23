@@ -1,11 +1,28 @@
 package ru.sigma.hse.business.bot.domain.entity
 
-data class ActivityEntity(
-    val id: Long,
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import java.time.Instant
+
+@Entity
+@Table(name = "activity")
+class ActivityEntity(
+    @Column(nullable = false, unique = true, updatable = false)
     val code: String,
-    val name: String,
-    val description: String,
-    val location: String,
-    val startDate: Long,
-    val endDate: Long
-)
+
+    @Column(nullable = false)
+    var name: String,
+
+    @Column(nullable = false)
+    var description: String,
+
+    @Column(nullable = false)
+    var location: String,
+
+    @Column(nullable = false)
+    var startDate: Instant,
+
+    @Column(nullable = false)
+    var endDate: Instant
+) : BaseEntity()

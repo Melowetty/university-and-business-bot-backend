@@ -3,7 +3,7 @@ package ru.sigma.hse.business.bot.domain.entity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
-import java.time.Instant
+import java.time.LocalTime
 
 @Entity
 @Table(name = "activity")
@@ -21,8 +21,8 @@ class ActivityEntity(
     var location: String,
 
     @Column(nullable = false)
-    var startDate: Instant,
+    var startTime: LocalTime,
 
     @Column(nullable = false)
-    var endDate: Instant
+    var endTime: LocalTime
 ) : BaseEntity()

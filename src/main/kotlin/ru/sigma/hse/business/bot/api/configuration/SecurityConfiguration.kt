@@ -1,0 +1,25 @@
+package ru.sigma.hse.business.bot.api.configuration
+
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.web.SecurityFilterChain
+
+
+@Configuration
+class SecurityConfiguration {
+    @Bean
+    @Throws(Exception::class)
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        return http
+            .authorizeHttpRequests {
+                it.anyRequest().authenticated()
+            }
+            .httpBasic(Customizer.withDefaults())
+            .cors {
+                it.disable()
+            }
+            .build()
+    }
+}

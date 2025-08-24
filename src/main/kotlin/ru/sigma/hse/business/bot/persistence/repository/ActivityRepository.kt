@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository
 import ru.sigma.hse.business.bot.domain.entity.ActivityEntity
 
 @Repository
-interface ActivityRepository : JpaRepository<ActivityEntity, Long>
+interface ActivityRepository : JpaRepository<ActivityEntity, Long> {
+    fun findByCode(code: String): ActivityEntity?
+}

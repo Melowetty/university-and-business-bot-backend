@@ -1,4 +1,4 @@
-package ru.sigma.hse.business.bot.persistence.impl
+package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Component
@@ -10,6 +10,16 @@ import ru.sigma.hse.business.bot.persistence.repository.UserRepository
 class JdbcUserStorage(
     private val userRepository: UserRepository,
 ) {
+    fun getUser(id: Long): User? {
+        if (userRepository.existsById(id)) {
+            logger.info { "Found user with id $id" }
+            return userRepository.findById(id).get().toUser()
+        }
+
+        logger.warn { "User with id $id does not exist" }
+        return null
+    }
+
     fun createUser(
         name: String,
         middleName: String,

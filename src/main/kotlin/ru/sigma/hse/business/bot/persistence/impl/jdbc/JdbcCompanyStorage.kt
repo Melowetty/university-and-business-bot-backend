@@ -1,4 +1,4 @@
-package ru.sigma.hse.business.bot.persistence.impl
+package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Component

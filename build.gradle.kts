@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.5.4"
-    id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "1.9.25"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.spring)
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.jpa)
+    alias(libs.plugins.spring.dependency.management)
 }
 
 group = "ru.sigma.hse.business"
@@ -20,18 +20,23 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.liquibase:liquibase-core")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.springframework.security:spring-security-test")
-    runtimeOnly("org.postgresql:postgresql")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation(libs.logback.encoder)
+    implementation(libs.kotlin.logging)
+    implementation(libs.spring.actuator)
+    implementation(libs.spring.security)
+    implementation(libs.spring.validation)
+    implementation(libs.kotlin.reflect)
+    implementation(libs.spring.jpa)
+    implementation(libs.liquibase.core)
+    implementation(libs.spring.web)
+
+    runtimeOnly(libs.postgresql)
+
+    testImplementation(libs.spring.test)
+    testImplementation(libs.kotlin.junit)
+    testImplementation(libs.spring.security.test)
+
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 kotlin {

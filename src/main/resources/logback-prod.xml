@@ -1,0 +1,13 @@
+<configuration>
+    <springProperty name="service_name" source="spring.application.name" scope="context"/>
+    <springProperty name="instance_id" source="random.uuid" scope="context"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"stream_name":"backend"}</customFields>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>

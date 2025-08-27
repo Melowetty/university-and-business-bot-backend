@@ -42,6 +42,12 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.Embeddable")
+    annotation("javax.persistence.MappedSuperclass")
+}
+
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")

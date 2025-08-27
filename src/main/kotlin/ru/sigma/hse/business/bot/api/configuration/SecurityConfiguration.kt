@@ -13,9 +13,10 @@ class SecurityConfiguration {
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .authorizeHttpRequests {
-                it.anyRequest().authenticated()
+                it.anyRequest().permitAll()//authenticated() //поменял
             }
             .httpBasic(Customizer.withDefaults())
+            .csrf { it.disable() } // ← ОБЯЗАТЕЛЬНО ДОБАВЬТЕ ЭТУ СТРОЧКУ! //поменял
             .cors {
                 it.disable()
             }

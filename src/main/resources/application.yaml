@@ -10,6 +10,11 @@ security:
     username: test
     password: test
 
+integrations:
+  yandex-disk:
+    token: ${YANDEX_DISK_OAUTH_TOKEN:test}
+    base-url: https://cloud-api.yandex.net/v1/disk/resources
+
 spring:
   application:
     name: university-and-business-bot-backend
@@ -35,3 +40,5 @@ spring:
       password: ${security.bot.password}
       roles:
         - ADMIN
+
+debug: true

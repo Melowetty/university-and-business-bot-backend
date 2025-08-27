@@ -27,5 +27,6 @@ class CompanyService(
         val qrCode = simpleQrCodeGenerator.generateQrCode(code)
         File("qr_" + expectedData.name + ".png").writeBytes(qrCode)
         return "qr for " + expectedData.name + " done.\nCode = " + code
+
     }
 }

@@ -3,8 +3,9 @@ package ru.sigma.hse.business.bot.persistence.impl
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
-import org.springframework.web.client.requiredBody
+import org.springframework.web.client.body
 import ru.sigma.hse.business.bot.persistence.FileStorage
 
 @Component
@@ -19,7 +20,7 @@ class YandexDiskFileStorage(
             try {
                 directSave(path, file)
                 return
-            } catch (e: Exception) {
+            } catch (e: HttpServerErrorException) {
                 log.warn(e) { "Failed to save file to Yandex Disk: $path, retrying $i/3" }
             }
         }
@@ -29,15 +30,19 @@ class YandexDiskFileStorage(
         log.info { "Saving file to Yandex Disk: $path with size ${file.size} bytes" }
 
         val fullPath = "app:/$path"
-        val query = mapOf(
-            "path" to fullPath,
-            "overwrite" to "true"
-        )
 
         val uploadResponse = diskRestClient.get()
-            .uri("/uploads", query)
+            .uri { uri -> uri
+                .path("/upload")
+                .queryParam("path", fullPath)
+                .queryParam("overwrite", true)
+                .build()
+            }
             .retrieve()
-            .requiredBody<UploadResponse>()
+            .body<UploadResponse>()
+
+        uploadResponse
+            ?: throw IllegalStateException("Upload response is null")
 
         val url = uploadResponse.href
 
@@ -45,7 +50,7 @@ class YandexDiskFileStorage(
             .uri(url)
             .body(file)
             .retrieve()
-            .requiredBody<Unit>()
+            .toBodilessEntity()
 
         log.info { "File saved to Yandex Disk: $path" }
     }

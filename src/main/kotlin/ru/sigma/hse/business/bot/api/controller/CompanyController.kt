@@ -13,10 +13,7 @@ import ru.sigma.hse.business.bot.service.CompanyService
 class CompanyController(
     private val companyService: CompanyService
 ) {
-    @PostMapping("/{id}")
-    fun scanCompany(@PathVariable id: Long): String {
-        return companyService.visitCompany(id)
-    }
+
 
     @PostMapping("/create")
     fun getQrCode(@RequestBody newCompany: NewCompanyRequest): String {

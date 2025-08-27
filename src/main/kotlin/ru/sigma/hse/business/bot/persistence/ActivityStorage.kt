@@ -7,6 +7,7 @@ interface ActivityStorage {
     fun getActivity(id: Long): Activity?
 
     fun createActivity(
+        code: String,
         name: String,
         description: String,
         location: String,

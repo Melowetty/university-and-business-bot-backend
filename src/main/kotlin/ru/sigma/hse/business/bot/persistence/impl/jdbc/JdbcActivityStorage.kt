@@ -23,13 +23,14 @@ class JdbcActivityStorage(
     }
 
     fun createActivity(
+        code: String,
         name: String,
         description: String,
         location: String,
         startTime: LocalTime,
         endTime: LocalTime
     ): Activity {
-        val code = CodeGenerator.generateCode()
+//        val code = CodeGenerator.generateCode() код генерируется в сервисе
 
         val activityEntity = ActivityEntity(
             code = code,

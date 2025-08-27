@@ -47,11 +47,12 @@ class DbStorage(
     }
 
     override fun createCompany(
+        code: String,
         name: String,
         description: String,
         vacanciesLink: String
     ): Company {
-        return jdbcCompanyStorage.createCompany(name, description, vacanciesLink)
+        return jdbcCompanyStorage.createCompany(code, name, description, vacanciesLink)
     }
 
     override fun updateCompany(
@@ -69,13 +70,14 @@ class DbStorage(
     }
 
     override fun createActivity(
+        code: String,
         name: String,
         description: String,
         location: String,
         startTime: LocalTime,
         endTime: LocalTime
     ): Activity {
-        return jdbcActivityStorage.createActivity(name, description, location, startTime, endTime)
+        return jdbcActivityStorage.createActivity(code, name, description, location, startTime, endTime)
     }
 
     override fun updateActivity(activity: Activity): Activity {

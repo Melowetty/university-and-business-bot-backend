@@ -6,6 +6,7 @@ interface CompanyStorage {
     fun getCompany(id: Long): Company?
 
     fun createCompany(
+        code: String,
         name: String,
         description: String,
         vacanciesLink: String

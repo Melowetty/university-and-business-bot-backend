@@ -16,6 +16,9 @@ class SecurityConfiguration {
                 it.anyRequest().authenticated()
             }
             .httpBasic(Customizer.withDefaults())
+            .csrf {
+                it.disable()
+            }
             .cors {
                 it.disable()
             }

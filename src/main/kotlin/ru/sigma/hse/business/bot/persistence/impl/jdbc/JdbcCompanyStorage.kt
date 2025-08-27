@@ -21,11 +21,12 @@ class JdbcCompanyStorage(
     }
 
     fun createCompany(
+        code: String,
         name: String,
         description: String,
         vacanciesLink: String
     ): Company {
-        val code = CodeGenerator.generateCode()
+//        val code = CodeGenerator.generateCode()
         val entity = companyRepository.save(
             CompanyEntity(
                 code = code,

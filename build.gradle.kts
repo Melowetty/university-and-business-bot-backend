@@ -20,6 +20,9 @@ repositories {
 }
 
 dependencies {
+    implementation("com.google.zxing:core:3.5.2")
+    implementation("com.google.zxing:javase:3.5.2")
+
     implementation(libs.logback.encoder)
     implementation(libs.kotlin.logging)
     implementation(libs.spring.actuator)
@@ -37,6 +40,12 @@ dependencies {
     testImplementation(libs.spring.security.test)
 
     testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.Embeddable")
+    annotation("javax.persistence.MappedSuperclass")
 }
 
 kotlin {

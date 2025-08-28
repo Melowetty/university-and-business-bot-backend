@@ -1,29 +1,68 @@
 package ru.sigma.hse.business.bot.service
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.web.util.UriComponentsBuilder
+import ru.sigma.hse.business.bot.domain.model.Activity
+import ru.sigma.hse.business.bot.domain.model.Company
+import ru.sigma.hse.business.bot.domain.model.DetailedVisit
+import ru.sigma.hse.business.bot.domain.model.VisitTarget
+import ru.sigma.hse.business.bot.domain.model.Visitable
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
 import ru.sigma.hse.business.bot.persistence.CompanyStorage
 import ru.sigma.hse.business.bot.persistence.VisitStorage
+import ru.sigma.hse.business.bot.service.qr.QrCodeGenerator
 
 @Service
 class VisitService(
     private val visitStorage: VisitStorage,
     private val companyStorage: CompanyStorage,
-    private val activityStorage: ActivityStorage
+    private val activityStorage: ActivityStorage,
+    private val qrCodeGenerator: QrCodeGenerator,
 ) {
-    fun visit(id: String): String {
-        // Вызываем старт ивента или компании в боте, а там бот сам будет логику делать
-        System.out.println(id)
-        var name = "NotFound"
-        when (id.substring(0,3)){
-            "UNC" -> return "Вы посетили компанию:" + companyStorage.getCompany(
-                    visitStorage.addCompanyVisit(1,id).targetId
-                )?.name
-            "UNA" ->  return "Вы посетили компанию:" + activityStorage.getActivity(
-                    visitStorage.addActivityVisit(1,id).targetId
-                )?.name
-            else -> System.out.println("нет такой компании")
+    @Value("\${integrations.telegram.link}")
+    private lateinit var telegramBotLink: String
+
+    fun visit(userId: Long, code: String): DetailedVisit {
+        val type = code.substring(0, 3)
+
+        when (type) {
+            "UNC" -> {
+                val targetId = visitStorage.addCompanyVisit(userId, code).targetId
+                val company = companyStorage.getCompany(targetId)
+                    ?: throw IllegalStateException("Company not found")
+
+                return company.toDetailedVisit()
+            }
+
+            "UNA" -> {
+                val targetId = visitStorage.addActivityVisit(userId, code).targetId
+                val activity = activityStorage.getActivity(targetId)
+                    ?: throw IllegalStateException("Activity not found")
+
+                return activity.toDetailedVisit()
+            }
+
+            else -> throw IllegalArgumentException("Неверный тип кода")
         }
-        return "Ошибка чтения кода, попробуйте ещё раз"
+    }
+
+    fun generateVisitQrCode(code: String): ByteArray {
+        val link = UriComponentsBuilder
+            .fromUriString(telegramBotLink)
+            .queryParam("start", code)
+            .build()
+            .toUriString()
+
+        return qrCodeGenerator.generateQrCode(link)
+    }
+
+    private fun Visitable.toDetailedVisit(): DetailedVisit {
+        val type = when (this) {
+            is Company -> VisitTarget.COMPANY
+            is Activity -> VisitTarget.ACTIVITY
+        }
+
+        return DetailedVisit(this, type)
     }
 }

@@ -1,32 +1,30 @@
 package ru.sigma.hse.business.bot.service
 
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
-import ru.sigma.hse.business.bot.api.controller.model.NewCompanyRequest
+import ru.sigma.hse.business.bot.api.controller.model.CreateCompanyRequest
+import ru.sigma.hse.business.bot.domain.event.CreatedVisitableObjectEvent
+import ru.sigma.hse.business.bot.domain.model.Company
 import ru.sigma.hse.business.bot.persistence.CompanyStorage
-import ru.sigma.hse.business.bot.persistence.repository.CompanyRepository
 import ru.sigma.hse.business.bot.service.code.CodeGenerator
-import ru.sigma.hse.business.bot.service.qr.SimpleQrCodeGenerator
-import java.io.File
 
 @Service
 class CompanyService(
-    private val simpleQrCodeGenerator: SimpleQrCodeGenerator,
     private val codeGenerator: CodeGenerator,
-    private val companyStorage: CompanyStorage
+    private val companyStorage: CompanyStorage,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
-    fun createCompany(expectedData: NewCompanyRequest): String {
+    fun createCompany(request: CreateCompanyRequest): Company {
         val code = codeGenerator.generateCompanyCode()
-        companyStorage.createCompany(
+        val company = companyStorage.createCompany(
             code = code,
-            name = expectedData.name,
-            description = expectedData.description,
-            vacanciesLink = expectedData.vacanciesLink
+            name = request.name,
+            description = request.description,
+            vacanciesLink = request.vacanciesLink
         )
 
-        // Генерируем QR-код
-        val qrCode = simpleQrCodeGenerator.generateQrCode(code)
-        File("qr_" + expectedData.name + ".png").writeBytes(qrCode)
-        return "qr for " + expectedData.name + " done.\nCode = " + code
+        eventPublisher.publishEvent(CreatedVisitableObjectEvent(company, code))
+        return company
 
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.ActivityEntity
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.persistence.repository.ActivityRepository
-import ru.sigma.hse.business.bot.utils.CodeGenerator
 
 @Component
 class JdbcActivityStorage(
@@ -30,8 +29,6 @@ class JdbcActivityStorage(
         startTime: LocalTime,
         endTime: LocalTime
     ): Activity {
-//        val code = CodeGenerator.generateCode() код генерируется в сервисе
-
         val activityEntity = ActivityEntity(
             code = code,
             name = name,

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.CompanyEntity
 import ru.sigma.hse.business.bot.domain.model.Company
 import ru.sigma.hse.business.bot.persistence.repository.CompanyRepository
-import ru.sigma.hse.business.bot.utils.CodeGenerator
 
 @Component
 class JdbcCompanyStorage(
@@ -26,7 +25,6 @@ class JdbcCompanyStorage(
         description: String,
         vacanciesLink: String
     ): Company {
-//        val code = CodeGenerator.generateCode()
         val entity = companyRepository.save(
             CompanyEntity(
                 code = code,

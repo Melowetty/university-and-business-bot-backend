@@ -1,8 +1,8 @@
 package ru.sigma.hse.business.bot.domain.model
 
 data class Company(
-    val id: Long,
-    val name: String,
-    val description: String,
+    override val id: Long,
+    override val name: String,
+    override val description: String,
     val vacanciesLink: String
-)
+) : Visitable(id, name, description)

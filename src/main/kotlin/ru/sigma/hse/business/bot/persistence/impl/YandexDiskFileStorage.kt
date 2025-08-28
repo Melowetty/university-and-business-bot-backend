@@ -2,7 +2,9 @@ package ru.sigma.hse.business.bot.persistence.impl
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
@@ -31,6 +33,8 @@ class YandexDiskFileStorage(
 
         val fullPath = "app:/$path"
 
+        createParentDirs(fullPath)
+
         val uploadResponse = diskRestClient.get()
             .uri { uri -> uri
                 .path("/upload")
@@ -53,6 +57,32 @@ class YandexDiskFileStorage(
             .toBodilessEntity()
 
         log.info { "File saved to Yandex Disk: $path" }
+    }
+
+    private fun createParentDirs(path: String) {
+        val parentPath = path.substringBeforeLast('/')
+        log.info { "Creating parent directories for $path" }
+
+        if (parentPath.isNotEmpty()) {
+            try {
+                diskRestClient.put()
+                    .uri { uri ->
+                        uri
+                            .queryParam("path", parentPath)
+                            .build()
+                    }
+                    .retrieve()
+                    .toBodilessEntity()
+            } catch (e: HttpClientErrorException) {
+                if (e.statusCode == HttpStatus.CONFLICT) {
+                    log.debug { "Parent dirs already exists" }
+                } else {
+                    throw e
+                }
+            }
+        }
+
+        log.info { "Parent directories created for $path" }
     }
 
     private data class UploadResponse(

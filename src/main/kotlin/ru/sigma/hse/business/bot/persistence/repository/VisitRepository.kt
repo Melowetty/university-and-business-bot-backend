@@ -13,6 +13,12 @@ interface VisitRepository : JpaRepository<VisitEntity, VisitId> {
         @Param("userId") userId: Long
     ): List<VisitEntity>
 
+    @Query("SELECT COUNT(*) FROM VisitEntity v WHERE v.id.userId = :userId AND v.id.targetId = :code")
+    fun existsByUserIdAndCode(
+        @Param("userId") userId: Long,
+        @Param("targetId") targetId: Long,
+    ): Boolean
+
     @Query("SELECT v FROM VisitEntity v WHERE v.id.targetId = :companyId AND v.id.targetType = :targetType")
     fun findByCompanyId(
         @Param("companyId") companyId: Long,
@@ -24,10 +30,4 @@ interface VisitRepository : JpaRepository<VisitEntity, VisitId> {
         @Param("activityId") activityId: Long,
         @Param("targetType") targetType: VisitTarget = VisitTarget.ACTIVITY
     ): List<VisitEntity>
-
-//    fun findByUserId(userId: Long): List<VisitEntity
-
-//    fun findByCompanyId(companyId: Long): List<VisitEntity>
-
-//    fun findByActivityId(activityId: Long): List<VisitEntity>
 }

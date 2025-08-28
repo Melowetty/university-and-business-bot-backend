@@ -20,12 +20,17 @@ class JdbcVisitStorage(
     private val userRepository: UserRepository,
 ) {
     fun addCompanyVisit(userId: Long, visitCode: String): Visit {
-        validateUserId(userId)
+        validateUser(userId)
         val company = companyRepository.findByCode(visitCode)
             ?: run {
                 logger.warn { "Company with code $visitCode does not exist" }
                 throw NoSuchElementException("Company with code $visitCode does not exist")
             }
+
+        if (visitRepository.existsByUserIdAndCode(userId, company.id())) {
+            logger.warn { "Visit with code $visitCode already exists for user $userId" }
+            throw IllegalArgumentException("Visit with code $visitCode already exists for user $userId")
+        }
 
         val id = VisitId(
             userId = userId,
@@ -46,12 +51,17 @@ class JdbcVisitStorage(
     }
 
     fun addActivityVisit(userId: Long, visitCode: String): Visit {
-        validateUserId(userId)
+        validateUser(userId)
         val activity = activityRepository.findByCode(visitCode)
             ?: run {
                 logger.warn { "Activity with code $visitCode does not exist" }
                 throw NoSuchElementException("Activity with code $visitCode does not exist")
             }
+
+        if (visitRepository.existsByUserIdAndCode(userId, activity.id())) {
+            logger.warn { "Visit with code $visitCode already exists for user $userId" }
+            throw IllegalArgumentException("Visit with code $visitCode already exists for user $userId")
+        }
 
         val id = VisitId(
             userId = userId,
@@ -71,13 +81,17 @@ class JdbcVisitStorage(
     }
 
     fun getVisitsByUserId(userId: Long): List<Visit> {
-        validateUserId(userId)
+        if (!userRepository.existsById(userId)) {
+            logger.warn { "User with id $userId does not exist" }
+            throw NoSuchElementException("User with id $userId does not exist")
+        }
+
         return visitRepository.findByUserId(userId).map {
             it.toVisit()
         }
     }
 
-    private fun validateUserId(userId: Long) {
+    private fun validateUser(userId: Long) {
         if (!userRepository.existsById(userId)) {
             logger.warn { "User with id $userId does not exist" }
             throw NoSuchElementException("User with id $userId does not exist")

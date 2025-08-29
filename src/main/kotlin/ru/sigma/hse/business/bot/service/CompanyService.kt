@@ -25,6 +25,10 @@ class CompanyService(
 
         eventPublisher.publishEvent(CreatedVisitableObjectEvent(company, code))
         return company
+    }
 
+    fun getCompany(companyId: Long): Company {
+        return companyStorage.getCompany(companyId)
+            ?: throw IllegalArgumentException("Company not found")
     }
 }

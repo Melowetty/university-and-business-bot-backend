@@ -4,6 +4,10 @@ springBoot = "3.4.0"
 springDependencyManagement = "1.1.7"
 kotlinLogging = "7.0.3"
 logback = "8.1"
+zxing = "3.5.2"
+springDocGradlePlugin = "1.9.0"
+springDoc = "2.8.11"
+mockK = "1.14.5"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -11,6 +15,7 @@ spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "springDependencyManagement" }
 spring-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+springdoc-openapi = { id = "org.springdoc.openapi-gradle-plugin", version.ref = "springDocGradlePlugin" }
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
@@ -36,3 +41,10 @@ kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = 
 logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logback" }
 
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
+zxing-javase = { module = "com.google.zxing:javase", version.ref = "zxing" }
+
+springdoc-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc" }
+
+mockK = { module = "io.mockk:mockk", version.ref = "mockK" }

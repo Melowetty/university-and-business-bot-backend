@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.jpa)
     alias(libs.plugins.spring.dependency.management)
+    alias(libs.plugins.springdoc.openapi)
 }
 
 group = "ru.sigma.hse.business"
@@ -20,23 +21,29 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.zxing:core:3.5.2")
-    implementation("com.google.zxing:javase:3.5.2")
+    implementation(libs.springdoc.openapi)
+
+    implementation(libs.zxing.core)
+    implementation(libs.zxing.javase)
 
     implementation(libs.logback.encoder)
     implementation(libs.kotlin.logging)
+
     implementation(libs.spring.actuator)
     implementation(libs.spring.security)
     implementation(libs.spring.validation)
-    implementation(libs.kotlin.reflect)
-    implementation(libs.spring.jpa)
-    implementation(libs.liquibase.core)
     implementation(libs.spring.web)
+
+    implementation(libs.spring.jpa)
+    implementation(libs.kotlin.reflect)
+    implementation(libs.liquibase.core)
+
+    implementation(libs.mockK)
 
     runtimeOnly(libs.postgresql)
 
-    testImplementation(libs.spring.test)
     testImplementation(libs.kotlin.junit)
+    testImplementation(libs.spring.test)
     testImplementation(libs.spring.security.test)
 
     testRuntimeOnly(libs.junit.platform.launcher)
@@ -56,4 +63,11 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+openApi {
+    apiDocsUrl = "http://localhost:8082/v3/api-docs"
+    outputFileName = "openapi.json"
+    outputDir.set(layout.buildDirectory.dir("api-docs").get().asFile)
+    waitTimeInSeconds = 30
 }

@@ -45,3 +45,10 @@ spring:
         - ADMIN
 
 debug: true
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+server:
+  port: 8082

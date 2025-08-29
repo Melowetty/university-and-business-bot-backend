@@ -21,8 +21,12 @@ class JdbcActivityStorage(
         return null
     }
 
-    fun getActivities(ids: List<Long>): List<Activity?> {
-        return ids.map{ activityRepository.findById(it).get().toActivity() }
+    fun getActivities(ids: List<Long>): List<Activity> {
+        if (ids.isEmpty()) {
+            return emptyList()
+        }
+
+        return activityRepository.findAllById(ids).map { it.toActivity() }
     }
 
     fun createActivity(
@@ -77,6 +81,11 @@ class JdbcActivityStorage(
 
         activityRepository.deleteById(id)
         logger.info { "Deleted activity with id $id" }
+    }
+
+    fun findByCode(code: String): Activity? {
+        val activityEntity = activityRepository.findByCode(code)
+        return activityEntity?.toActivity()
     }
 
     companion object {

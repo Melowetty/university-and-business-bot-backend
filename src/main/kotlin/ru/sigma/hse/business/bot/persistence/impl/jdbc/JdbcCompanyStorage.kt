@@ -20,13 +20,11 @@ class JdbcCompanyStorage(
     }
 
     fun getCompanies(ids: List<Long>): List<Company> {
-        return if (ids.isEmpty()) {
-            emptyList()
-        } else {
-            companyRepository.findAllById(ids)
-                .map { it.toCompany() }
+        if (ids.isEmpty()) {
+            return emptyList()
         }
-//        return ids.map{ companyRepository.findById(it).get().toCompany() }
+
+        return companyRepository.findAllById(ids).map { it.toCompany() }
     }
 
     fun createCompany(
@@ -75,6 +73,11 @@ class JdbcCompanyStorage(
 
         logger.info { "Deleting company with id $id" }
         companyRepository.deleteById(id)
+    }
+
+    fun findByCode(code: String): Company? {
+        val entity = companyRepository.findByCode(code)
+        return entity?.toCompany()
     }
 
     companion object {

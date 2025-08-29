@@ -4,7 +4,9 @@ import java.time.LocalTime
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.domain.model.Company
+import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.User
+import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
 import ru.sigma.hse.business.bot.persistence.Storage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcActivityStorage
@@ -19,19 +21,21 @@ class DbStorage(
     private val jdbcActivityStorage: JdbcActivityStorage,
     private val jdbcVisitStorage: JdbcVisitStorage,
 ) : Storage {
+    override fun getUsers(limit: Int, token: Long): Pageable<User> {
+        return jdbcUserStorage.getUsers(limit, token)
+    }
+
     override fun getUser(id: Long): User? {
         return jdbcUserStorage.getUser(id)
     }
 
     override fun createUser(
-        name: String,
-        middleName: String,
-        lastName: String,
+        fullName: String,
         course: Int,
         program: String,
         email: String?
     ): User {
-        return jdbcUserStorage.createUser(name, middleName, lastName, course, program, email)
+        return jdbcUserStorage.createUser(fullName, course, program, email)
     }
 
     override fun updateUser(user: User): User {
@@ -73,7 +77,7 @@ class DbStorage(
         return jdbcActivityStorage.getActivity(id)
     }
 
-    override fun getActivities(ids: List<Long>): List<Activity?> {
+    override fun getActivities(ids: List<Long>): List<Activity> {
         return jdbcActivityStorage.getActivities(ids)
     }
 
@@ -94,6 +98,10 @@ class DbStorage(
 
     override fun deleteActivity(id: Long) {
         jdbcActivityStorage.deleteActivity(id)
+    }
+
+    override fun getVisits(limit: Int, token: Long): Pageable<UserVisit> {
+        return jdbcVisitStorage.getVisits(limit, token)
     }
 
     override fun addCompanyVisit(userId: Long, visitCode: String): Visit {

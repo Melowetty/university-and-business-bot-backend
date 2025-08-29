@@ -3,6 +3,7 @@ package ru.sigma.hse.business.bot.persistence.impl.jdbc
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.UserEntity
+import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.User
 import ru.sigma.hse.business.bot.persistence.repository.UserRepository
 
@@ -10,6 +11,26 @@ import ru.sigma.hse.business.bot.persistence.repository.UserRepository
 class JdbcUserStorage(
     private val userRepository: UserRepository,
 ) {
+    fun getUsers(
+        limit: Int,
+        token: Long,
+    ): Pageable<User> {
+        val users = userRepository.findAllByIdGreaterThanOrderByIdAsc(token, limit)
+            .map { it.toUser() }
+
+        val nextToken = if (users.size < limit) {
+            0L
+        } else {
+            users.last().id
+        }
+
+        logger.info { "Fetched ${users.size} users starting from token $token" }
+        return Pageable(
+            data = users,
+            nextToken = nextToken
+        )
+    }
+
     fun getUser(id: Long): User? {
         if (userRepository.existsById(id)) {
             logger.info { "Found user with id $id" }
@@ -21,18 +42,14 @@ class JdbcUserStorage(
     }
 
     fun createUser(
-        name: String,
-        middleName: String,
-        lastName: String,
+        fullName: String,
         course: Int,
         program: String,
         email: String?
     ): User {
         val userEntity = userRepository.save(
             UserEntity(
-                name = name,
-                middleName = middleName,
-                lastName = lastName,
+                fullName = fullName,
                 course = course,
                 program = program,
                 email = email
@@ -52,9 +69,7 @@ class JdbcUserStorage(
         val existingUser = userRepository.findById(user.id).get()
 
         val updatedUser = existingUser.apply {
-            name = user.name
-            middleName = user.middleName
-            lastName = user.lastName
+            fullName = user.fullName
             course = user.course
             program = user.program
             email = user.email
@@ -74,15 +89,17 @@ class JdbcUserStorage(
         userRepository.deleteById(userId)
     }
 
+    fun existsById(userId: Long): Boolean {
+        return userRepository.existsById(userId)
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 
         fun UserEntity.toUser(): User {
             return User(
                 id = this.id(),
-                name = this.name,
-                middleName = this.middleName,
-                lastName = this.lastName,
+                fullName = this.fullName,
                 course = this.course,
                 program = this.program,
                 email = this.email

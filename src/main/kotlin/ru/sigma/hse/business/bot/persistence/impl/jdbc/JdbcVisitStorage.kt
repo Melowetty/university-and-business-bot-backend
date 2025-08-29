@@ -4,43 +4,75 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.VisitEntity
-import ru.sigma.hse.business.bot.domain.entity.VisitId
+import ru.sigma.hse.business.bot.domain.model.Pageable
+import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
 import ru.sigma.hse.business.bot.domain.model.VisitTarget
-import ru.sigma.hse.business.bot.persistence.repository.ActivityRepository
-import ru.sigma.hse.business.bot.persistence.repository.CompanyRepository
-import ru.sigma.hse.business.bot.persistence.repository.UserRepository
 import ru.sigma.hse.business.bot.persistence.repository.VisitRepository
 
 @Component
 class JdbcVisitStorage(
     private val visitRepository: VisitRepository,
-    private val companyRepository: CompanyRepository,
-    private val activityRepository: ActivityRepository,
-    private val userRepository: UserRepository,
+    private val jdbcCompanyStorage: JdbcCompanyStorage,
+    private val jdbcActivityStorage: JdbcActivityStorage,
+    private val jdbcUserStorage: JdbcUserStorage,
 ) {
+    fun getVisits(limit: Int, token: Long): Pageable<UserVisit> {
+        val visits = visitRepository.findAllByIdGreaterThanOrderByTimeAsc(token, limit)
+
+        val companiesById = visits.filter { it.targetType == VisitTarget.COMPANY }.map { it.targetId }
+            .let { jdbcCompanyStorage.getCompanies(it) }.associateBy { it.id }
+
+        val activitiesById = visits.filter { it.targetType == VisitTarget.ACTIVITY }.map { it.targetId }
+            .let { jdbcActivityStorage.getActivities(it) }.associateBy { it.id }
+
+        val mappedVisits = visits.mapNotNull { visit ->
+            val target = when (visit.targetType) {
+                VisitTarget.COMPANY -> companiesById[visit.targetId]
+                VisitTarget.ACTIVITY -> activitiesById[visit.targetId]
+            } ?: run {
+                logger.warn { "Target with id ${visit.targetId} and type ${visit.targetType} does not exist" }
+                return@mapNotNull null
+            }
+
+            UserVisit(
+                userId = visit.userId,
+                target = target,
+                time = visit.time,
+            )
+        }
+
+        val nextToken = if (visits.size < limit) {
+            0L
+        } else {
+            visits.last().id()
+        }
+
+        logger.info { "Fetched ${visits.size} visits starting from token $token" }
+        return Pageable(
+            data = mappedVisits,
+            nextToken = nextToken
+        )
+    }
+
     fun addCompanyVisit(userId: Long, visitCode: String): Visit {
         validateUser(userId)
-        val company = companyRepository.findByCode(visitCode)
+        val company = jdbcCompanyStorage.findByCode(visitCode)
             ?: run {
                 logger.warn { "Company with code $visitCode does not exist" }
                 throw NoSuchElementException("Company with code $visitCode does not exist")
             }
 
-        if (visitRepository.existsByUserIdAndCode(userId, company.id())) {
+        if (visitRepository.existsByUserIdAndCode(userId, company.id)) {
             logger.warn { "Visit with code $visitCode already exists for user $userId" }
             throw IllegalArgumentException("Visit with code $visitCode already exists for user $userId")
         }
 
-        val id = VisitId(
-            userId = userId,
-            targetId = company.id(),
-            targetType = VisitTarget.COMPANY
-        )
-
         val visitEntity = visitRepository.save(
             VisitEntity(
-                id = id,
+                userId = userId,
+                targetId = company.id,
+                targetType = VisitTarget.COMPANY,
                 time = LocalDateTime.now()
             )
         )
@@ -52,26 +84,22 @@ class JdbcVisitStorage(
 
     fun addActivityVisit(userId: Long, visitCode: String): Visit {
         validateUser(userId)
-        val activity = activityRepository.findByCode(visitCode)
+        val activity = jdbcActivityStorage.findByCode(visitCode)
             ?: run {
                 logger.warn { "Activity with code $visitCode does not exist" }
                 throw NoSuchElementException("Activity with code $visitCode does not exist")
             }
 
-        if (visitRepository.existsByUserIdAndCode(userId, activity.id())) {
+        if (visitRepository.existsByUserIdAndCode(userId, activity.id)) {
             logger.warn { "Visit with code $visitCode already exists for user $userId" }
             throw IllegalArgumentException("Visit with code $visitCode already exists for user $userId")
         }
 
-        val id = VisitId(
-            userId = userId,
-            targetId = activity.id(),
-            targetType = VisitTarget.ACTIVITY
-        )
-
         val visitEntity = visitRepository.save(
             VisitEntity(
-                id = id,
+                userId = userId,
+                targetId = activity.id,
+                targetType = VisitTarget.ACTIVITY,
                 time = LocalDateTime.now()
             )
         )
@@ -81,7 +109,7 @@ class JdbcVisitStorage(
     }
 
     fun getVisitsByUserId(userId: Long): List<Visit> {
-        if (!userRepository.existsById(userId)) {
+        if (!jdbcUserStorage.existsById(userId)) {
             logger.warn { "User with id $userId does not exist" }
             throw NoSuchElementException("User with id $userId does not exist")
         }
@@ -92,7 +120,7 @@ class JdbcVisitStorage(
     }
 
     private fun validateUser(userId: Long) {
-        if (!userRepository.existsById(userId)) {
+        if (!jdbcUserStorage.existsById(userId)) {
             logger.warn { "User with id $userId does not exist" }
             throw NoSuchElementException("User with id $userId does not exist")
         }
@@ -103,9 +131,9 @@ class JdbcVisitStorage(
 
         private fun VisitEntity.toVisit(): Visit {
             return Visit(
-                userId = this.id.userId,
-                targetId = this.id.targetId,
-                targetType = this.id.targetType,
+                userId = this.userId,
+                targetId = this.targetId,
+                targetType = this.targetType,
                 time = this.time
             )
         }

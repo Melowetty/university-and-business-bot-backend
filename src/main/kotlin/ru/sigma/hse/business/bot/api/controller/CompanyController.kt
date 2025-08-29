@@ -1,5 +1,7 @@
 package ru.sigma.hse.business.bot.api.controller
 
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,5 +18,9 @@ class CompanyController(
     @PostMapping
     fun createCompany(@RequestBody newCompany: CreateCompanyRequest): Company {
         return companyService.createCompany(newCompany)
+    }
+    @GetMapping("/{companyId}")
+    fun getCompany(@PathVariable companyId: Long): Company {
+        return companyService.getCompany(companyId)
     }
 }

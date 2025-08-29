@@ -21,6 +21,10 @@ class JdbcActivityStorage(
         return null
     }
 
+    fun getActivities(ids: List<Long>): List<Activity?> {
+        return ids.map{ activityRepository.findById(it).get().toActivity() }
+    }
+
     fun createActivity(
         code: String,
         name: String,

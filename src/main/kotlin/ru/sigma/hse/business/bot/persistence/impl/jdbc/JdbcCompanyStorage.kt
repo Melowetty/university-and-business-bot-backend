@@ -19,6 +19,16 @@ class JdbcCompanyStorage(
         return companyRepository.findById(id).get().toCompany()
     }
 
+    fun getCompanies(ids: List<Long>): List<Company> {
+        return if (ids.isEmpty()) {
+            emptyList()
+        } else {
+            companyRepository.findAllById(ids)
+                .map { it.toCompany() }
+        }
+//        return ids.map{ companyRepository.findById(it).get().toCompany() }
+    }
+
     fun createCompany(
         code: String,
         name: String,

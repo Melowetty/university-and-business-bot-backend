@@ -46,6 +46,10 @@ class DbStorage(
         return jdbcCompanyStorage.getCompany(id)
     }
 
+    override fun getCompanies(ids: List<Long>): List<Company> {
+        return jdbcCompanyStorage.getCompanies(ids)
+    }
+
     override fun createCompany(
         code: String,
         name: String,
@@ -67,6 +71,10 @@ class DbStorage(
 
     override fun getActivity(id: Long): Activity? {
         return jdbcActivityStorage.getActivity(id)
+    }
+
+    override fun getActivities(ids: List<Long>): List<Activity?> {
+        return jdbcActivityStorage.getActivities(ids)
     }
 
     override fun createActivity(

@@ -8,13 +8,7 @@ import jakarta.persistence.Table
 @Table(name = "users")
 class UserEntity(
     @Column(nullable = false)
-    var name: String,
-
-    @Column(nullable = false)
-    var middleName: String,
-
-    @Column(nullable = false)
-    var lastName: String,
+    var fullName: String,
 
     @Column(nullable = false)
     var course: Int,

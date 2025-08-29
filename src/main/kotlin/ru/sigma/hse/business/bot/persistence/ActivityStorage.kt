@@ -2,12 +2,11 @@ package ru.sigma.hse.business.bot.persistence
 
 import java.time.LocalTime
 import ru.sigma.hse.business.bot.domain.model.Activity
-import ru.sigma.hse.business.bot.domain.model.Company
 
 interface ActivityStorage {
     fun getActivity(id: Long): Activity?
 
-    fun getActivities(ids: List<Long>): List<Activity?>
+    fun getActivities(ids: List<Long>): List<Activity>
 
     fun createActivity(
         code: String,

@@ -8,6 +8,7 @@ zxing = "3.5.2"
 springDocGradlePlugin = "1.9.0"
 springDoc = "2.8.11"
 mockK = "1.14.5"
+apachePoi = "5.4.1"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -48,3 +49,6 @@ zxing-javase = { module = "com.google.zxing:javase", version.ref = "zxing" }
 springdoc-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc" }
 
 mockK = { module = "io.mockk:mockk", version.ref = "mockK" }
+
+apache-poi = { module = "org.apache.poi:poi", version.ref = "apachePoi" }
+apache-poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "apachePoi" }

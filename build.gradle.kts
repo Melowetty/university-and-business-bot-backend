@@ -40,6 +40,9 @@ dependencies {
 
     implementation(libs.mockK)
 
+    implementation(libs.apache.poi)
+    implementation(libs.apache.poi.ooxml)
+
     runtimeOnly(libs.postgresql)
 
     testImplementation(libs.kotlin.junit)

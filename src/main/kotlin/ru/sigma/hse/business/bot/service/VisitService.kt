@@ -6,7 +6,6 @@ import org.springframework.web.util.UriComponentsBuilder
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.domain.model.Company
 import ru.sigma.hse.business.bot.domain.model.DetailedVisit
-import ru.sigma.hse.business.bot.domain.model.Visit
 import ru.sigma.hse.business.bot.domain.model.VisitTarget
 import ru.sigma.hse.business.bot.domain.model.Visitable
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
@@ -69,14 +68,20 @@ class VisitService(
 
     fun getUserVisits(userId: Long): List<DetailedVisit> {
         val allVisits = visitStorage.getVisitsByUserId(userId)
-        val allIds = allVisits.map { it.targetId }
 
-        var detailedVisits = mutableListOf<DetailedVisit>()
-        detailedVisits += companyStorage.getCompanies(allIds)
-            .map { it.toDetailedVisit() }
-//        detailedVisits += activityStorage.getActivities(allIds)
-//            .mapNotNull { it?.toDetailedVisit() }
+        val companyIds = allVisits.filter { it.targetType == VisitTarget.COMPANY }
+            .map { it.targetId }
 
-        return detailedVisits.toList()
+        val activityIds = allVisits.filter { it.targetType == VisitTarget.ACTIVITY }
+            .map { it.targetId }
+
+
+        val detailedVisits = run {
+            val companies = companyStorage.getCompanies(companyIds)
+            val activities = activityStorage.getActivities(activityIds)
+            companies + activities
+        }.map { it.toDetailedVisit() }
+
+        return detailedVisits
     }
 }

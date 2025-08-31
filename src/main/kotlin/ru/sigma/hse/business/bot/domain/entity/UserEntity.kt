@@ -8,6 +8,9 @@ import jakarta.persistence.Table
 @Table(name = "users")
 class UserEntity(
     @Column(nullable = false)
+    var tgId: Long,
+
+    @Column(nullable = false)
     var fullName: String,
 
     @Column(nullable = false)

@@ -1,7 +1,9 @@
 package ru.sigma.hse.business.bot.api.controller.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalTime
+import ru.sigma.hse.business.bot.utils.Constants
 
 
 data class CreateActivityRequest(
@@ -11,8 +13,10 @@ data class CreateActivityRequest(
     val description: String,
     @Schema(description = "Место проведение активности", example = "Актовый зал")
     val location: String,
-    @Schema(description = "Время начала", example = "2025-09-01 10:00:00")
+    @Schema(description = "Время начала (часовой пояс Перми)", example = "10:00")
+    @JsonFormat(pattern = Constants.TIME_FORMAT)
     val startTime: LocalTime,
-    @Schema(description = "Время окончания", example = "2025-09-01 10:30:00")
+    @Schema(description = "Время окончания (часовой пояс Перми)", example = "10:30")
+    @JsonFormat(pattern = Constants.TIME_FORMAT)
     val endTime: LocalTime
 )

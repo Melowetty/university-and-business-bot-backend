@@ -16,31 +16,36 @@ import ru.sigma.hse.business.bot.service.CompanyService
 
 @RestController
 @RequestMapping("/companies")
-@Tag(name = "Companies", description = "Управление сущностями компаний")
+@Tag(name = "Компании", description = "Управление компаниями")
 class CompanyController(
     private val companyService: CompanyService
 ) {
-    @PostMapping
+    @PostMapping(
+        produces = ["application/json"]
+    )
     @Operation(
         summary = "Добавить компанию",
-        description = "Создает компанию и присваивает ей свой уникальный код."
+        description = "Создает компанию"
     )
-    @ApiResponse(responseCode = "200", description = "Компания успешно добавлен")
+    @ApiResponse(responseCode = "200", description = "Компания успешно добавлена")
     fun createCompany(
-        @Parameter(description = "Json тело компании с информацией")
+        @Parameter(description = "Информация о компании для создания")
         @RequestBody newCompany: CreateCompanyRequest
     ): Company {
         return companyService.createCompany(newCompany)
     }
 
-    @GetMapping("/{companyId}")
+    @GetMapping(
+        "/{companyId}",
+        produces = ["application/json"]
+    )
     @Operation(
         summary = "Получить информацию о компании",
-        description = "Выдает всю информаицю о существующей компании по её id"
+        description = "Выдает информацию о компании"
     )
-    @ApiResponse(responseCode = "200", description = "Информация о компании выведена")
+    @ApiResponse(responseCode = "200", description = "Информация о компании")
     fun getCompany(
-        @Parameter(description = "id компании")
+        @Parameter(description = "ID компании")
         @PathVariable companyId: Long
     ): Company {
         return companyService.getCompany(companyId)

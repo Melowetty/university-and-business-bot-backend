@@ -12,6 +12,11 @@ interface VisitRepository : JpaRepository<VisitEntity, Long> {
         @Param("userId") userId: Long
     ): List<VisitEntity>
 
+    @Query("SELECT COUNT(*) FROM VisitEntity v WHERE v.userId = :userId")
+    fun countByUserId(
+        @Param("userId") userId: Long
+    ): Long
+
     @Query("SELECT COUNT(v) > 0 FROM VisitEntity v WHERE v.userId = :userId AND v.targetId = :targetId")
     fun existsByUserIdAndCode(
         @Param("userId") userId: Long,

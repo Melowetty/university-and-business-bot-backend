@@ -23,6 +23,8 @@ repositories {
 dependencies {
     implementation(libs.springdoc.openapi)
 
+    implementation(libs.jackson.kotlin)
+
     implementation(libs.zxing.core)
     implementation(libs.zxing.javase)
 

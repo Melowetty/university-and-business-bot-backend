@@ -9,4 +9,5 @@ interface VisitStorage {
     fun addCompanyVisit(userId: Long, visitCode: String): Visit
     fun addActivityVisit(userId: Long, visitCode: String): Visit
     fun getVisitsByUserId(userId: Long): List<Visit>
+    fun getCountVisitsByUserId(userId: Long): Long
 }

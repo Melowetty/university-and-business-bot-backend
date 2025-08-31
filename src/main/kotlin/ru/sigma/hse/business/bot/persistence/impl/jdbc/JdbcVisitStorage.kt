@@ -121,6 +121,11 @@ class JdbcVisitStorage(
         }
     }
 
+    fun getVisitsCountByUserId(userId: Long): Long {
+        validateUser(userId)
+        return visitRepository.countByUserId(userId)
+    }
+
     private fun validateUser(userId: Long) {
         if (!jdbcUserStorage.existsById(userId)) {
             logger.warn { "User with id $userId does not exist" }

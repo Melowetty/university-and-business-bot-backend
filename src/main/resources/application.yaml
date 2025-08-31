@@ -10,13 +10,15 @@ security:
     username: test
     password: test
 
+conference:
+  count-for-complete: 3
+
 integrations:
   yandex-disk:
     token: ${YANDEX_DISK_OAUTH_TOKEN:test}
     base-url: https://cloud-api.yandex.net/v1/disk/resources
   telegram:
     link: ${TELEGRAM_BOT_LINK:https://t.me/university_and_business_bot}
-    token: ${TELEGRAM_BOT_TOKEN:test}
 
 spring:
   application:

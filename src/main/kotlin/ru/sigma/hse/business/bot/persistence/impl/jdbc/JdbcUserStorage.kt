@@ -32,6 +32,10 @@ class JdbcUserStorage(
         )
     }
 
+    fun existsByTelegramId(telegramId: Long): Boolean {
+        return userRepository.existsByTelegramId(telegramId)
+    }
+
     fun getUser(id: Long): User? {
         if (userRepository.existsById(id)) {
             logger.info { "Found user with id $id" }
@@ -96,6 +100,15 @@ class JdbcUserStorage(
         return userRepository.existsById(userId)
     }
 
+    fun markUserAsCompletedConference(userId: Long) {
+        if (!userRepository.existsById(userId)) {
+            logger.warn { "User with id $userId does not exist" }
+            throw UserByIdNotFoundException(userId)
+        }
+
+        userRepository.markUserAsCompleteConference(userId)
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 
@@ -106,7 +119,8 @@ class JdbcUserStorage(
                 fullName = this.fullName,
                 course = this.course,
                 program = this.program,
-                email = this.email
+                email = this.email,
+                isCompleteConference = this.isCompleteConference,
             )
         }
     }

@@ -10,19 +10,20 @@ import ru.sigma.hse.business.bot.service.TelegramUserService
 import ru.sigma.hse.business.bot.service.VisitService
 
 @RestController
-@RequestMapping("/users/{telegramUserId}/visits")
+@RequestMapping("/users/{telegramId}/visits")
 class VisitController(
     private val visitService: VisitService,
     private val telegramUserService: TelegramUserService
 ) {
     @PostMapping("/{code}")
-    fun visitFlow(@PathVariable("telegramUserId") telegramUserId: Long, @PathVariable("code") code: String): DetailedVisit {
-        val userId = telegramUserService.getUser(telegramUserId).id
+    fun visitFlow(@PathVariable("telegramId") telegramId: Long, @PathVariable("code") code: String): DetailedVisit {
+        val userId = telegramUserService.getUser(telegramId).id
         return visitService.visit(userId, code)
     }
 
     @GetMapping
-    fun getUserVisits(@PathVariable("userId") userId: Long): List<DetailedVisit> {
+    fun getUserVisits(@PathVariable("telegramId") telegramId: Long): List<DetailedVisit> {
+        val userId = telegramUserService.getUser(telegramId).id
         return visitService.getUserVisits(userId)
     }
 }

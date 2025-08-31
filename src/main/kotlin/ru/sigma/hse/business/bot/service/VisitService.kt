@@ -8,6 +8,8 @@ import ru.sigma.hse.business.bot.domain.model.Company
 import ru.sigma.hse.business.bot.domain.model.DetailedVisit
 import ru.sigma.hse.business.bot.domain.model.VisitTarget
 import ru.sigma.hse.business.bot.domain.model.Visitable
+import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
 import ru.sigma.hse.business.bot.persistence.CompanyStorage
 import ru.sigma.hse.business.bot.persistence.VisitStorage
@@ -30,7 +32,7 @@ class VisitService(
             "UNC" -> {
                 val targetId = visitStorage.addCompanyVisit(userId, code).targetId
                 val company = companyStorage.getCompany(targetId)
-                    ?: throw IllegalStateException("Company not found")
+                    ?: throw CompanyByIdNotFoundException(targetId)
 
                 return company.toDetailedVisit()
             }
@@ -38,7 +40,7 @@ class VisitService(
             "UNA" -> {
                 val targetId = visitStorage.addActivityVisit(userId, code).targetId
                 val activity = activityStorage.getActivity(targetId)
-                    ?: throw IllegalStateException("Activity not found")
+                    ?: throw ActivityByIdNotFoundException(targetId)
 
                 return activity.toDetailedVisit()
             }

@@ -11,5 +11,5 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     fun findAllByIdGreaterThanOrderByIdAsc(id: Long, limit: Int): List<UserEntity>
 
     @Query("SELECT id FROM UserEntity WHERE tgId = :telegramId")
-    fun getUserIdByTelegramId(telegramId: Long): Long
+    fun getUserIdByTelegramId(telegramId: Long): Long?
 }

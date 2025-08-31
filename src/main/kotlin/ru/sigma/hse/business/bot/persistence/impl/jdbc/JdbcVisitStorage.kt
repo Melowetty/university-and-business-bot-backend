@@ -8,6 +8,8 @@ import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
 import ru.sigma.hse.business.bot.domain.model.VisitTarget
+import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.visit.VisitAlreadyExistsException
 import ru.sigma.hse.business.bot.persistence.repository.VisitRepository
 
 @Component
@@ -65,7 +67,7 @@ class JdbcVisitStorage(
 
         if (visitRepository.existsByUserIdAndCode(userId, company.id)) {
             logger.warn { "Visit with code $visitCode already exists for user $userId" }
-            throw IllegalArgumentException("Visit with code $visitCode already exists for user $userId")
+            throw VisitAlreadyExistsException(visitCode)
         }
 
         val visitEntity = visitRepository.save(
@@ -92,7 +94,7 @@ class JdbcVisitStorage(
 
         if (visitRepository.existsByUserIdAndCode(userId, activity.id)) {
             logger.warn { "Visit with code $visitCode already exists for user $userId" }
-            throw IllegalArgumentException("Visit with code $visitCode already exists for user $userId")
+            throw VisitAlreadyExistsException(visitCode)
         }
 
         val visitEntity = visitRepository.save(
@@ -122,7 +124,7 @@ class JdbcVisitStorage(
     private fun validateUser(userId: Long) {
         if (!jdbcUserStorage.existsById(userId)) {
             logger.warn { "User with id $userId does not exist" }
-            throw NoSuchElementException("User with id $userId does not exist")
+            throw UserByIdNotFoundException(userId)
         }
     }
 

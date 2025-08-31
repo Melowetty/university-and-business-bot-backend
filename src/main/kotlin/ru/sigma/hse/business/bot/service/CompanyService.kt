@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import ru.sigma.hse.business.bot.api.controller.model.CreateCompanyRequest
 import ru.sigma.hse.business.bot.domain.event.CreatedVisitableObjectEvent
 import ru.sigma.hse.business.bot.domain.model.Company
+import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.CompanyStorage
 import ru.sigma.hse.business.bot.service.code.CodeGenerator
 
@@ -29,6 +30,6 @@ class CompanyService(
 
     fun getCompany(companyId: Long): Company {
         return companyStorage.getCompany(companyId)
-            ?: throw IllegalArgumentException("Company not found")
+            ?: throw CompanyByIdNotFoundException(companyId)
     }
 }

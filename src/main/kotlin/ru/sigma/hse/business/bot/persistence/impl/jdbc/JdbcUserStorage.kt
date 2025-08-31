@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.UserEntity
 import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.User
+import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.UserRepository
 
 @Component
@@ -63,7 +64,7 @@ class JdbcUserStorage(
     fun updateUser(user: User): User {
         if (!userRepository.existsById(user.id)) {
             logger.warn { "User with id ${user.id} does not exist" }
-            throw NoSuchElementException("User with id ${user.id} does not exist")
+            throw UserByIdNotFoundException(user.id)
         }
 
         val existingUser = userRepository.findById(user.id).get()
@@ -82,7 +83,7 @@ class JdbcUserStorage(
     fun deleteUser(userId: Long) {
         if (!userRepository.existsById(userId)) {
             logger.warn { "User with id $userId does not exist" }
-            throw NoSuchElementException("User with id $userId does not exist")
+            throw UserByIdNotFoundException(userId)
         }
 
         logger.info { "Deleting user with id $userId" }

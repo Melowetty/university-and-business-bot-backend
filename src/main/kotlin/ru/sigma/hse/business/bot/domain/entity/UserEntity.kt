@@ -7,7 +7,7 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "users")
 class UserEntity(
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     var tgId: Long,
 
     @Column(nullable = false)

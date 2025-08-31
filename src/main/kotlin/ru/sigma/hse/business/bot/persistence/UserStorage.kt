@@ -13,6 +13,10 @@ interface UserStorage {
         id: Long
     ): User?
 
+    fun existsByTelegramId(
+        tgId: Long
+    ): Boolean
+
     fun createUser(
         tgId: Long,
         fullName: String,

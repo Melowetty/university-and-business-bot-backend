@@ -43,6 +43,7 @@ class JdbcUserStorage(
     }
 
     fun createUser(
+        tgId: Long,
         fullName: String,
         course: Int,
         program: String,
@@ -50,6 +51,7 @@ class JdbcUserStorage(
     ): User {
         val userEntity = userRepository.save(
             UserEntity(
+                tgId = tgId,
                 fullName = fullName,
                 course = course,
                 program = program,
@@ -100,6 +102,7 @@ class JdbcUserStorage(
         fun UserEntity.toUser(): User {
             return User(
                 id = this.id(),
+                tgId = this.tgId,
                 fullName = this.fullName,
                 course = this.course,
                 program = this.program,

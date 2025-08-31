@@ -30,12 +30,13 @@ class DbStorage(
     }
 
     override fun createUser(
+        tgId: Long,
         fullName: String,
         course: Int,
         program: String,
         email: String?
     ): User {
-        return jdbcUserStorage.createUser(fullName, course, program, email)
+        return jdbcUserStorage.createUser(tgId, fullName, course, program, email)
     }
 
     override fun updateUser(user: User): User {

@@ -3,6 +3,7 @@ package ru.sigma.hse.business.bot.service
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
+import ru.sigma.hse.business.bot.api.controller.model.VisitResult
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.domain.model.Company
 import ru.sigma.hse.business.bot.domain.model.DetailedVisit
@@ -10,8 +11,10 @@ import ru.sigma.hse.business.bot.domain.model.VisitTarget
 import ru.sigma.hse.business.bot.domain.model.Visitable
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
 import ru.sigma.hse.business.bot.persistence.CompanyStorage
+import ru.sigma.hse.business.bot.persistence.UserStorage
 import ru.sigma.hse.business.bot.persistence.VisitStorage
 import ru.sigma.hse.business.bot.service.qr.QrCodeGenerator
 
@@ -21,20 +24,24 @@ class VisitService(
     private val companyStorage: CompanyStorage,
     private val activityStorage: ActivityStorage,
     private val qrCodeGenerator: QrCodeGenerator,
+    private val userStorage: UserStorage,
+
+    @Value("\${conference.count-for-complete}")
+    private val countForCompleteConference: Int,
 ) {
     @Value("\${integrations.telegram.link}")
     private lateinit var telegramBotLink: String
 
-    fun visit(userId: Long, code: String): DetailedVisit {
+    fun visit(userId: Long, code: String): VisitResult {
         val type = code.substring(0, 3)
 
-        when (type) {
+        val visit = when (type) {
             "UNC" -> {
                 val targetId = visitStorage.addCompanyVisit(userId, code).targetId
                 val company = companyStorage.getCompany(targetId)
                     ?: throw CompanyByIdNotFoundException(targetId)
 
-                return company.toDetailedVisit()
+                company.toDetailedVisit()
             }
 
             "UNA" -> {
@@ -42,11 +49,28 @@ class VisitService(
                 val activity = activityStorage.getActivity(targetId)
                     ?: throw ActivityByIdNotFoundException(targetId)
 
-                return activity.toDetailedVisit()
+                activity.toDetailedVisit()
             }
 
             else -> throw IllegalArgumentException("Неверный тип кода")
         }
+
+        val visitsCount = visitStorage.getCountVisitsByUserId(userId)
+
+        val user = userStorage.getUser(userId)
+            ?: throw UserByIdNotFoundException(userId)
+
+        var completeConference = false
+        if (visitsCount >= countForCompleteConference && !user.isCompleteConference) {
+            userStorage.markUserAsCompletedConference(userId)
+            completeConference = true
+        }
+
+        return VisitResult(
+            target = visit.target,
+            targetType = visit.type,
+            isCompleteConference = completeConference
+        )
     }
 
     fun generateVisitQrCode(code: String): ByteArray {

@@ -29,6 +29,10 @@ class DbStorage(
         return jdbcUserStorage.getUser(id)
     }
 
+    override fun existsByTelegramId(tgId: Long): Boolean {
+        return jdbcUserStorage.existsByTelegramId(tgId)
+    }
+
     override fun createUser(
         tgId: Long,
         fullName: String,
@@ -41,6 +45,10 @@ class DbStorage(
 
     override fun updateUser(user: User): User {
         return jdbcUserStorage.updateUser(user)
+    }
+
+    override fun markUserAsCompletedConference(userId: Long) {
+        return jdbcUserStorage.markUserAsCompletedConference(userId)
     }
 
     override fun deleteUser(userId: Long) {
@@ -115,5 +123,9 @@ class DbStorage(
 
     override fun getVisitsByUserId(userId: Long): List<Visit> {
         return jdbcVisitStorage.getVisitsByUserId(userId)
+    }
+
+    override fun getCountVisitsByUserId(userId: Long): Long {
+        return jdbcVisitStorage.getVisitsCountByUserId(userId)
     }
 }

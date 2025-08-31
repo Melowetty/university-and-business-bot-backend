@@ -20,5 +20,8 @@ class UserEntity(
     var program: String,
 
     @Column(nullable = true)
-    var email: String?
+    var email: String?,
+
+    @Column(nullable = false)
+    var isCompleteConference: Boolean = false
 ) : BaseEntity()

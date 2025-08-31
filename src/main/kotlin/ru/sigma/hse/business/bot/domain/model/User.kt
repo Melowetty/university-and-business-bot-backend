@@ -6,5 +6,6 @@ data class User(
     val fullName: String,
     val course: Int,
     val program: String,
-    val email: String?
+    val email: String?,
+    val isCompleteConference: Boolean,
 )

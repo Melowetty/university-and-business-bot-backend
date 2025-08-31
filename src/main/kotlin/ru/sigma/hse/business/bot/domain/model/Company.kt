@@ -3,7 +3,7 @@ package ru.sigma.hse.business.bot.domain.model
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class Company(
-    @Schema(description = "Id клмпании", example = "1")
+    @Schema(description = "ID компании", example = "1")
     override val id: Long,
     @Schema(description = "Название компании", example = "Ростикс")
     override val name: String,

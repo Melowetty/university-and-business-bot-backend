@@ -3,7 +3,7 @@ package ru.sigma.hse.business.bot.api.controller.model
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class CreateUserRequest(
-    @Schema(description = "Telegram id пользователя", example = "123456789")
+    @Schema(description = "Telegram iD пользователя", example = "123456789")
     val tgId: Long,
     @Schema(description = "Имя пользователя", example = "Павел")
     val fullName: String,

@@ -29,6 +29,10 @@ interface UserStorage {
         user: User
     ): User
 
+    fun markUserAsCompletedConference(
+        userId: Long
+    )
+
     fun deleteUser(
         userId: Long
     )

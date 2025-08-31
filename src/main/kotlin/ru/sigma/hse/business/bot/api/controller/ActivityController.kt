@@ -1,19 +1,31 @@
 package ru.sigma.hse.business.bot.api.controller
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.sigma.hse.business.bot.api.controller.model.CreateActivityRequest
-import ru.sigma.hse.business.bot.service.CompanyService
+import ru.sigma.hse.business.bot.domain.model.Activity
+import ru.sigma.hse.business.bot.service.ActivityService
 
 @RestController
 @RequestMapping("/activities")
 class ActivityController(
-    private val visitService: CompanyService
+    private val activityService: ActivityService
 ) {
     @PostMapping()
-    fun createActivity(@RequestBody newActivity: CreateActivityRequest): String {
-        return "companyService.(id)"
+    @Operation(
+        summary = "Добавить новую активность",
+        description = "Создание новой активности"
+    )
+    @ApiResponse(responseCode = "200", description = "Новая активнсоть успешно создана")
+    fun createActivity(
+        @Parameter(description = "Объект с полной информацией об активности")
+        @RequestBody newActivity: CreateActivityRequest
+    ): Activity {
+        return activityService.createActivity(newActivity)
     }
 }

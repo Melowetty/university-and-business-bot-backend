@@ -6,5 +6,5 @@ data class Visit(
     var userId: Long,
     var targetId: Long,
     var targetType: VisitTarget,
-    var time: LocalDateTime,
+    var time: LocalDateTime
 )

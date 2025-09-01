@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.FutureOrPresent
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotEmpty
-import org.jetbrains.annotations.NotNull
 import java.time.LocalTime
 import ru.sigma.hse.business.bot.utils.Constants
 
 
 data class CreateActivityRequest(
-    @field:NotBlank("Wrong activity name format")
+    @field:NotBlank(message = "Wrong activity name format")
     @Schema(description = "Название активности", example = "Собрание")
     val name: String,
     @field:NotBlank(message = "Wrong activity description format")

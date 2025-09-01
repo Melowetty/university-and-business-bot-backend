@@ -3,6 +3,7 @@ package ru.sigma.hse.business.bot.domain.entity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")
@@ -23,5 +24,8 @@ class UserEntity(
     var email: String?,
 
     @Column(nullable = false)
-    var isCompleteConference: Boolean = false
+    var isCompleteConference: Boolean = false,
+
+    @Column(nullable = false, updatable = false)
+    val creationDate: LocalDateTime,
 ) : BaseEntity()

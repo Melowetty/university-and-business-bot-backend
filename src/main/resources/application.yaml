@@ -25,7 +25,7 @@ spring:
     name: university-and-business-bot-backend
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -37,7 +37,7 @@ spring:
     url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
 
   liquibase:
-    enabled: false
+    enabled: true
 
   security:
     user:

@@ -13,5 +13,4 @@ class GetUserInfoRequest(
     val activityCount: Int,
     @Schema(description = "Игровой счёт пользователя", example = "15")
     val scoreCount: Int
-    //.... other fields
 )

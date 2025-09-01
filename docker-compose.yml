@@ -1,0 +1,75 @@
+version: '3.8'
+services:
+  caddy:
+    image: caddy
+    restart: always
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      ub-backend:
+        condition: service_healthy
+    ports:
+      - "8443:8443"
+    networks:
+      - internal
+
+  ub-backend:
+    image: ${IMAGE_TAG:ghcr.io/melowetty/ub-backend:stable}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -q -O - http://localhost:8080/actuator/health | grep -q UP" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    env_file: ./.env
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 127.0.0.1:24224
+    ports:
+      - published: 8000
+        target: 8000
+        protocol: tcp
+        mode: ingress
+    restart: always
+    networks:
+      - internal
+      - logging
+
+  postgresdb:
+    image: postgres
+    restart: unless-stopped
+    env_file: ./.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - published: 5436
+        target: 5432
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - internal
+
+volumes:
+  db:
+    name: ub-backend_db
+
+networks:
+  internal:
+    driver: overlay
+    attachable: true
+  logging:
+    external: true

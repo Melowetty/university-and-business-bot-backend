@@ -20,7 +20,9 @@ import ru.sigma.hse.business.bot.service.ActivityService
 class ActivityController(
     private val activityService: ActivityService
 ) {
-    @PostMapping()
+    @PostMapping(
+        produces = ["application/json"]
+    )
     @Operation(
         summary = "Добавить новую активность",
         description = "Создание новой активности"

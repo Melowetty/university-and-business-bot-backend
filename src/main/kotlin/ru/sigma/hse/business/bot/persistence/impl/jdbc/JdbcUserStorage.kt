@@ -1,6 +1,7 @@
 package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.time.LocalDateTime
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.UserEntity
 import ru.sigma.hse.business.bot.domain.model.Pageable
@@ -59,7 +60,8 @@ class JdbcUserStorage(
                 fullName = fullName,
                 course = course,
                 program = program,
-                email = email
+                email = email,
+                creationDate = LocalDateTime.now()
             )
         )
 

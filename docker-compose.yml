@@ -10,12 +10,9 @@ services:
       resources:
         limits:
           memory: 768M
-    healthcheck:
-      test: [ "CMD-SHELL", "wget -q -O - http://localhost:8080/actuator/health | grep -q UP" ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 120s
+    environment:
+      THC_PORT: 8080
+      THC_PATH: '/actuator/health'
     env_file: ./.env
     logging:
       driver: "fluentd"

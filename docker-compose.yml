@@ -2,6 +2,12 @@ version: '3.8'
 services:
   ub-backend:
     image: ${IMAGE_TAG:-ghcr.io/melowetty/ub-backend:stable}
+    healthcheck:
+      test: ["/workspace/health-check"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     depends_on:
       - db
     deploy:

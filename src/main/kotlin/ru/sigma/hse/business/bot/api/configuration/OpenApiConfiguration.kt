@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Profile
     ),
     servers = [
         Server(
-            url = "https://ub.hse-perm-helper.ru",
+            url = "https://d5dii9i4dic8068c380j.g3ab4gln.apigw.yandexcloud.net",
             description = "Production server"
         ),
         Server(

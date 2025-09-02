@@ -1,14 +1,14 @@
 database:
-  host: localhost
-  port: 5432
-  name: university-and-business-bot-backend
-  username: postgres
-  password: postgres
+  host: ${DATABASE_HOST:localhost}
+  port: ${DATABASE_PORT:5432}
+  name: ${DATABASE_NAME:university-and-business-bot-backend}
+  username: ${DATABASE_USERNAME:postgres}
+  password: ${DATABASE_PASSWORD:postgres}
 
 security:
   bot:
-    username: test
-    password: test
+    username: ${SECURITY_BOT_USERNAME:test}
+    password: ${SECURITY_BOT_PASSWORD:test}
 
 conference:
   count-for-complete: 3

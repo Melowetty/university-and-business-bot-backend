@@ -4,7 +4,7 @@ TARGET_TAG=$1
 # Функция для ожидания стабилизации сервисов
 wait_for_services() {
     local stack_name=$1
-    local timeout=600  # 10 минут таймаут
+    local timeout=300  # 5 минут таймаут
     local interval=10
     local elapsed=0
 

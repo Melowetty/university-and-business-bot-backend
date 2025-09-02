@@ -10,8 +10,6 @@ on:
       - 'settings.gradle*'
       - 'gradle.properties'
       - 'gradle/wrapper/gradle-wrapper.properties'
-      - 'Dockerfile'
-      - 'docker-compose*.yml'
       - 'scripts/**'
       - '.github/workflows/**'
 

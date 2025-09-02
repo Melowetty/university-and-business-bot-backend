@@ -3,11 +3,11 @@ services:
   ub-backend:
     image: ${IMAGE_TAG:-ghcr.io/melowetty/ub-backend:stable}
     healthcheck:
-      test: ["/workspace/health-check"]
+      test: ["CMD", "/workspace/health-check"]
       interval: 10s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 120s
     depends_on:
       - db
     deploy:
@@ -19,6 +19,7 @@ services:
     environment:
       THC_PORT: 8080
       THC_PATH: '/actuator/health'
+      THC_USE_LOOPBACK_ADDRESS: "true"
     env_file: ./.env
     logging:
       driver: "fluentd"

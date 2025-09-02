@@ -1,9 +1,9 @@
 database:
-  host: ${DATABASE_HOST:localhost}
-  port: ${DATABASE_PORT:5432}
-  name: ${DATABASE_NAME:university-and-business-bot-backend}
-  username: ${DATABASE_USERNAME:postgres}
-  password: ${DATABASE_PASSWORD:postgres}
+  host: localhost
+  port: 5432
+  name: university-and-business-bot-backend
+  username: postgres
+  password: postgres
 
 security:
   bot:

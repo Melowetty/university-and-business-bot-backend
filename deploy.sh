@@ -13,7 +13,7 @@ wait_for_services() {
     while [ $elapsed -lt $timeout ]; do
         # Проверяем все сервисы в stack
         local all_ready=true
-        local services=$(docker service ls --filter "name=${stack_name}_" --format "{{.Name}}")
+        local services=$(sudo docker service ls --filter "name=${stack_name}_" --format "{{.Name}}")
 
         if [ -z "$services" ]; then
             echo "❌ Не найдено сервисов в stack: $stack_name"
@@ -21,7 +21,7 @@ wait_for_services() {
         fi
 
         for service in $services; do
-            local replicas=$(docker service ls --filter "name=$service" --format "{{.Replicas}}")
+            local replicas=$(sudo docker service ls --filter "name=$service" --format "{{.Replicas}}")
             local current=$(echo $replicas | awk -F'/' '{print $1}')
             local target=$(echo $replicas | awk -F'/' '{print $2}')
 
@@ -47,7 +47,7 @@ wait_for_services() {
 }
 
 # Пробуем деплоить с указанным тегом
-if IMAGE_TAG="ghcr.io/melowetty/ub-backend:$TARGET_TAG" docker stack deploy -c docker-compose.yml ub-backend --with-registry-auth; then
+if IMAGE_TAG="ghcr.io/melowetty/ub-backend:$TARGET_TAG" sudo docker stack deploy -c docker-compose.yml ub-backend --with-registry-auth; then
     echo "✅ Деплой запущен с тегом: $TARGET_TAG"
 
     # Ждем стабилизации сервисов
@@ -62,7 +62,7 @@ if IMAGE_TAG="ghcr.io/melowetty/ub-backend:$TARGET_TAG" docker stack deploy -c d
 else
     echo "❌ Деплой с тегом $TARGET_TAG failed, пробуем stable"
 
-    if IMAGE_TAG="ghcr.io/melowetty/ub-backend:stable" docker stack deploy -c docker-compose.yml ub-backend --with-registry-auth; then
+    if IMAGE_TAG="ghcr.io/melowetty/ub-backend:stable" sudo docker stack deploy -c docker-compose.yml ub-backend --with-registry-auth; then
         echo "✅ Деплой запущен с тегом stable"
 
         # Ждем стабилизации сервисов

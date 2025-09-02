@@ -10,8 +10,6 @@ on:
       - 'settings.gradle*'
       - 'gradle.properties'
       - 'gradle/wrapper/gradle-wrapper.properties'
-      - 'Dockerfile'
-      - 'docker-compose*.yml'
       - 'scripts/**'
       - '.github/workflows/**'
 
@@ -167,7 +165,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd services/university-and-business-bot-backend
+            cd ub-backend
             echo "Running on ${{needs.build-image.outputs.tag}} environment"
             ./deploy.sh "${{needs.build-image.outputs.tag}}"
 

@@ -13,6 +13,7 @@ class SecurityConfiguration {
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .authorizeHttpRequests {
+                it.requestMatchers("/actuator/health").permitAll()
                 it.anyRequest().authenticated()
             }
             .httpBasic(Customizer.withDefaults())

@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.spring)
@@ -75,4 +77,11 @@ openApi {
     outputFileName = "openapi.json"
     outputDir.set(layout.buildDirectory.dir("api-docs").get().asFile)
     waitTimeInSeconds = 30
+}
+
+tasks.named("bootBuildImage") {
+    this as BootBuildImage
+    val env = mapOf("BP_HEALTH_CHECKER_ENABLED" to "true")
+    environment.set(env)
+    buildpacks.addAll("urn:cnb:builder:paketo-buildpacks/java", "docker.io/paketobuildpacks/health-checker:2.10.2")
 }

@@ -30,6 +30,9 @@ class UserService(
         return GetUserInfoRequest(
             userId = userId,
             name = user.fullName,
+            course = user.course,
+            program = user.program,
+            email = user.email,
             companyCount = companyNumber,
             activityCount = activityNumber,
             scoreCount = activityNumber + companyNumber
@@ -52,6 +55,9 @@ class UserService(
         return GetUserInfoRequest(
             userId = user.id,
             name = user.fullName,
+            course = user.course,
+            program = user.program,
+            email = user.email,
             companyCount = 0,
             activityCount = 0,
             scoreCount = 0

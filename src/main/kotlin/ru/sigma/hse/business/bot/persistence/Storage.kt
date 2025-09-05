@@ -1,3 +1,3 @@
 package ru.sigma.hse.business.bot.persistence
 
-interface Storage : UserStorage, CompanyStorage, ActivityStorage, VisitStorage
+interface Storage : UserStorage, CompanyStorage, ActivityStorage, VisitStorage, PreregistrationUserStorage

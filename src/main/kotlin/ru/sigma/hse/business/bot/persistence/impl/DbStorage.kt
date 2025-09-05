@@ -5,12 +5,14 @@ import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.domain.model.Company
 import ru.sigma.hse.business.bot.domain.model.Pageable
+import ru.sigma.hse.business.bot.domain.model.PreregistrationUser
 import ru.sigma.hse.business.bot.domain.model.User
 import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
 import ru.sigma.hse.business.bot.persistence.Storage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcActivityStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompanyStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcPreregistrationUserStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcUserStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVisitStorage
 
@@ -20,6 +22,7 @@ class DbStorage(
     private val jdbcCompanyStorage: JdbcCompanyStorage,
     private val jdbcActivityStorage: JdbcActivityStorage,
     private val jdbcVisitStorage: JdbcVisitStorage,
+    private val jdbcPreregistrationUserStorage: JdbcPreregistrationUserStorage
 ) : Storage {
     override fun getUsers(limit: Int, token: Long): Pageable<User> {
         return jdbcUserStorage.getUsers(limit, token)
@@ -127,5 +130,17 @@ class DbStorage(
 
     override fun getCountVisitsByUserId(userId: Long): Long {
         return jdbcVisitStorage.getVisitsCountByUserId(userId)
+    }
+
+    override fun getPreregistrationUser(tgId: Long): PreregistrationUser? {
+        return jdbcPreregistrationUserStorage.getPreregistrationUser(tgId)
+    }
+
+    override fun createPreregistrationUser(tgId: Long): PreregistrationUser {
+        return jdbcPreregistrationUserStorage.createPreregistrationUser(tgId)
+    }
+
+    override fun deletePreregistrationUser(tgId: Long) {
+        jdbcPreregistrationUserStorage.deletePreregistrationUser(tgId)
     }
 }

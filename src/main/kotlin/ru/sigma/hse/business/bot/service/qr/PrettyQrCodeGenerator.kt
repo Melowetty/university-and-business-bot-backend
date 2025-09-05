@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component
 
 @Component("prettyQrCodeGenerator")
 class PrettyQrCodeGenerator : QrCodeGenerator {
-    override fun generateQrCode(data: String): ByteArray {
+    override fun generateQrCode(data: String, size: Int): ByteArray {
         return try {
-            val qrCodeSize = 300
+            val qrCodeSize = size
 
             val hintMap = Hashtable<EncodeHintType, ErrorCorrectionLevel>()
             hintMap[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
@@ -36,7 +36,7 @@ class PrettyQrCodeGenerator : QrCodeGenerator {
             graphics.fillRect(0, 0, matrixWidth, matrixWidth)
 
             // Основной цвет QR-кода
-            graphics.color = Color(51, 102, 153)
+            graphics.color = Color(46, 180, 133)
 
             // Рисуем QR-код
             for (i in 0 until matrixWidth) {
@@ -47,8 +47,10 @@ class PrettyQrCodeGenerator : QrCodeGenerator {
                 }
             }
 
-            // Добавляем логотип
-            addLogoToQr(graphics, matrixWidth)
+            if (size > 300) {
+                // Добавляем логотип
+                addLogoToQr(graphics, matrixWidth)
+            }
 
             graphics.dispose()
 
@@ -76,6 +78,9 @@ class PrettyQrCodeGenerator : QrCodeGenerator {
                 // Позиционируем по центру
                 val x = (qrSize - scaledLogo.width) / 2
                 val y = (qrSize - scaledLogo.height) / 2
+
+                graphics.color = Color.WHITE
+                graphics.fillRect(x, y, scaledLogo.width, scaledLogo.height)
 
                 graphics.drawImage(scaledLogo, x, y, null)
             }

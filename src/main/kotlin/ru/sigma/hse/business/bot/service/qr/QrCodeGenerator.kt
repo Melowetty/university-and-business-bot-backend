@@ -1,5 +1,5 @@
 package ru.sigma.hse.business.bot.service.qr
 
 interface QrCodeGenerator {
-    fun generateQrCode(data: String): ByteArray
+    fun generateQrCode(data: String, size: Int): ByteArray
 }

@@ -73,14 +73,14 @@ class VisitService(
         )
     }
 
-    fun generateVisitQrCode(code: String): ByteArray {
+    fun generateVisitQrCode(code: String, size: Int): ByteArray {
         val link = UriComponentsBuilder
             .fromUriString(telegramBotLink)
             .queryParam("start", code)
             .build()
             .toUriString()
 
-        return qrCodeGenerator.generateQrCode(link)
+        return qrCodeGenerator.generateQrCode(link, size)
     }
 
     private fun Visitable.toDetailedVisit(): DetailedVisit {

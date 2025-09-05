@@ -13,6 +13,10 @@ class CodeGenerator {
         return "UNA" + generateCode()
     }
 
+    fun generateUserCode(): String {
+        return "UNU" + generateCode()
+    }
+
     fun generateCode(): String {
         return buildString {
             repeat(CODE_LENGTH) {

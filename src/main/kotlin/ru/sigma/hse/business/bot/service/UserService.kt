@@ -8,11 +8,17 @@ import ru.sigma.hse.business.bot.domain.model.VisitTarget
 import ru.sigma.hse.business.bot.exception.user.UserAlreadyExistsByTelegramIdException
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.UserStorage
+import ru.sigma.hse.business.bot.persistence.impl.LocalFileStorage
+import ru.sigma.hse.business.bot.service.code.CodeGenerator
+import ru.sigma.hse.business.bot.service.qr.PrettyQrCodeGenerator
 
 @Service
 class UserService(
     private val userStorage: UserStorage,
-    private val visitService: VisitService
+    private val visitService: VisitService,
+    private val codeGenerator: CodeGenerator,
+    private val qrCodeGenerator: PrettyQrCodeGenerator,
+    private val localFileStorage: LocalFileStorage
 ) {
     fun getUser(userId: Long): User {
         val user = userStorage.getUser(userId)
@@ -43,9 +49,10 @@ class UserService(
         if (userStorage.existsByTelegramId(newUser.tgId)) {
             throw UserAlreadyExistsByTelegramIdException(newUser.tgId)
         }
-
+        val code = codeGenerator.generateCompanyCode()
         val user = userStorage.createUser(
             tgId = newUser.tgId,
+            code = code,
             fullName = newUser.fullName,
             course = newUser.course,
             program = newUser.program,
@@ -62,5 +69,13 @@ class UserService(
             activityCount = 0,
             scoreCount = 0
         )
+    }
+
+    fun getUserQr(userId: Long): String {
+        val user = userStorage.getUser(userId)
+            ?: throw UserByIdNotFoundException(userId)
+        val qr = qrCodeGenerator.generateQrCode(user.code,300)
+        localFileStorage.save("User"+user.fullName,qr)
+        return "ok"
     }
 }

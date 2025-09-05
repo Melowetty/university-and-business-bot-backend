@@ -19,6 +19,7 @@ interface UserStorage {
 
     fun createUser(
         tgId: Long,
+        code: String,
         fullName: String,
         course: Int,
         program: String,

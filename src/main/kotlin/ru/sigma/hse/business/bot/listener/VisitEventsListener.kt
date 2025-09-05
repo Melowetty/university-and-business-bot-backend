@@ -20,7 +20,7 @@ class VisitEventsListener(
     fun onCreatedVisitableObjectEvent(event: CreatedVisitableObjectEvent) {
         log.info { "Fetched created visitable object event: $event" }
 
-        val qrCode = visitService.generateVisitQrCode(event.code)
+        val qrCode = visitService.generateVisitQrCode(event.code, 2000)
 
         val path = when(event.data) {
             is Company -> "Компании"

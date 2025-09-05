@@ -53,4 +53,21 @@ class UserController(
         val userId = telegramUserService.getUser(telegramId).id
         return userService.getUserInfo(userId)
     }
+
+    @GetMapping(
+        "/{telegramId}/qr",
+        produces = ["application/json"]
+    )
+    @Operation(
+        summary = "Получить qr пользователя",
+        description = "Выдает qr пользователя (пока не знаю как и куда)"
+    )
+    @ApiResponse(responseCode = "200", description = "Qr пользователя успешно выведен")
+    fun getUserQr(
+        @Parameter(description = "Телеграмм ID пользователя")
+        @PathVariable telegramId: Long
+    ): String {
+        val userId = telegramUserService.getUser(telegramId).id
+        return userService.getUserQr(userId)
+    }
 }

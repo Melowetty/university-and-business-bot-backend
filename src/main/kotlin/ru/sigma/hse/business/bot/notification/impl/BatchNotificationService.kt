@@ -1,14 +1,15 @@
-package ru.sigma.hse.business.bot.notification
+package ru.sigma.hse.business.bot.notification.impl
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import org.springframework.stereotype.Service
+import ru.sigma.hse.business.bot.notification.NotificationService
 import ru.sigma.hse.business.bot.notification.base.Notification
 
 @Service
 class BatchNotificationService(
-    private val notificationService: TelegramNotificationService
+    private val notificationService: NotificationService
 ) {
     private val executor = Executors.newFixedThreadPool(50)
 

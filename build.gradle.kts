@@ -23,6 +23,10 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.spring.retry)
+
+    implementation(libs.telegram.api)
+
     implementation(libs.springdoc.openapi)
 
     implementation(libs.spring.quartz)

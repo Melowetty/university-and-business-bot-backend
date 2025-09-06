@@ -22,6 +22,7 @@ integrations:
     base-url: https://cloud-api.yandex.net/v1/disk/resources
   telegram:
     link: ${TELEGRAM_BOT_LINK:https://t.me/university_and_business_bot}
+    token: ${TOKEN:123}
 
 spring:
   quartz:

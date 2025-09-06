@@ -15,3 +15,5 @@ integrations:
   telegram:
     link: ${TELEGRAM_BOT_LINK}
     token: ${TELEGRAM_BOT_TOKEN}
+
+debug: false

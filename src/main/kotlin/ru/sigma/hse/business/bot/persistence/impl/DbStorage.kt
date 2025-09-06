@@ -4,15 +4,20 @@ import java.time.LocalTime
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.domain.model.Company
+import ru.sigma.hse.business.bot.domain.model.Event
+import ru.sigma.hse.business.bot.domain.model.EventStatus
 import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.User
 import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
+import ru.sigma.hse.business.bot.domain.model.Vote
 import ru.sigma.hse.business.bot.persistence.Storage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcActivityStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompanyStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcEventStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcUserStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVisitStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVoteStorage
 
 @Component
 class DbStorage(
@@ -20,6 +25,8 @@ class DbStorage(
     private val jdbcCompanyStorage: JdbcCompanyStorage,
     private val jdbcActivityStorage: JdbcActivityStorage,
     private val jdbcVisitStorage: JdbcVisitStorage,
+    private val jdbcEventStorage: JdbcEventStorage,
+    private val jdbcVoteStorage: JdbcVoteStorage,
 ) : Storage {
     override fun getUsers(limit: Int, token: Long): Pageable<User> {
         return jdbcUserStorage.getUsers(limit, token)
@@ -128,5 +135,33 @@ class DbStorage(
 
     override fun getCountVisitsByUserId(userId: Long): Long {
         return jdbcVisitStorage.getVisitsCountByUserId(userId)
+    }
+
+    override fun getEvent(id: Long): Event? {
+        return jdbcEventStorage.getEvent(id)
+    }
+
+    override fun createEvent(answers: List<String>): Event {
+        return jdbcEventStorage.createEvent(answers)
+    }
+
+    override fun updateEventStatus(id: Long, status: EventStatus): Event {
+        return jdbcEventStorage.updateEventStatus(id, status)
+    }
+
+    override fun deleteEvent(id: Long) {
+        return jdbcEventStorage.deleteEvent(id)
+    }
+
+    override fun getVote(id: Long): Vote? {
+        return jdbcVoteStorage.getVote(id)
+    }
+
+    override fun createVote(eventId: Long, answer: String, userId: Long): Vote {
+        return jdbcVoteStorage.createVote(eventId, answer, userId)
+    }
+
+    override fun deleteVote(id: Long) {
+        return jdbcVoteStorage.deleteVote(id)
     }
 }

@@ -16,7 +16,7 @@ class LoggingInterceptor: OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         val requestIdHeader = request.headerNames.toList().firstOrNull {
-            it.lowercase() == REQUEST_ID_HEADER.lowercase()
+            it.equals(REQUEST_ID_HEADER, ignoreCase = true)
         }
 
         val id = request.getHeader(requestIdHeader)

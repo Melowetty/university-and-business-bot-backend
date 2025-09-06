@@ -1,6 +1,9 @@
 package ru.sigma.hse.business.bot.scheduled
 
-import org.springframework.scheduling.annotation.Scheduled
+import org.quartz.DisallowConcurrentExecution
+import org.quartz.JobExecutionContext
+import org.quartz.PersistJobDataAfterExecution
+import org.springframework.scheduling.quartz.QuartzJobBean
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.persistence.FileStorage
 import ru.sigma.hse.business.bot.persistence.Storage
@@ -8,12 +11,18 @@ import ru.sigma.hse.business.bot.utils.ExcelGenerator
 import ru.sigma.hse.business.bot.utils.Paginator
 
 @Component
+@PersistJobDataAfterExecution
+@DisallowConcurrentExecution
 class CollectDataToYaDiskJob(
     private val storage: Storage,
     private val fileStorage: FileStorage,
-) {
-    @Scheduled(cron = "0 0/5 * * * ?")
-    fun collectDataAndUploadToYaDisk() {
+) : QuartzJobBean() {
+
+    override fun executeInternal(context: JobExecutionContext) {
+        collectDataAndUploadToYaDisk()
+    }
+
+    private fun collectDataAndUploadToYaDisk() {
         val generator = ExcelGenerator()
 
         addUsers(generator)

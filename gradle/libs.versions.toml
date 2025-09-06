@@ -35,7 +35,8 @@ spring-validation = { module = "org.springframework.boot:spring-boot-starter-val
 spring-security = { module = "org.springframework.boot:spring-boot-starter-security" }
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
-
+spring-quartz = { module = "org.springframework.boot:spring-boot-starter-quartz" }
+spring-tx = { module = "org.springframework:spring-tx" }
 
 kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlinLogging" }
 

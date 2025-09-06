@@ -47,11 +47,11 @@ wait_for_services() {
 }
 
 # Пробуем деплоить с указанным тегом
-if IMAGE_TAG="ghcr.io/melowetty/ub-backend:$TARGET_TAG" sudo docker stack deploy -c docker-compose.yml ub-backend --with-registry-auth; then
+if IMAGE_TAG="ghcr.io/ub-hse-conf/scanner-mini-app:$TARGET_TAG" sudo docker stack deploy -c docker-compose.yml scanner-mini-app --with-registry-auth; then
     echo "✅ Деплой запущен с тегом: $TARGET_TAG"
 
     # Ждем стабилизации сервисов
-    if wait_for_services "ub-backend"; then
+    if wait_for_services "scanner-mini-app"; then
         echo "✅ Деплой успешно завершен с тегом: $TARGET_TAG"
         exit 0
     else
@@ -62,11 +62,11 @@ if IMAGE_TAG="ghcr.io/melowetty/ub-backend:$TARGET_TAG" sudo docker stack deploy
 else
     echo "❌ Деплой с тегом $TARGET_TAG failed, пробуем stable"
 
-    if IMAGE_TAG="ghcr.io/melowetty/ub-backend:stable" sudo docker stack deploy -c docker-compose.yml ub-backend --with-registry-auth; then
+    if IMAGE_TAG="ghcr.io/ub-hse-conf/scanner-mini-app:stable" sudo docker stack deploy -c docker-compose.yml scanner-mini-app --with-registry-auth; then
         echo "✅ Деплой запущен с тегом stable"
 
         # Ждем стабилизации сервисов
-        if wait_for_services "ub-backend"; then
+        if wait_for_services "scanner-mini-app"; then
             echo "✅ Деплой с тегом stable успешно завершен"
             exit 0
         else

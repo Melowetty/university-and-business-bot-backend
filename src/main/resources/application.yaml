@@ -21,7 +21,8 @@ integrations:
     token: ${YANDEX_DISK_OAUTH_TOKEN:test}
     base-url: https://cloud-api.yandex.net/v1/disk/resources
   telegram:
-    link: ${TELEGRAM_BOT_LINK:https://t.me/university_and_business_bot}
+    link: ${TELEGRAM_BOT_LINK:https://t.me/hse_cub_bot}
+    token: ${TELEGRAM_BOT_TOKEN:}
 
 spring:
   quartz:

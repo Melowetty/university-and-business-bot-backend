@@ -18,7 +18,7 @@ import ru.sigma.hse.business.bot.service.ActivityService
 @RequestMapping("/activities")
 @Tag(name = "Активности", description = "Управление активностями")
 class ActivityController(
-    private val activityService: ActivityService
+    private val activityService: ActivityService,
 ) {
     @PostMapping(
         produces = ["application/json"]
@@ -44,7 +44,7 @@ class ActivityController(
         description = "Выдает информацию об активности"
     )
     @ApiResponse(responseCode = "200", description = "Информация об активности")
-    fun getCompany(
+    fun getActivity(
         @Parameter(description = "ID активности")
         @PathVariable activityId: Long
     ): Activity {

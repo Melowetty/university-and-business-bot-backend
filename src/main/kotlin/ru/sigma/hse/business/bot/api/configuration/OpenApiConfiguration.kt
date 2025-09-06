@@ -18,11 +18,11 @@ import org.springframework.context.annotation.Profile
     ),
     servers = [
         Server(
-            url = "https://d5dii9i4dic8068c380j.g3ab4gln.apigw.yandexcloud.net",
+            url = "https://ub.hse-perm-helper.ru/api",
             description = "Production server"
         ),
         Server(
-            url = "localhost:8080/api",
+            url = "localhost:8080",
             description = "Local server for development"
         ),
     ]

@@ -2,6 +2,7 @@ package ru.sigma.hse.business.bot.persistence.impl
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
@@ -11,6 +12,7 @@ import org.springframework.web.client.body
 import ru.sigma.hse.business.bot.persistence.FileStorage
 
 @Component
+@ConditionalOnProperty(name = ["integrations.yandex-disk.token"], havingValue = ".+", matchIfMissing = false)
 class YandexDiskFileStorage(
     @Qualifier("yandexDiskRestClient")
     private val diskRestClient: RestClient,

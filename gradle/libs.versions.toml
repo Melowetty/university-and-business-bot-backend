@@ -9,6 +9,7 @@ springDocGradlePlugin = "1.9.0"
 springDoc = "2.8.11"
 mockK = "1.14.5"
 apachePoi = "5.4.1"
+telegramBotApi = "8.0.0"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -37,6 +38,7 @@ spring-security-test = { module = "org.springframework.security:spring-security-
 spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-quartz = { module = "org.springframework.boot:spring-boot-starter-quartz" }
 spring-tx = { module = "org.springframework:spring-tx" }
+spring-retry = { module = "org.springframework.retry:spring-retry" }
 
 kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlinLogging" }
 
@@ -53,3 +55,5 @@ mockK = { module = "io.mockk:mockk", version.ref = "mockK" }
 
 apache-poi = { module = "org.apache.poi:poi", version.ref = "apachePoi" }
 apache-poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "apachePoi" }
+
+telegram-api = { module = "org.telegram:telegrambots-client", version.ref = "telegramBotApi" }

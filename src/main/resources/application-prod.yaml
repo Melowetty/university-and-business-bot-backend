@@ -3,3 +3,15 @@ logging:
 
 server:
   port: 8080
+
+security:
+  bot:
+    username: ${SECURITY_BOT_USERNAME}
+    password: ${SECURITY_BOT_PASSWORD}
+
+integrations:
+  yandex-disk:
+    token: ${YANDEX_DISK_OAUTH_TOKEN}
+  telegram:
+    link: ${TELEGRAM_BOT_LINK}
+    token: ${TELEGRAM_BOT_TOKEN}

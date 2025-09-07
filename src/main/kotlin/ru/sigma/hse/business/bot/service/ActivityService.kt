@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import ru.sigma.hse.business.bot.api.controller.model.CreateActivityRequest
 import ru.sigma.hse.business.bot.domain.event.CreatedVisitableObjectEvent
 import ru.sigma.hse.business.bot.domain.model.Activity
+import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
 import ru.sigma.hse.business.bot.service.code.CodeGenerator
 
@@ -36,5 +37,6 @@ class ActivityService(
         return activityStorage.getActivity(activityId)
             ?: throw IllegalArgumentException("Activity not found")
 
+            ?: throw ActivityByIdNotFoundException(activityId)
     }
 }

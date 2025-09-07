@@ -15,7 +15,11 @@ class LoggingInterceptor: OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val id = request.getHeader(REQUEST_ID_HEADER)
+        val requestIdHeader = request.headerNames.toList().firstOrNull {
+            it.equals(REQUEST_ID_HEADER, ignoreCase = true)
+        }
+
+        val id = request.getHeader(requestIdHeader)
             ?: RequestIdGenerator.generate()
 
         LoggingUtils.executeWithRequestIdContext(id) {
@@ -24,6 +28,6 @@ class LoggingInterceptor: OncePerRequestFilter() {
     }
 
     companion object {
-        private const val REQUEST_ID_HEADER = "X-Request-Id"
+        private const val REQUEST_ID_HEADER = "X-Request-ID"
     }
 }

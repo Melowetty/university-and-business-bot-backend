@@ -12,6 +12,7 @@ import ru.sigma.hse.business.bot.domain.model.Visitable
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.visit.BadVisitCodeException
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
 import ru.sigma.hse.business.bot.persistence.CompanyStorage
 import ru.sigma.hse.business.bot.persistence.UserStorage
@@ -52,7 +53,7 @@ class VisitService(
                 activity.toDetailedVisit()
             }
 
-            else -> throw IllegalArgumentException("Неверный тип кода")
+            else -> throw BadVisitCodeException()
         }
 
         val visitsCount = visitStorage.getCountVisitsByUserId(userId)

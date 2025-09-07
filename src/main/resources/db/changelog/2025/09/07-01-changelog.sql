@@ -11,6 +11,6 @@ ALTER TABLE activity ADD COLUMN key_word VARCHAR(255);
 -- changeset knbdan:1757256459000-5
 CREATE SEQUENCE IF NOT EXISTS user_task_completions_seq START WITH 1 INCREMENT BY 50;
 -- changeset knbdan:1757256459000-6
-CREATE TABLE user_task_completions (id BIGINT NOT NULL, user_id BIGINT NOT NULL, task_id BIGINT NOT NULL, time_taken TIME WITHOUT TIME ZONE NOT NULL, CONSTRAINT pk_user_task_completions PRIMARY KEY (id));
+CREATE TABLE completed_user_task (id BIGINT NOT NULL, user_id BIGINT NOT NULL, task_id BIGINT NOT NULL, time_taken TIME WITHOUT TIME ZONE NOT NULL, CONSTRAINT pk_user_task_completions PRIMARY KEY (id));
 
 

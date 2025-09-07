@@ -7,7 +7,7 @@ import java.time.LocalTime
 
 @Entity
 @Table(name = "user_task_completions")
-class UserTaskCompletionsEntity(
+class CompletedUserTaskEntity(
     @Column(nullable = false)
     val userId: Long,
 

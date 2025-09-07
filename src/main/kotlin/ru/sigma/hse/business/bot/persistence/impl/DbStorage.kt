@@ -10,10 +10,11 @@ import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.PreregistrationUser
 import ru.sigma.hse.business.bot.domain.model.Task
 import ru.sigma.hse.business.bot.domain.model.User
-import ru.sigma.hse.business.bot.domain.model.UserTaskCompletions
+import ru.sigma.hse.business.bot.domain.model.CompletedUserTask
 import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
 import ru.sigma.hse.business.bot.domain.model.Vote
+import ru.sigma.hse.business.bot.persistence.CompletedUserTaskStorage
 import ru.sigma.hse.business.bot.persistence.Storage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcActivityStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompanyStorage
@@ -21,7 +22,7 @@ import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcEventStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcTaskStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcPreregistrationUserStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcUserStorage
-import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcUserTaskCompletionsStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompletedUserTaskStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVisitStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVoteStorage
 
@@ -32,7 +33,7 @@ class DbStorage(
     private val jdbcActivityStorage: JdbcActivityStorage,
     private val jdbcVisitStorage: JdbcVisitStorage,
     private val jdbcPreregistrationUserStorage: JdbcPreregistrationUserStorage,
-    private val jdbcUserTaskCompletionsStorage: JdbcUserTaskCompletionsStorage,
+    private val jdbcCompletedUserTaskStorage: JdbcCompletedUserTaskStorage,
     private val jdbcEventStorage: JdbcEventStorage,
     private val jdbcVoteStorage: JdbcVoteStorage,
     private val jdbcTaskStorage: JdbcTaskStorage
@@ -204,15 +205,19 @@ class DbStorage(
         return jdbcTaskStorage.deleteTask(id)
     }
 
-    override fun getUserTaskCompletions(id: Long): UserTaskCompletions? {
-        return jdbcUserTaskCompletionsStorage.getUserTaskCompletions(id)
+    override fun getCompletedUserTask(id: Long): CompletedUserTask? {
+        return jdbcCompletedUserTaskStorage.getCompletedUserTask(id)
     }
 
-    override fun createUserTaskCompletions(userId: Long, taskId: Long, timeTaken: LocalTime): UserTaskCompletions {
-        return jdbcUserTaskCompletionsStorage.createUserTaskCompletions(userId, taskId, timeTaken)
+    override fun createCompletedUserTask(userId: Long, taskId: Long): CompletedUserTask {
+        return jdbcCompletedUserTaskStorage.createCompletedUserTask(userId, taskId)
     }
 
-    override fun deleteUserTaskCompletions(id: Long) {
-        return jdbcUserTaskCompletionsStorage.deleteUserTaskCompletions(id)
+    override fun deleteCompletedUserTask(id: Long) {
+        return jdbcCompletedUserTaskStorage.deleteCompletedUserTask(id)
+    }
+
+    override fun getCompletedUserTasksByUserId(userId: Long): List<CompletedUserTask> {
+        return jdbcCompletedUserTaskStorage.getCompletedUserTasksByUserId(userId)
     }
 }

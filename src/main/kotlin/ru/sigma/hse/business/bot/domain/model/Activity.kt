@@ -16,4 +16,8 @@ data class Activity(
     var startTime: LocalTime,
     @Schema(description = "Время окончания", example = "11:50")
     var endTime: LocalTime,
+    @Schema(description = "Id ивента", example = "2")
+    var eventId: Long?,
+    @Schema(description = "Баллы за выполнения ивента", example = "20")
+    val points: Int
 ) : Visitable(id, name, description)

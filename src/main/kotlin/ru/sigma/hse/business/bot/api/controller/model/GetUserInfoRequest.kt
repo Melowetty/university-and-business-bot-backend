@@ -13,10 +13,6 @@ class GetUserInfoRequest(
     val program: String,
     @Schema(description = "Email пользователя", example = "example@ex.pl")
     val email: String?,
-    @Schema(description = "Количество посещенных пользователем компаний", example = "4")
-    val companyCount: Int,
-    @Schema(description = "Количество посещенных пользователем активностей", example = "1")
-    val activityCount: Int,
     @Schema(description = "Игровой счёт пользователя", example = "15")
-    val scoreCount: Int
+    val score: Int
 )

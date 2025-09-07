@@ -17,7 +17,8 @@ class EventService(
     ) {
     fun createEvent(request: CreateEventRequest): Event {
         return eventStorage.createEvent(
-            answers = request.answers
+            answers = request.answers,
+            rightAnswer = request.rightAnswer
         )
     }
 

@@ -7,7 +7,8 @@ interface EventStorage {
     fun getEvent(id: Long): Event?
 
     fun createEvent(
-        answers: List<String>
+        answers: List<String>,
+        rightAnswer: String?
     ): Event
 
     fun updateEventStatus(

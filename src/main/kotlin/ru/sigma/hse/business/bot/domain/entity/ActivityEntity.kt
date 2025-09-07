@@ -24,5 +24,14 @@ class ActivityEntity(
     var startTime: LocalTime,
 
     @Column(nullable = false)
-    var endTime: LocalTime
+    var endTime: LocalTime,
+
+    @Column(nullable = true)
+    var eventId: Long?,
+
+    @Column(nullable = false)
+    var keyWord: String?,
+
+    @Column(nullable = true)
+    val points: Int
 ) : BaseEntity()

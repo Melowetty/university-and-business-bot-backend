@@ -35,7 +35,10 @@ class JdbcActivityStorage(
         description: String,
         location: String,
         startTime: LocalTime,
-        endTime: LocalTime
+        endTime: LocalTime,
+        eventId: Long?,
+        keyWord: String?,
+        points: Int
     ): Activity {
         val activityEntity = ActivityEntity(
             code = code,
@@ -43,7 +46,10 @@ class JdbcActivityStorage(
             description = description,
             location = location,
             startTime = startTime,
-            endTime = endTime
+            endTime = endTime,
+            eventId = eventId,
+            keyWord = keyWord,
+            points = points
         )
 
         val savedEntity = activityRepository.save(activityEntity)
@@ -98,7 +104,9 @@ class JdbcActivityStorage(
                 description = this.description,
                 location = this.location,
                 startTime = this.startTime,
-                endTime = this.endTime
+                endTime = this.endTime,
+                eventId = this.eventId,
+                points = this.points
             )
         }
     }

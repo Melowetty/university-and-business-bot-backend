@@ -31,4 +31,7 @@ class UserEntity(
 
     @Column(nullable = false, updatable = false)
     val creationDate: LocalDateTime,
+
+    @Column(nullable = false)
+    var score: Int = 0
 ) : BaseEntity()

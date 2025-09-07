@@ -9,4 +9,5 @@ data class User(
     val program: String,
     val email: String?,
     val isCompleteConference: Boolean,
+    var score: Int
 )

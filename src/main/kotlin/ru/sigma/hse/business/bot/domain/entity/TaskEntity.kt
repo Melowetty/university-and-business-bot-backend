@@ -9,14 +9,17 @@ import jakarta.persistence.Entity
 import ru.sigma.hse.business.bot.domain.model.EventStatus
 
 @Entity
-@Table(name = "event")
-class EventEntity(
+@Table(name = "task")
+class TaskEntity(
     @Column(nullable = false)
-    var status: EventStatus,
+    val name: String,
 
     @Column(nullable = false)
-    val answers: List<String>,
+    var isAvailable: Boolean,
 
-    @Column(nullable = true)
-    val rightAnswer: String?
+    @Column(nullable = false)
+    val description: String,
+
+    @Column(nullable = false)
+    val points: Int
 ) : BaseEntity()

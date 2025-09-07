@@ -31,17 +31,15 @@ class UserService(
             ?: throw UserByIdNotFoundException(userId)
 
         val allVisitsDetailedInfo = visitService.getUserVisits(userId)
-        val companyNumber = allVisitsDetailedInfo.filter {it.type == VisitTarget.COMPANY}.size
-        val activityNumber = allVisitsDetailedInfo.filter {it.type == VisitTarget.ACTIVITY}.size
+//        val companyNumber = allVisitsDetailedInfo.filter {it.type == VisitTarget.COMPANY}.size
+//        val activityNumber = allVisitsDetailedInfo.filter {it.type == VisitTarget.ACTIVITY}.size
         return GetUserInfoRequest(
             userId = userId,
             name = user.fullName,
             course = user.course,
             program = user.program,
             email = user.email,
-            companyCount = companyNumber,
-            activityCount = activityNumber,
-            scoreCount = activityNumber + companyNumber
+            score = user.score
         )
     }
 
@@ -56,7 +54,7 @@ class UserService(
             fullName = newUser.fullName,
             course = newUser.course,
             program = newUser.program,
-            email = newUser.email
+            email = newUser.email,
         )
 
         return GetUserInfoRequest(
@@ -65,9 +63,7 @@ class UserService(
             course = user.course,
             program = user.program,
             email = user.email,
-            companyCount = 0,
-            activityCount = 0,
-            scoreCount = 0
+            score = user.score
         )
     }
 
@@ -77,5 +73,25 @@ class UserService(
         val qr = qrCodeGenerator.generateQrCode(user.code,300)
         localFileStorage.save("User"+user.fullName,qr)
         return "ok"
+    }
+
+    fun addPointsToUserScore(userId: Long, points: Int): GetUserInfoRequest {
+        val user = userStorage.getUser(userId)
+            ?: throw UserByIdNotFoundException(userId)
+
+        val newUser = user.apply {
+            score += points
+        }
+
+        userStorage.updateUser(newUser)
+
+        return GetUserInfoRequest(
+            userId = userId,
+            name = newUser.fullName,
+            course = newUser.course,
+            program = newUser.program,
+            email = newUser.email,
+            score = newUser.score
+        )
     }
 }

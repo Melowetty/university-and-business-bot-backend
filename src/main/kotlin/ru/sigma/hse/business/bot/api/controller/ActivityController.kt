@@ -44,7 +44,7 @@ class ActivityController(
         description = "Выдает информацию об активности"
     )
     @ApiResponse(responseCode = "200", description = "Информация об активности")
-    fun getCompany(
+    fun getActivity(
         @Parameter(description = "ID активности")
         @PathVariable activityId: Long
     ): Activity {

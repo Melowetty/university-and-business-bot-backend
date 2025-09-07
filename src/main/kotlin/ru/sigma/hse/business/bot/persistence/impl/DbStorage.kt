@@ -7,6 +7,7 @@ import ru.sigma.hse.business.bot.domain.model.Company
 import ru.sigma.hse.business.bot.domain.model.Event
 import ru.sigma.hse.business.bot.domain.model.EventStatus
 import ru.sigma.hse.business.bot.domain.model.Pageable
+import ru.sigma.hse.business.bot.domain.model.Task
 import ru.sigma.hse.business.bot.domain.model.User
 import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
@@ -15,6 +16,7 @@ import ru.sigma.hse.business.bot.persistence.Storage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcActivityStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompanyStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcEventStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcTaskStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcUserStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVisitStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVoteStorage
@@ -27,6 +29,7 @@ class DbStorage(
     private val jdbcVisitStorage: JdbcVisitStorage,
     private val jdbcEventStorage: JdbcEventStorage,
     private val jdbcVoteStorage: JdbcVoteStorage,
+    private val jdbcTaskStorage: JdbcTaskStorage
 ) : Storage {
     override fun getUsers(limit: Int, token: Long): Pageable<User> {
         return jdbcUserStorage.getUsers(limit, token)
@@ -104,9 +107,12 @@ class DbStorage(
         description: String,
         location: String,
         startTime: LocalTime,
-        endTime: LocalTime
+        endTime: LocalTime,
+        eventId: Long?,
+        keyWord: String?,
+        points: Int
     ): Activity {
-        return jdbcActivityStorage.createActivity(code, name, description, location, startTime, endTime)
+        return jdbcActivityStorage.createActivity(code, name, description, location, startTime, endTime, eventId, keyWord, points)
     }
 
     override fun updateActivity(activity: Activity): Activity {
@@ -141,8 +147,8 @@ class DbStorage(
         return jdbcEventStorage.getEvent(id)
     }
 
-    override fun createEvent(answers: List<String>): Event {
-        return jdbcEventStorage.createEvent(answers)
+    override fun createEvent(answers: List<String>, rightAnswer: String?): Event {
+        return jdbcEventStorage.createEvent(answers, rightAnswer)
     }
 
     override fun updateEventStatus(id: Long, status: EventStatus): Event {
@@ -163,5 +169,20 @@ class DbStorage(
 
     override fun deleteVote(id: Long) {
         return jdbcVoteStorage.deleteVote(id)
+    }
+    override fun getTask(id: Long): Task? {
+        return jdbcTaskStorage.getTask(id)
+    }
+
+    override fun createTask(name: String, description: String, points: Int): Task {
+        return jdbcTaskStorage.createTask(name, description, points)
+    }
+
+    override fun updateTaskStatus(id: Long, isAvailable: Boolean): Task {
+        return jdbcTaskStorage.updateTaskStatus(id, isAvailable)
+    }
+
+    override fun deleteTask(id: Long) {
+        return jdbcTaskStorage.deleteTask(id)
     }
 }

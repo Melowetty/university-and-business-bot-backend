@@ -126,6 +126,7 @@ class JdbcUserStorage(
                 program = this.program,
                 email = this.email,
                 isCompleteConference = this.isCompleteConference,
+                score = this.score
             )
         }
     }

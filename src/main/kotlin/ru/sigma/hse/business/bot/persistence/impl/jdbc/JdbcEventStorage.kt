@@ -23,11 +23,13 @@ class JdbcEventStorage(
     }
 
     fun createEvent(
-        answers: List<String>
+        answers: List<String>,
+        rightAnswer: String?
     ): Event {
         val eventEntity = EventEntity(
             status = EventStatus.PREPARED,
-            answers = answers
+            answers = answers,
+            rightAnswer = rightAnswer
         )
 
         val savedEntity = eventRepository.save(eventEntity)
@@ -71,7 +73,8 @@ class JdbcEventStorage(
             return Event(
                 id = this.id(),
                 status = status,
-                answers = answers
+                answers = answers,
+                rightAnswer = rightAnswer
             )
         }
     }

@@ -9,5 +9,7 @@ data class Event (
     @Schema(description = "Статус ивента", example = "ENDED")
     var status: EventStatus,
     @Schema(description = "Ответы ивента", example = "['раз','двас','три3']")
-    val answers: List<String>
+    val answers: List<String>,
+    @Schema(description = "Правильный ответ", example = "раз")
+    val rightAnswer: String?
 )

@@ -1,10 +1,12 @@
 package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.time.LocalTime
+import java.time.LocalDateTime
+import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.CompletedUserTaskEntity
 import ru.sigma.hse.business.bot.domain.model.CompletedUserTask
+import ru.sigma.hse.business.bot.exception.task.CompletedUserTaskByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.CompletedUserTaskRepository
 
 @Component
@@ -12,13 +14,14 @@ class JdbcCompletedUserTaskStorage(
     private val completedUserTaskRepository: CompletedUserTaskRepository
 ) {
     fun getCompletedUserTask(id: Long): CompletedUserTask? {
-        if (completedUserTaskRepository.existsById(id)) {
-            logger.info { "Found completed user task with id $id" }
-            return completedUserTaskRepository.findById(id).get().toCompletedUserTask()
-        }
+        val task = completedUserTaskRepository.findById(id).getOrNull()
+            ?: run {
+                logger.warn { "Completed user task with id $id does not exist" }
+                return null
+            }
 
-        logger.warn { "Completed user task with id $id does not exist" }
-        return null
+        logger.info { "Found completed user task with id $id" }
+        return task.toCompletedUserTask()
     }
 
     fun createCompletedUserTask(
@@ -28,7 +31,7 @@ class JdbcCompletedUserTaskStorage(
         val completedUserTaskEntity = CompletedUserTaskEntity(
             userId = userId,
             taskId = taskId,
-            timeTaken = LocalTime.now()
+            completeTime = LocalDateTime.now(),
         )
 
         val savedEntity = completedUserTaskRepository.save(completedUserTaskEntity)
@@ -39,7 +42,7 @@ class JdbcCompletedUserTaskStorage(
     fun deleteCompletedUserTask(id: Long) {
         if (!completedUserTaskRepository.existsById(id)) {
             logger.warn { "Completed user task with id $id does not exist" }
-            throw NoSuchElementException("Completed user task with id $id does not exist")
+            throw CompletedUserTaskByIdNotFoundException(id)
         }
 
         completedUserTaskRepository.deleteById(id)
@@ -58,7 +61,7 @@ class JdbcCompletedUserTaskStorage(
                 id = this.id(),
                 userId = this.userId,
                 taskId = this.taskId,
-                timeTaken = this.timeTaken
+                completeTime = this.completeTime,
             )
         }
     }

@@ -9,6 +9,7 @@ import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
 import ru.sigma.hse.business.bot.domain.model.VisitTarget
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.visit.BadVisitCodeException
 import ru.sigma.hse.business.bot.exception.visit.VisitAlreadyExistsException
 import ru.sigma.hse.business.bot.persistence.repository.VisitRepository
 
@@ -62,7 +63,7 @@ class JdbcVisitStorage(
         val company = jdbcCompanyStorage.findByCode(visitCode)
             ?: run {
                 logger.warn { "Company with code $visitCode does not exist" }
-                throw NoSuchElementException("Company with code $visitCode does not exist")
+                throw BadVisitCodeException()
             }
 
         if (visitRepository.existsByUserIdAndCode(userId, company.id)) {
@@ -89,7 +90,7 @@ class JdbcVisitStorage(
         val activity = jdbcActivityStorage.findByCode(visitCode)
             ?: run {
                 logger.warn { "Activity with code $visitCode does not exist" }
-                throw NoSuchElementException("Activity with code $visitCode does not exist")
+                throw BadVisitCodeException()
             }
 
         if (visitRepository.existsByUserIdAndCode(userId, activity.id)) {
@@ -113,7 +114,7 @@ class JdbcVisitStorage(
     fun getVisitsByUserId(userId: Long): List<Visit> {
         if (!jdbcUserStorage.existsById(userId)) {
             logger.warn { "User with id $userId does not exist" }
-            throw NoSuchElementException("User with id $userId does not exist")
+            throw UserByIdNotFoundException(userId)
         }
 
         return visitRepository.findByUserId(userId).map {

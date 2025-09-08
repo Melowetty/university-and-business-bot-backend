@@ -11,7 +11,7 @@ class UserEntity(
     @Column(nullable = false, unique = true)
     var tgId: Long,
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, updatable = false)
     var code: String,
 
     @Column(nullable = false)
@@ -33,5 +33,5 @@ class UserEntity(
     val creationDate: LocalDateTime,
 
     @Column(nullable = false)
-    var score: Int = 0
+    var currentScore: Int = 0
 ) : BaseEntity()

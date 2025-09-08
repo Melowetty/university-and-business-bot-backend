@@ -35,8 +35,6 @@ class ActivityService(
 
     fun getActivity(activityId: Long): Activity {
         return activityStorage.getActivity(activityId)
-            ?: throw IllegalArgumentException("Activity not found")
-
             ?: throw ActivityByIdNotFoundException(activityId)
     }
 }

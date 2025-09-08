@@ -1,11 +1,12 @@
 package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.time.LocalTime
+import jakarta.transaction.Transactional
+import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.TaskEntity
 import ru.sigma.hse.business.bot.domain.model.Task
-import ru.sigma.hse.business.bot.domain.model.EventStatus
+import ru.sigma.hse.business.bot.exception.task.TaskByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.TaskRepository
 
 @Component
@@ -13,13 +14,14 @@ class JdbcTaskStorage(
     private val taskRepository: TaskRepository
 ) {
     fun getTask(id: Long): Task? {
-        if (taskRepository.existsById(id)) {
-            logger.info { "Found task with id $id" }
-            return taskRepository.findById(id).get().toTask()
-        }
+        val task = taskRepository.findById(id).getOrNull()
+            ?: run {
+                logger.warn { "Task with id $id does not exist" }
+                return null
+            }
 
-        logger.warn { "Task with id $id does not exist" }
-        return null
+        logger.info { "Found task with id $id" }
+        return task.toTask()
     }
 
     fun createTask(
@@ -39,29 +41,25 @@ class JdbcTaskStorage(
         return savedEntity.toTask()
     }
 
+    @Transactional
     fun updateTaskStatus(
         id: Long,
-        isAvaiable: Boolean
+        isAvailable: Boolean
     ): Task {
         if (!taskRepository.existsById(id)) {
-            logger.warn { "Task with id ${id} does not exist" }
-            throw NoSuchElementException("Task with id ${id} does not exist")
+            logger.warn { "Task with id $id does not exist" }
+            throw TaskByIdNotFoundException(id)
         }
 
-        val existingTask = taskRepository.findById(id).get()
-        val taskEntity = existingTask.apply {
-            this.isAvailable = isAvailable
-        }
-
-        val savedEntity = taskRepository.save(taskEntity)
-        logger.info { "Updated task with id ${taskEntity.id()}" }
-        return savedEntity.toTask()
+        taskRepository.updateTaskStatus(isAvailable, id)
+        logger.info { "Updated task with id $id" }
+        return getTask(id)!!
     }
 
     fun deleteTask(id: Long) {
         if (!taskRepository.existsById(id)) {
             logger.warn { "Task with id $id does not exist" }
-            throw NoSuchElementException("Task with id $id does not exist")
+            throw TaskByIdNotFoundException(id)
         }
 
         taskRepository.deleteById(id)

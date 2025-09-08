@@ -6,6 +6,7 @@ import ru.sigma.hse.business.bot.api.controller.model.CreateVoteRequest
 import ru.sigma.hse.business.bot.api.controller.model.UpdateEventStatusRequest
 import ru.sigma.hse.business.bot.domain.model.Event
 import ru.sigma.hse.business.bot.domain.model.Vote
+import ru.sigma.hse.business.bot.exception.event.EventByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.EventStorage
 import ru.sigma.hse.business.bot.persistence.VoteStorage
 
@@ -24,7 +25,7 @@ class EventService(
 
     fun getEvent(eventId: Long): Event {
         return eventStorage.getEvent(eventId)
-            ?: throw IllegalArgumentException("Event not found")
+            ?: throw EventByIdNotFoundException(eventId)
     }
 
     fun updateEventStatus(id: Long, request: UpdateEventStatusRequest): Event {

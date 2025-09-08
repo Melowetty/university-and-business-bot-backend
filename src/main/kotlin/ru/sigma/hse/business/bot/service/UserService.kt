@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service
 import ru.sigma.hse.business.bot.api.controller.model.CreateUserRequest
 import ru.sigma.hse.business.bot.api.controller.model.GetUserInfoRequest
 import ru.sigma.hse.business.bot.domain.model.User
-import ru.sigma.hse.business.bot.domain.model.VisitTarget
 import ru.sigma.hse.business.bot.exception.user.UserAlreadyExistsByTelegramIdException
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.UserStorage
@@ -15,7 +14,6 @@ import ru.sigma.hse.business.bot.service.qr.PrettyQrCodeGenerator
 @Service
 class UserService(
     private val userStorage: UserStorage,
-    private val visitService: VisitService,
     private val codeGenerator: CodeGenerator,
     private val qrCodeGenerator: PrettyQrCodeGenerator,
     private val localFileStorage: LocalFileStorage
@@ -30,9 +28,6 @@ class UserService(
         val user = userStorage.getUser(userId)
             ?: throw UserByIdNotFoundException(userId)
 
-        val allVisitsDetailedInfo = visitService.getUserVisits(userId)
-//        val companyNumber = allVisitsDetailedInfo.filter {it.type == VisitTarget.COMPANY}.size
-//        val activityNumber = allVisitsDetailedInfo.filter {it.type == VisitTarget.ACTIVITY}.size
         return GetUserInfoRequest(
             userId = userId,
             name = user.fullName,

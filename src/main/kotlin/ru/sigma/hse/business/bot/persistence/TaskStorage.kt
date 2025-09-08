@@ -1,7 +1,6 @@
 package ru.sigma.hse.business.bot.persistence
 
 import ru.sigma.hse.business.bot.domain.model.Task
-import ru.sigma.hse.business.bot.domain.model.EventStatus
 
 interface TaskStorage {
     fun getTask(id: Long): Task?

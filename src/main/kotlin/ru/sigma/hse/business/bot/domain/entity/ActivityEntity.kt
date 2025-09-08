@@ -29,7 +29,7 @@ class ActivityEntity(
     @Column(nullable = true)
     var eventId: Long?,
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     var keyWord: String?,
 
     @Column(nullable = true)

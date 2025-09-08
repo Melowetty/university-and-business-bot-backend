@@ -1,9 +1,9 @@
 package ru.sigma.hse.business.bot.domain.entity
 
 import jakarta.persistence.Column
-import jakarta.persistence.Table
 import jakarta.persistence.Entity
-import java.time.LocalTime
+import jakarta.persistence.Table
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "user_task_completions")
@@ -15,6 +15,6 @@ class CompletedUserTaskEntity(
     val taskId: Long,
 
     @Column(nullable = false)
-    val timeTaken: LocalTime
+    val completeTime: LocalDateTime
 
 ) : BaseEntity()

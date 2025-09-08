@@ -2,6 +2,7 @@ package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.LocalDateTime
+import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.UserEntity
 import ru.sigma.hse.business.bot.domain.model.Pageable
@@ -38,13 +39,14 @@ class JdbcUserStorage(
     }
 
     fun getUser(id: Long): User? {
-        if (userRepository.existsById(id)) {
-            logger.info { "Found user with id $id" }
-            return userRepository.findById(id).get().toUser()
-        }
+        val user = userRepository.findById(id).getOrNull()
+            ?: run {
+                logger.warn { "User with id $id does not exist" }
+                return null
+            }
 
-        logger.warn { "User with id $id does not exist" }
-        return null
+        logger.info { "Found user with id $id" }
+        return user.toUser()
     }
 
     fun createUser(
@@ -126,7 +128,7 @@ class JdbcUserStorage(
                 program = this.program,
                 email = this.email,
                 isCompleteConference = this.isCompleteConference,
-                score = this.score
+                score = this.currentScore
             )
         }
     }

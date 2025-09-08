@@ -18,7 +18,7 @@ interface VisitRepository : JpaRepository<VisitEntity, Long> {
     ): Long
 
     @Query("SELECT COUNT(v) > 0 FROM VisitEntity v WHERE v.userId = :userId AND v.targetId = :targetId")
-    fun existsByUserIdAndCode(
+    fun existsByUserIdAndTargetId(
         @Param("userId") userId: Long,
         @Param("targetId") targetId: Long
     ): Boolean

@@ -11,6 +11,9 @@ class UserEntity(
     @Column(nullable = false, unique = true)
     var tgId: Long,
 
+    @Column(nullable = false, unique = true, updatable = false)
+    var code: String,
+
     @Column(nullable = false)
     var fullName: String,
 
@@ -28,4 +31,7 @@ class UserEntity(
 
     @Column(nullable = false, updatable = false)
     val creationDate: LocalDateTime,
+
+    @Column(nullable = false)
+    var currentScore: Int = 0
 ) : BaseEntity()

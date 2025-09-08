@@ -1,9 +1,11 @@
 package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.CompanyEntity
 import ru.sigma.hse.business.bot.domain.model.Company
+import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.CompanyRepository
 
 @Component
@@ -11,12 +13,14 @@ class JdbcCompanyStorage(
     private val companyRepository: CompanyRepository
 ) {
     fun getCompany(id: Long): Company? {
-        if (!companyRepository.existsById(id)) {
-            logger.warn { "Company with id $id does not exist" }
-            return null
-        }
+        val company = companyRepository.findById(id).getOrNull()
+            ?: run {
+                logger.warn { "Company with id $id does not exist" }
+                return null
+            }
 
-        return companyRepository.findById(id).get().toCompany()
+        logger.info { "Found company with id $id" }
+        return company.toCompany()
     }
 
     fun getCompanies(ids: List<Long>): List<Company> {
@@ -51,7 +55,7 @@ class JdbcCompanyStorage(
     ): Company {
         if (!companyRepository.existsById(company.id)) {
             logger.warn { "Company with id ${company.id} does not exist" }
-            throw NoSuchElementException("Company with id ${company.id} does not exist")
+            throw CompanyByIdNotFoundException(company.id)
         }
 
         val existingCompany = companyRepository.findById(company.id).get()

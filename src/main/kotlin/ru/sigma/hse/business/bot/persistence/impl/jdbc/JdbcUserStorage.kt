@@ -2,6 +2,7 @@ package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.LocalDateTime
+import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.UserEntity
 import ru.sigma.hse.business.bot.domain.model.Pageable
@@ -38,17 +39,19 @@ class JdbcUserStorage(
     }
 
     fun getUser(id: Long): User? {
-        if (userRepository.existsById(id)) {
-            logger.info { "Found user with id $id" }
-            return userRepository.findById(id).get().toUser()
-        }
+        val user = userRepository.findById(id).getOrNull()
+            ?: run {
+                logger.warn { "User with id $id does not exist" }
+                return null
+            }
 
-        logger.warn { "User with id $id does not exist" }
-        return null
+        logger.info { "Found user with id $id" }
+        return user.toUser()
     }
 
     fun createUser(
         tgId: Long,
+        code: String,
         fullName: String,
         course: Int,
         program: String,
@@ -57,6 +60,7 @@ class JdbcUserStorage(
         val userEntity = userRepository.save(
             UserEntity(
                 tgId = tgId,
+                code = code,
                 fullName = fullName,
                 course = course,
                 program = program,
@@ -111,18 +115,24 @@ class JdbcUserStorage(
         userRepository.markUserAsCompleteConference(userId)
     }
 
+    fun getUserByCode(code: String): User? {
+         return userRepository.findByCode(code)?.toUser()
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 
         fun UserEntity.toUser(): User {
             return User(
                 id = this.id(),
+                code = this.code,
                 tgId = this.tgId,
                 fullName = this.fullName,
                 course = this.course,
                 program = this.program,
                 email = this.email,
                 isCompleteConference = this.isCompleteConference,
+                score = this.currentScore
             )
         }
     }

@@ -1,9 +1,9 @@
 package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.PreregistrationUserEntity
-import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.PreregistrationUser
 import ru.sigma.hse.business.bot.exception.preregistration.PreregistrationUserByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.PreregistrationUserRepository
@@ -13,13 +13,14 @@ class JdbcPreregistrationUserStorage(
     private val preregistrationUserRepository: PreregistrationUserRepository,
 ) {
     fun getPreregistrationUser(tgId: Long): PreregistrationUser? {
-        if (preregistrationUserRepository.existsById(tgId)) {
-            logger.info { "Found preregistration user with id $tgId" }
-            return preregistrationUserRepository.findById(tgId).get().toPreregistrationUser()
-        }
+        val user = preregistrationUserRepository.findById(tgId).getOrNull()
+            ?: run {
+                logger.warn { "Preregistration user with id $tgId does not exist" }
+                return null
+            }
 
-        logger.warn { "Preregistration user with id $tgId does not exist" }
-        return null
+        logger.info { "Found preregistration user with id $tgId" }
+        return user.toPreregistrationUser()
     }
 
     fun createPreregistrationUser(tgId: Long): PreregistrationUser {

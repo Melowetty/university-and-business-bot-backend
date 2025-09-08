@@ -2,9 +2,7 @@ package ru.sigma.hse.business.bot.exception.visit
 
 import ru.sigma.hse.business.bot.exception.base.AlreadyExistsException
 
-class VisitAlreadyExistsException(
-    code: String
-) : AlreadyExistsException(
+class VisitAlreadyExistsException: AlreadyExistsException(
     "Visit",
-    "Visit with code $code already registered"
+    "Visit already registered"
 )

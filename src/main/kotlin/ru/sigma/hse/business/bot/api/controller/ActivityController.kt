@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RestController
 import ru.sigma.hse.business.bot.api.controller.model.CreateActivityRequest
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.service.ActivityService
+import ru.sigma.hse.business.bot.service.VisitService
 
 @RestController
 @RequestMapping("/activities")
 @Tag(name = "Активности", description = "Управление активностями")
 class ActivityController(
     private val activityService: ActivityService,
+    private val visitService: VisitService,
 ) {
     @PostMapping(
         produces = ["application/json"]
@@ -50,4 +52,22 @@ class ActivityController(
     ): Activity {
         return activityService.getActivity(activityId)
     }
+
+    @PostMapping(
+        "/{activityId}/visit/{userCode}"
+    )
+    @Operation(
+        summary = "Посетить активность участиком",
+        description = "Создание нового посещения активности участником"
+    )
+    @ApiResponse(responseCode = "200", description = "Новое посещение активности успешно создано")
+    fun visitActivity(
+        @Parameter(description = "ID активности")
+        @PathVariable activityId: Long,
+        @Parameter(description = "Код пользователя")
+        @PathVariable userCode: String
+    ) : Activity {
+        return visitService.markUserAsVisitedActivity(activityId, userCode)
+    }
+
 }

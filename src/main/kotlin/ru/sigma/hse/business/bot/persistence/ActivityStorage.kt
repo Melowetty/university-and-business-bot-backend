@@ -14,7 +14,10 @@ interface ActivityStorage {
         description: String,
         location: String,
         startTime: LocalTime,
-        endTime: LocalTime
+        endTime: LocalTime,
+        eventId: Long?,
+        keyWord: String?,
+        points: Int
     ): Activity
 
     fun updateActivity(
@@ -22,4 +25,6 @@ interface ActivityStorage {
     ): Activity
 
     fun deleteActivity(id: Long)
+
+    fun getActivityByCode(code: String): Activity?
 }

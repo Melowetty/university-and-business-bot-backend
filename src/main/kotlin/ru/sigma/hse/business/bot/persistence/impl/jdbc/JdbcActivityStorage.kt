@@ -2,9 +2,11 @@ package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.LocalTime
+import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.ActivityEntity
 import ru.sigma.hse.business.bot.domain.model.Activity
+import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.ActivityRepository
 
 @Component
@@ -12,13 +14,14 @@ class JdbcActivityStorage(
     private val activityRepository: ActivityRepository,
 ) {
     fun getActivity(id: Long): Activity? {
-        if (activityRepository.existsById(id)) {
-            logger.info { "Found activity with id $id" }
-            return activityRepository.findById(id).get().toActivity()
-        }
+        val activity = activityRepository.findById(id).getOrNull()
+            ?: run {
+                logger.warn { "Activity with id $id does not exist" }
+                return null
+            }
 
-        logger.warn { "Activity with id $id does not exist" }
-        return null
+        logger.info { "Found activity with id $id" }
+        return activity.toActivity()
     }
 
     fun getActivities(ids: List<Long>): List<Activity> {
@@ -35,7 +38,10 @@ class JdbcActivityStorage(
         description: String,
         location: String,
         startTime: LocalTime,
-        endTime: LocalTime
+        endTime: LocalTime,
+        eventId: Long?,
+        keyWord: String?,
+        points: Int
     ): Activity {
         val activityEntity = ActivityEntity(
             code = code,
@@ -43,7 +49,10 @@ class JdbcActivityStorage(
             description = description,
             location = location,
             startTime = startTime,
-            endTime = endTime
+            endTime = endTime,
+            eventId = eventId,
+            keyWord = keyWord,
+            points = points
         )
 
         val savedEntity = activityRepository.save(activityEntity)
@@ -56,7 +65,7 @@ class JdbcActivityStorage(
     ): Activity {
         if (!activityRepository.existsById(activity.id)) {
             logger.warn { "Activity with id ${activity.id} does not exist" }
-            throw NoSuchElementException("Activity with id ${activity.id} does not exist")
+            throw ActivityByIdNotFoundException(activity.id)
         }
 
         val existingActivity = activityRepository.findById(activity.id).get()
@@ -76,7 +85,7 @@ class JdbcActivityStorage(
     fun deleteActivity(id: Long) {
         if (!activityRepository.existsById(id)) {
             logger.warn { "Activity with id $id does not exist" }
-            throw NoSuchElementException("Activity with id $id does not exist")
+            throw ActivityByIdNotFoundException(id)
         }
 
         activityRepository.deleteById(id)
@@ -98,7 +107,9 @@ class JdbcActivityStorage(
                 description = this.description,
                 location = this.location,
                 startTime = this.startTime,
-                endTime = this.endTime
+                endTime = this.endTime,
+                eventId = this.eventId,
+                points = this.points
             )
         }
     }

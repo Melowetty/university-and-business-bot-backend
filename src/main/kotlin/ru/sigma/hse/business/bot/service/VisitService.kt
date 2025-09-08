@@ -1,5 +1,6 @@
 package ru.sigma.hse.business.bot.service
 
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
@@ -10,9 +11,11 @@ import ru.sigma.hse.business.bot.domain.model.DetailedVisit
 import ru.sigma.hse.business.bot.domain.model.VisitTarget
 import ru.sigma.hse.business.bot.domain.model.Visitable
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
-import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.base.BadArgumentException
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.visit.BadVisitCodeException
+import ru.sigma.hse.business.bot.notification.NotificationService
+import ru.sigma.hse.business.bot.notification.model.UserVisitNotification
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
 import ru.sigma.hse.business.bot.persistence.CompanyStorage
 import ru.sigma.hse.business.bot.persistence.UserStorage
@@ -26,6 +29,7 @@ class VisitService(
     private val activityStorage: ActivityStorage,
     private val qrCodeGenerator: QrCodeGenerator,
     private val userStorage: UserStorage,
+    private val notificationService: NotificationService,
 
     @Value("\${conference.count-for-complete}")
     private val countForCompleteConference: Int,
@@ -33,23 +37,24 @@ class VisitService(
     @Value("\${integrations.telegram.link}")
     private lateinit var telegramBotLink: String
 
+    @Transactional
     fun visit(userId: Long, code: String): VisitResult {
         val type = code.substring(0, 3)
 
         val visit = when (type) {
             "UNC" -> {
-                val targetId = visitStorage.addCompanyVisit(userId, code).targetId
-                val company = companyStorage.getCompany(targetId)
-                    ?: throw CompanyByIdNotFoundException(targetId)
+                val company = companyStorage.getCompanyByCode(code)
+                    ?: throw BadVisitCodeException()
 
+                visitStorage.addCompanyVisit(userId, company.id)
                 company.toDetailedVisit()
             }
 
             "UNA" -> {
-                val targetId = visitStorage.addActivityVisit(userId, code).targetId
-                val activity = activityStorage.getActivity(targetId)
-                    ?: throw ActivityByIdNotFoundException(targetId)
+                val activity = activityStorage.getActivityByCode(code)
+                    ?: throw BadVisitCodeException()
 
+                visitStorage.addActivityVisit(userId, activity.id).targetId
                 activity.toDetailedVisit()
             }
 
@@ -74,14 +79,14 @@ class VisitService(
         )
     }
 
-    fun generateVisitQrCode(code: String): ByteArray {
+    fun generateVisitQrCode(code: String, size: Int): ByteArray {
         val link = UriComponentsBuilder
             .fromUriString(telegramBotLink)
             .queryParam("start", code)
             .build()
             .toUriString()
 
-        return qrCodeGenerator.generateQrCode(link)
+        return qrCodeGenerator.generateQrCode(link, size)
     }
 
     private fun Visitable.toDetailedVisit(): DetailedVisit {
@@ -91,6 +96,27 @@ class VisitService(
         }
 
         return DetailedVisit(this, type)
+    }
+
+    fun markUserAsVisitedActivity(activityId: Long, userCode: String): Activity {
+        val user = userStorage.findUserByCode(userCode)
+            ?: throw BadArgumentException("WRONG_USER_CODE", "Wrong user code")
+
+        val activity = activityStorage.getActivity(activityId)
+            ?: throw ActivityByIdNotFoundException(activityId)
+
+        visitStorage.addActivityVisit(user.id, activityId)
+
+        val notification = UserVisitNotification(
+            DetailedVisit(
+                target = activity,
+                type = VisitTarget.ACTIVITY
+            )
+        )
+
+        notificationService.notify(user.tgId, notification)
+
+        return activity
     }
 
     fun getUserVisits(userId: Long): List<DetailedVisit> {

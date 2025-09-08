@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.FutureOrPresent
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Positive
 import java.time.LocalTime
 import ru.sigma.hse.business.bot.utils.Constants
 
@@ -25,5 +26,14 @@ data class CreateActivityRequest(
     @field:FutureOrPresent(message = "Wrong activity end time format (must be present or future)")
     @Schema(description = "Время окончания (часовой пояс Перми)", example = "10:30")
     @JsonFormat(pattern = Constants.TIME_FORMAT)
-    val endTime: LocalTime
+    val endTime: LocalTime,
+    @field:Positive(message = "Wrong activity event id format")
+    @Schema(description = "Id связанного ивента", example = "3")
+    val eventId: Long?,
+    @field:NotBlank(message = "Wrong activity keyWord format")
+    @Schema(description = "Ключевое слово ивента", example = "Веном")
+    val keyWord: String,
+    @field:Positive(message = "Wrong activity points format")
+    @Schema(description = "Баллы ха выполнение ивента", example = "15")
+    val points: Int
 )

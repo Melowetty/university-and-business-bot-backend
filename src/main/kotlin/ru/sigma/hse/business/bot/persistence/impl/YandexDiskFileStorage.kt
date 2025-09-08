@@ -12,7 +12,7 @@ import org.springframework.web.client.body
 import ru.sigma.hse.business.bot.persistence.FileStorage
 
 @Component
-@ConditionalOnProperty(name = ["integrations.yandex-disk.token"], havingValue = ".+", matchIfMissing = false)
+@ConditionalOnProperty(name = ["integrations.yandex-disk.token"], havingValue = "", matchIfMissing = false)
 class YandexDiskFileStorage(
     @Qualifier("yandexDiskRestClient")
     private val diskRestClient: RestClient,

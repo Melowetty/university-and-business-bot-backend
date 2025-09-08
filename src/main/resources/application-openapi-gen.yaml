@@ -1,4 +1,6 @@
 spring:
+  quartz:
+    auto-startup: false
   config:
     activate:
       on-profile: openapi-gen

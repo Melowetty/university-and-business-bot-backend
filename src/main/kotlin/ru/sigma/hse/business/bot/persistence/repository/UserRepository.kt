@@ -8,6 +8,8 @@ import ru.sigma.hse.business.bot.domain.entity.UserEntity
 
 @Repository
 interface UserRepository : JpaRepository<UserEntity, Long> {
+    fun findByCode(code: String): UserEntity?
+
     @Query("SELECT u FROM UserEntity u WHERE u.id > :id ORDER BY u.id ASC LIMIT :limit")
     fun findAllByIdGreaterThanOrderByIdAsc(id: Long, limit: Int): List<UserEntity>
 

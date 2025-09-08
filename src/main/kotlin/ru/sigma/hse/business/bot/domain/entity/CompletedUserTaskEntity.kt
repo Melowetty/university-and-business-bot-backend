@@ -6,7 +6,7 @@ import jakarta.persistence.Table
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "user_task_completions")
+@Table(name = "completed_user_task")
 class CompletedUserTaskEntity(
     @Column(nullable = false)
     val userId: Long,

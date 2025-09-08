@@ -19,4 +19,6 @@ interface CompanyStorage {
     ): Company
 
     fun deleteCompany(id: Long)
+
+    fun getCompanyByCode(code: String): Company?
 }

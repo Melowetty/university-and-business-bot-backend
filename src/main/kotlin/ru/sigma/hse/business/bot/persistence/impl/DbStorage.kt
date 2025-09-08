@@ -4,25 +4,24 @@ import java.time.LocalTime
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.domain.model.Company
+import ru.sigma.hse.business.bot.domain.model.CompletedUserTask
 import ru.sigma.hse.business.bot.domain.model.Event
 import ru.sigma.hse.business.bot.domain.model.EventStatus
 import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.PreregistrationUser
 import ru.sigma.hse.business.bot.domain.model.Task
 import ru.sigma.hse.business.bot.domain.model.User
-import ru.sigma.hse.business.bot.domain.model.CompletedUserTask
 import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
 import ru.sigma.hse.business.bot.domain.model.Vote
-import ru.sigma.hse.business.bot.persistence.CompletedUserTaskStorage
 import ru.sigma.hse.business.bot.persistence.Storage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcActivityStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompanyStorage
-import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcEventStorage
-import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcTaskStorage
-import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcPreregistrationUserStorage
-import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcUserStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompletedUserTaskStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcEventStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcPreregistrationUserStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcTaskStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcUserStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVisitStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVoteStorage
 
@@ -73,6 +72,10 @@ class DbStorage(
         jdbcUserStorage.deleteUser(userId)
     }
 
+    override fun findUserByCode(code: String): User? {
+        return jdbcUserStorage.getUserByCode(code)
+    }
+
     override fun getCompany(id: Long): Company? {
         return jdbcCompanyStorage.getCompany(id)
     }
@@ -98,6 +101,10 @@ class DbStorage(
 
     override fun deleteCompany(id: Long) {
         jdbcCompanyStorage.deleteCompany(id)
+    }
+
+    override fun getCompanyByCode(code: String): Company? {
+        return jdbcCompanyStorage.findByCode(code)
     }
 
     override fun getActivity(id: Long): Activity? {
@@ -130,16 +137,26 @@ class DbStorage(
         jdbcActivityStorage.deleteActivity(id)
     }
 
+    override fun getActivityByCode(code: String): Activity? {
+        return jdbcActivityStorage.findByCode(code)
+    }
+
     override fun getVisits(limit: Int, token: Long): Pageable<UserVisit> {
         return jdbcVisitStorage.getVisits(limit, token)
     }
 
-    override fun addCompanyVisit(userId: Long, visitCode: String): Visit {
-        return jdbcVisitStorage.addCompanyVisit(userId, visitCode)
+    override fun addCompanyVisit(
+        userId: Long,
+        companyId: Long
+    ): Visit {
+        return jdbcVisitStorage.addCompanyVisit(userId, companyId)
     }
 
-    override fun addActivityVisit(userId: Long, visitCode: String): Visit {
-        return jdbcVisitStorage.addActivityVisit(userId, visitCode)
+    override fun addActivityVisit(
+        userId: Long,
+        activityId: Long
+    ): Visit {
+        return jdbcVisitStorage.addActivityVisit(userId, activityId)
     }
 
     override fun getVisitsByUserId(userId: Long): List<Visit> {

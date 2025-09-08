@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -56,18 +57,20 @@ class UserController(
 
     @GetMapping(
         "/{telegramId}/qr",
-        produces = ["application/json"]
+        produces = [MediaType.IMAGE_PNG_VALUE]
     )
     @Operation(
-        summary = "Получить qr пользователя",
-        description = "Выдает qr пользователя (пока не знаю как и куда)"
+        summary = "Получить QR-код пользователя",
+        description = "Выдает QR-код пользователя"
     )
-    @ApiResponse(responseCode = "200", description = "Qr пользователя успешно выведен")
+    @ApiResponse(responseCode = "200", description = "QR-код пользователя успешно выведен")
     fun getUserQr(
         @Parameter(description = "Телеграмм ID пользователя")
         @PathVariable telegramId: Long
-    ): String {
+    ): ByteArray {
         val userId = telegramUserService.getUser(telegramId).id
-        return userService.getUserQr(userId)
+
+        val qr = userService.getUserQr(userId)
+        return qr
     }
 }

@@ -25,4 +25,6 @@ interface ActivityStorage {
     ): Activity
 
     fun deleteActivity(id: Long)
+
+    fun getActivityByCode(code: String): Activity?
 }

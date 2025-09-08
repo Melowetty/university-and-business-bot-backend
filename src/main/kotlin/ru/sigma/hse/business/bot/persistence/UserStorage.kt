@@ -37,4 +37,6 @@ interface UserStorage {
     fun deleteUser(
         userId: Long
     )
+
+    fun findUserByCode(code: String): User?
 }

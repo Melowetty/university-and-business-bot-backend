@@ -8,8 +8,9 @@ import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
 import ru.sigma.hse.business.bot.domain.model.VisitTarget
+import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
-import ru.sigma.hse.business.bot.exception.visit.BadVisitCodeException
 import ru.sigma.hse.business.bot.exception.visit.VisitAlreadyExistsException
 import ru.sigma.hse.business.bot.persistence.repository.VisitRepository
 
@@ -58,17 +59,14 @@ class JdbcVisitStorage(
         )
     }
 
-    fun addCompanyVisit(userId: Long, visitCode: String): Visit {
+    fun addCompanyVisit(userId: Long, companyId: Long): Visit {
         validateUser(userId)
-        val company = jdbcCompanyStorage.findByCode(visitCode)
-            ?: run {
-                logger.warn { "Company with code $visitCode does not exist" }
-                throw BadVisitCodeException()
-            }
+        val company = jdbcCompanyStorage.getCompany(companyId)
+            ?: throw CompanyByIdNotFoundException(companyId)
 
-        if (visitRepository.existsByUserIdAndCode(userId, company.id)) {
-            logger.warn { "Visit with code $visitCode already exists for user $userId" }
-            throw VisitAlreadyExistsException(visitCode)
+        if (visitRepository.existsByUserIdAndTargetId(userId, company.id)) {
+            logger.warn { "Visit to company with id $companyId already exists for user $userId" }
+            throw VisitAlreadyExistsException()
         }
 
         val visitEntity = visitRepository.save(
@@ -85,17 +83,14 @@ class JdbcVisitStorage(
         return visitEntity.toVisit()
     }
 
-    fun addActivityVisit(userId: Long, visitCode: String): Visit {
+    fun addActivityVisit(userId: Long, activityId: Long): Visit {
         validateUser(userId)
-        val activity = jdbcActivityStorage.findByCode(visitCode)
-            ?: run {
-                logger.warn { "Activity with code $visitCode does not exist" }
-                throw BadVisitCodeException()
-            }
+        val activity = jdbcActivityStorage.getActivity(activityId)
+            ?: throw ActivityByIdNotFoundException(activityId)
 
-        if (visitRepository.existsByUserIdAndCode(userId, activity.id)) {
-            logger.warn { "Visit with code $visitCode already exists for user $userId" }
-            throw VisitAlreadyExistsException(visitCode)
+        if (visitRepository.existsByUserIdAndTargetId(userId, activity.id)) {
+            logger.warn { "Visit to activity with id $activityId already exists for user $userId" }
+            throw VisitAlreadyExistsException()
         }
 
         val visitEntity = visitRepository.save(

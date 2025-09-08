@@ -7,7 +7,6 @@ import ru.sigma.hse.business.bot.domain.model.User
 import ru.sigma.hse.business.bot.exception.user.UserAlreadyExistsByTelegramIdException
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.UserStorage
-import ru.sigma.hse.business.bot.persistence.impl.LocalFileStorage
 import ru.sigma.hse.business.bot.service.code.CodeGenerator
 import ru.sigma.hse.business.bot.service.qr.PrettyQrCodeGenerator
 
@@ -16,7 +15,6 @@ class UserService(
     private val userStorage: UserStorage,
     private val codeGenerator: CodeGenerator,
     private val qrCodeGenerator: PrettyQrCodeGenerator,
-    private val localFileStorage: LocalFileStorage
 ) {
     fun getUser(userId: Long): User {
         val user = userStorage.getUser(userId)
@@ -33,8 +31,7 @@ class UserService(
             name = user.fullName,
             course = user.course,
             program = user.program,
-            email = user.email,
-            score = user.score
+            email = user.email
         )
     }
 
@@ -57,17 +54,16 @@ class UserService(
             name = user.fullName,
             course = user.course,
             program = user.program,
-            email = user.email,
-            score = user.score
+            email = user.email
         )
     }
 
-    fun getUserQr(userId: Long): String {
+    fun getUserQr(userId: Long): ByteArray {
         val user = userStorage.getUser(userId)
             ?: throw UserByIdNotFoundException(userId)
+
         val qr = qrCodeGenerator.generateQrCode(user.code,300)
-        localFileStorage.save("User"+user.fullName,qr)
-        return "ok"
+        return qr
     }
 
     fun addPointsToUserScore(userId: Long, points: Int): GetUserInfoRequest {
@@ -85,8 +81,7 @@ class UserService(
             name = newUser.fullName,
             course = newUser.course,
             program = newUser.program,
-            email = newUser.email,
-            score = newUser.score
+            email = newUser.email
         )
     }
 }

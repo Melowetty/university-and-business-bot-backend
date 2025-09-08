@@ -12,7 +12,5 @@ class GetUserInfoRequest(
     @Schema(description = "Программа пользователя", example = "РИС")
     val program: String,
     @Schema(description = "Email пользователя", example = "example@ex.pl")
-    val email: String?,
-    @Schema(description = "Игровой счёт пользователя", example = "15")
-    val score: Int
+    val email: String?
 )

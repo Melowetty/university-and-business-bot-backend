@@ -115,6 +115,10 @@ class JdbcUserStorage(
         userRepository.markUserAsCompleteConference(userId)
     }
 
+    fun getUserByCode(code: String): User? {
+         return userRepository.findByCode(code)?.toUser()
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 

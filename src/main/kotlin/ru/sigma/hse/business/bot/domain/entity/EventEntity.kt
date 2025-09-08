@@ -1,11 +1,13 @@
 package ru.sigma.hse.business.bot.domain.entity
 
 import jakarta.persistence.Column
+import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
 import ru.sigma.hse.business.bot.domain.model.EventStatus
+import ru.sigma.hse.business.bot.persistence.converter.ArrayListConverter
 
 @Entity
 @Table(name = "event")
@@ -14,7 +16,8 @@ class EventEntity(
     @Column(nullable = false)
     var status: EventStatus,
 
-    @Column(nullable = false)
+    @Convert(converter = ArrayListConverter::class)
+    @Column(nullable = false, columnDefinition = "TEXT")
     val answers: List<String>,
 
     @Column(nullable = true)

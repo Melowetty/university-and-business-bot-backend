@@ -14,7 +14,7 @@ import ru.sigma.hse.business.bot.notification.base.Notification
 import ru.sigma.hse.business.bot.notification.base.NotificationProcessor
 
 @Service
-@ConditionalOnProperty(name = ["integrations.telegram.token"], havingValue = ".+", matchIfMissing = false)
+@ConditionalOnProperty(name = ["integrations.telegram.token"], havingValue = "")
 class TelegramNotificationService(
     @Value("\${integrations.telegram.token}")
     botToken: String,

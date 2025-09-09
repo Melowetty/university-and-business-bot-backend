@@ -4,9 +4,11 @@ import org.springframework.stereotype.Service
 import ru.sigma.hse.business.bot.api.controller.model.CreateTaskRequest
 import ru.sigma.hse.business.bot.domain.model.CompletedUserTask
 import ru.sigma.hse.business.bot.domain.model.Task
+import ru.sigma.hse.business.bot.domain.model.TaskStatus
 import ru.sigma.hse.business.bot.exception.task.TaskByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.CompletedUserTaskStorage
 import ru.sigma.hse.business.bot.persistence.TaskStorage
+import java.time.Duration
 
 
 @Service
@@ -17,8 +19,10 @@ class TaskService(
     fun createTask(request: CreateTaskRequest): Task {
         return taskStorage.createTask(
             name = request.name,
+            type = request.type,
             description = request.description,
-            points = request.points
+            points = request.points,
+            duration = Duration.ofMinutes(request.duration)
         )
     }
 
@@ -27,9 +31,14 @@ class TaskService(
             ?: throw TaskByIdNotFoundException(taskId)
     }
 
-    fun updateTaskAvailable(taskId: Long, isAvailable: Boolean): Task {
-        return taskStorage.updateTaskStatus(taskId, isAvailable)
+    fun updateTaskStatus(taskId: Long, status: TaskStatus): Task {
+        return taskStorage.updateTaskStatus(taskId, status)
     }
+
+    fun startTask(taskId: Long): Task {
+        return taskStorage.startTask(taskId)
+    }
+
 
     fun completeTask(userId: Long, taskId: Long): CompletedUserTask {
         return completedUserTaskStorage.createCompletedUserTask(userId, taskId)

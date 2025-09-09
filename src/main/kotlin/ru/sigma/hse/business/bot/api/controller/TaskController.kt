@@ -50,4 +50,21 @@ class TaskController(
     ): Task {
         return taskService.getTask(taskId)
     }
+
+    @PostMapping(
+        "/{taskId}",
+        produces = ["application/json"]
+    )
+    @Operation(
+        summary = "Начать задание",
+        description = "Начать задание"
+    )
+    @ApiResponse(responseCode = "200", description = "Стартовать задание")
+    fun startTask(
+        @Parameter(description = "Уникальный код задания")
+        @PathVariable("taskId") taskId: Long
+    ): Task {
+        return taskService.startTask(taskId)
+    }
+
 }

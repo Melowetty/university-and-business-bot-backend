@@ -6,8 +6,11 @@ import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.TaskEntity
 import ru.sigma.hse.business.bot.domain.model.Task
+import ru.sigma.hse.business.bot.domain.model.TaskStatus
+import ru.sigma.hse.business.bot.domain.model.TaskType
 import ru.sigma.hse.business.bot.exception.task.TaskByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.TaskRepository
+import java.time.Duration
 
 @Component
 class JdbcTaskStorage(
@@ -26,12 +29,16 @@ class JdbcTaskStorage(
 
     fun createTask(
         name: String,
+        type: TaskType,
         description: String,
-        points: Int
+        points: Int,
+        duration: Duration
     ): Task {
         val taskEntity = TaskEntity(
             name = name,
-            isAvailable = false,
+            type = type,
+            duration = duration,
+            status = TaskStatus.READY,
             description = description,
             points = points
         )
@@ -44,14 +51,14 @@ class JdbcTaskStorage(
     @Transactional
     fun updateTaskStatus(
         id: Long,
-        isAvailable: Boolean
+        status: TaskStatus
     ): Task {
         if (!taskRepository.existsById(id)) {
             logger.warn { "Task with id $id does not exist" }
             throw TaskByIdNotFoundException(id)
         }
 
-        taskRepository.updateTaskStatus(isAvailable, id)
+        taskRepository.updateTaskStatus(status, id)
         logger.info { "Updated task with id $id" }
         return getTask(id)!!
     }
@@ -65,7 +72,21 @@ class JdbcTaskStorage(
         taskRepository.deleteById(id)
         logger.info { "Deleted task with id $id" }
     }
-    
+
+    fun startTask(
+        id: Long,
+    ): Task {
+        if (!taskRepository.existsById(id)) {
+            logger.warn { "Task with id $id does not exist" }
+            throw TaskByIdNotFoundException(id)
+
+        }
+
+        taskRepository.updateTaskStatus(TaskStatus.IN_PROCESS, id)
+        logger.info { "Updated task status with id $id" }
+        return getTask(id)!!
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 
@@ -73,7 +94,9 @@ class JdbcTaskStorage(
             return Task(
                 id = this.id(),
                 name = name,
-                isAvailable = isAvailable,
+                type = type,
+                duration = duration,
+                status = status,
                 description = description,
                 points = points
             )

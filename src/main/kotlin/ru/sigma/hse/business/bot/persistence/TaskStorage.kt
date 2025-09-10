@@ -21,9 +21,5 @@ interface TaskStorage {
         status: TaskStatus
     ): Task
 
-    fun startTask(
-        id: Long
-    ) : Task
-
     fun deleteTask(id: Long)
 }

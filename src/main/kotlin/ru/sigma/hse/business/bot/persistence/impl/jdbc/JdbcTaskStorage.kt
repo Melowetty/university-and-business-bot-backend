@@ -73,20 +73,6 @@ class JdbcTaskStorage(
         logger.info { "Deleted task with id $id" }
     }
 
-    fun startTask(
-        id: Long,
-    ): Task {
-        if (!taskRepository.existsById(id)) {
-            logger.warn { "Task with id $id does not exist" }
-            throw TaskByIdNotFoundException(id)
-
-        }
-
-        taskRepository.updateTaskStatus(TaskStatus.IN_PROCESS, id)
-        logger.info { "Updated task status with id $id" }
-        return getTask(id)!!
-    }
-
     companion object {
         private val logger = KotlinLogging.logger {  }
 

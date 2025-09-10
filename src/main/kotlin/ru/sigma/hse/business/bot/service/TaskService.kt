@@ -36,7 +36,7 @@ class TaskService(
     }
 
     fun startTask(taskId: Long): Task {
-        return taskStorage.startTask(taskId)
+        return taskStorage.updateTaskStatus(taskId, TaskStatus.IN_PROCESS)
     }
 
 

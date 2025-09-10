@@ -221,10 +221,6 @@ class DbStorage(
         return jdbcTaskStorage.updateTaskStatus(id, status)
     }
 
-    override fun startTask(id: Long): Task {
-        return jdbcTaskStorage.startTask(id)
-    }
-
     override fun deleteTask(id: Long) {
         return jdbcTaskStorage.deleteTask(id)
     }

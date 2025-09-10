@@ -39,4 +39,5 @@ interface UserStorage {
     )
 
     fun findUserByCode(code: String): User?
+    fun getTelegramIdsByIds(ids: List<Long>): List<Long>
 }

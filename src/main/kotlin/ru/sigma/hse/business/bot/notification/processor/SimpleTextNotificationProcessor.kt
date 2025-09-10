@@ -28,5 +28,4 @@ class SimpleTextNotificationProcessor: NotificationProcessor<SimpleTextNotificat
     override fun getNotificationType(): Class<SimpleTextNotification> {
         return SimpleTextNotification::class.java
     }
-
 }

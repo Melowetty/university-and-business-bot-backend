@@ -1,4 +1,4 @@
-package ru.sigma.hse.business.bot.api.controller
+package ru.sigma.hse.business.bot.api.controller.activity
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter

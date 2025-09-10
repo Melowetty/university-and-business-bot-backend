@@ -22,4 +22,7 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     @Query("UPDATE UserEntity SET isCompleteConference = true WHERE id = :userId")
     @Modifying
     fun markUserAsCompleteConference(userId: Long)
+
+    @Query("SELECT tgId FROM UserEntity WHERE id IN (:ids)")
+    fun findTelegramIdsByIds(ids: List<Long>): List<Long>
 }

@@ -39,7 +39,7 @@ class UserService(
         if (userStorage.existsByTelegramId(newUser.tgId)) {
             throw UserAlreadyExistsByTelegramIdException(newUser.tgId)
         }
-        val code = codeGenerator.generateCompanyCode()
+        val code = codeGenerator.generateUserCode()
         val user = userStorage.createUser(
             tgId = newUser.tgId,
             code = code,

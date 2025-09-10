@@ -2,6 +2,8 @@ package ru.sigma.hse.business.bot.domain.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
 import ru.sigma.hse.business.bot.domain.model.TaskStatus
 import ru.sigma.hse.business.bot.domain.model.TaskType
@@ -13,12 +15,14 @@ class TaskEntity(
     @Column(nullable = false)
     val name: String,
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     val type: TaskType,
 
     @Column(nullable = true)
     var duration: Duration?,
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     var status: TaskStatus,
 

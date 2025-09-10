@@ -1,20 +1,26 @@
 package ru.sigma.hse.business.bot.persistence
 
-import ru.sigma.hse.business.bot.domain.model.Event
+import java.time.Duration
+import ru.sigma.hse.business.bot.domain.model.ActivityEvent
 import ru.sigma.hse.business.bot.domain.model.EventStatus
 
 interface EventStorage {
-    fun getEvent(id: Long): Event?
+    fun getEvent(activityId: Long): ActivityEvent?
 
     fun createEvent(
+        activityId: Long,
+        name: String,
+        description: String,
+        duration: Duration?,
         answers: List<String>,
-        rightAnswer: String?
-    ): Event
+        rightAnswer: String?,
+        reward: Int
+    ): ActivityEvent
 
     fun updateEventStatus(
-        id: Long,
+        activityId: Long,
         status: EventStatus
-    ): Event
+    ): ActivityEvent
 
-    fun deleteEvent(id: Long)
+    fun deleteEvent(activityId: Long)
 }

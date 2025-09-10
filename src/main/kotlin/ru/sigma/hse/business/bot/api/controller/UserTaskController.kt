@@ -29,7 +29,7 @@ class UserTaskController(
         description = "Сделать отметку выполнения задания"
     )
     @ApiResponse(responseCode = "200", description = "Пользователь выполнил новое задание")
-//    @ApiResponse(responseCode = "409", description = "Пользователь уже выполнил это задание")
+    @ApiResponse(responseCode = "409", description = "Пользователь уже выполнил это задание")
     fun completeTask(
         @Parameter(description = "Telegram ID пользователя")
         @PathVariable("telegramId") telegramId: Long,
@@ -48,7 +48,7 @@ class UserTaskController(
         description = "Все выполненные пользователем задания"
     )
     @ApiResponse(responseCode = "200", description = "Список посещённых заданий")
-    fun getUserVisits(
+    fun getCompletedTasks(
         @Parameter(description = "Telegram ID пользователя")
         @PathVariable("telegramId") telegramId: Long
     ): List<CompletedUserTask> {

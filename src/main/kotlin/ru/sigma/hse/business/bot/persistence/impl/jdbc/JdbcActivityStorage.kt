@@ -39,7 +39,6 @@ class JdbcActivityStorage(
         location: String,
         startTime: LocalTime,
         endTime: LocalTime,
-        eventId: Long?,
         keyWord: String?,
         points: Int
     ): Activity {
@@ -50,7 +49,6 @@ class JdbcActivityStorage(
             location = location,
             startTime = startTime,
             endTime = endTime,
-            eventId = eventId,
             keyWord = keyWord,
             points = points
         )
@@ -108,7 +106,6 @@ class JdbcActivityStorage(
                 location = this.location,
                 startTime = this.startTime,
                 endTime = this.endTime,
-                eventId = this.eventId,
                 points = this.points
             )
         }

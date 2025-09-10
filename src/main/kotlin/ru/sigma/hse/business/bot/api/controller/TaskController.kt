@@ -15,7 +15,7 @@ import ru.sigma.hse.business.bot.domain.model.Task
 import ru.sigma.hse.business.bot.service.TaskService
 
 @RestController
-@RequestMapping("/users/{telegramId}/tasks")
+@RequestMapping("/tasks")
 @Tag(name = "Задания", description = "Работа с заданиями")
 class TaskController(
     private val taskService: TaskService,
@@ -52,7 +52,7 @@ class TaskController(
     }
 
     @PostMapping(
-        "/{taskId}",
+        "/{taskId}/start",
         produces = ["application/json"]
     )
     @Operation(

@@ -1,7 +1,7 @@
 -- liquibase formatted sql
 
 -- changeset knbdan:1757429229000-1
-ALTER TABLE task ADD COLUMN duration INTERVAL;
+ALTER TABLE task ADD COLUMN duration BIGINT;
 -- changeset knbdan:1757429229000-2
 ALTER TABLE task ADD COLUMN type VARCHAR(31) NOT NULL;
 -- changeset knbdan:1757429229000-3

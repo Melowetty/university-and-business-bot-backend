@@ -10,6 +10,8 @@ import ru.sigma.hse.business.bot.domain.model.EventStatus
 import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.PreregistrationUser
 import ru.sigma.hse.business.bot.domain.model.Task
+import ru.sigma.hse.business.bot.domain.model.TaskStatus
+import ru.sigma.hse.business.bot.domain.model.TaskType
 import ru.sigma.hse.business.bot.domain.model.User
 import ru.sigma.hse.business.bot.domain.model.UserVisit
 import ru.sigma.hse.business.bot.domain.model.Visit
@@ -24,6 +26,7 @@ import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcTaskStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcUserStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVisitStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVoteStorage
+import java.time.Duration
 
 @Component
 class DbStorage(
@@ -210,12 +213,12 @@ class DbStorage(
         return jdbcTaskStorage.getTask(id)
     }
 
-    override fun createTask(name: String, description: String, points: Int): Task {
-        return jdbcTaskStorage.createTask(name, description, points)
+    override fun createTask(name: String, type: TaskType, description: String, points: Int, duration: Duration): Task {
+        return jdbcTaskStorage.createTask(name, type, description, points, duration)
     }
 
-    override fun updateTaskStatus(id: Long, isAvailable: Boolean): Task {
-        return jdbcTaskStorage.updateTaskStatus(id, isAvailable)
+    override fun updateTaskStatus(id: Long, status: TaskStatus): Task {
+        return jdbcTaskStorage.updateTaskStatus(id, status)
     }
 
     override fun deleteTask(id: Long) {

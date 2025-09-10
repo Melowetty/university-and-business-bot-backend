@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import ru.sigma.hse.business.bot.domain.entity.TaskEntity
+import ru.sigma.hse.business.bot.domain.model.TaskStatus
+import java.time.LocalTime
 
 @Repository
 interface TaskRepository : JpaRepository<TaskEntity, Long> {
@@ -13,6 +15,7 @@ interface TaskRepository : JpaRepository<TaskEntity, Long> {
 
     @Transactional
     @Modifying
-    @Query("update TaskEntity t set t.isAvailable = ?1 where t.id = ?2")
-    fun updateTaskStatus(isAvailable: Boolean, id: Long)
+    @Query("update TaskEntity t set t.status = ?1 where t.id = ?2")
+    fun updateTaskStatus(status: TaskStatus, id: Long)
+
 }

@@ -123,6 +123,15 @@ class JdbcUserStorage(
         return userRepository.findTelegramIdsByIds(userIds)
     }
 
+    fun addPointsToUser(userId: Long, points: Int){
+        if (!userRepository.existsById(userId)) {
+            logger.warn { "User with id $userId does not exist" }
+            throw UserByIdNotFoundException(userId)
+        }
+
+        return userRepository.addPointsToUser(userId, points)
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 

@@ -39,5 +39,8 @@ interface UserStorage {
     )
 
     fun findUserByCode(code: String): User?
+
     fun getTelegramIdsByIds(ids: List<Long>): List<Long>
+
+    fun addPointsToUser(userId: Long, points: Int)
 }

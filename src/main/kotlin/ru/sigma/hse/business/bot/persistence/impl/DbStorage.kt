@@ -67,6 +67,10 @@ class DbStorage(
         return jdbcUserStorage.updateUser(user)
     }
 
+    override fun addPointsToUser(userId: Long, points: Int) {
+        return jdbcUserStorage.addPointsToUser(userId, points)
+    }
+
     override fun markUserAsCompletedConference(userId: Long) {
         return jdbcUserStorage.markUserAsCompletedConference(userId)
     }

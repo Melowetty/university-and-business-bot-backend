@@ -2,9 +2,9 @@ package ru.sigma.hse.business.bot.job
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.quartz.DisallowConcurrentExecution
+import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.quartz.PersistJobDataAfterExecution
-import org.springframework.scheduling.quartz.QuartzJobBean
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.persistence.FileStorage
 import ru.sigma.hse.business.bot.persistence.Storage
@@ -14,23 +14,23 @@ import ru.sigma.hse.business.bot.utils.Paginator
 @Component
 @PersistJobDataAfterExecution
 @DisallowConcurrentExecution
-class CollectDataToYaDiskJob(
+class CollectDataToFileStorage(
     private val storage: Storage,
     private val fileStorage: FileStorage,
-) : QuartzJobBean() {
+) : Job {
 
-    override fun executeInternal(context: JobExecutionContext) {
-        collectDataAndUploadToYaDisk()
-        logger.info { "Collected data and uploaded to YaDisk" }
+    override fun execute(context: JobExecutionContext) {
+        collectDataAndUploadToFileStorage()
+        logger.info { "Collected data and uploaded to file storage" }
     }
 
-    private fun collectDataAndUploadToYaDisk() {
+    private fun collectDataAndUploadToFileStorage() {
         val generator = ExcelGenerator()
 
         addUsers(generator)
         addVisits(generator)
 
-        val path = "$YA_DISK_PATH/$EXCEL_NAME"
+        val path = "$FILE_PATH/$EXCEL_NAME"
         fileStorage.save(path, generator.generate())
     }
 
@@ -59,7 +59,7 @@ class CollectDataToYaDiskJob(
     }
 
     companion object {
-        private const val YA_DISK_PATH = "Отчёты"
+        private const val FILE_PATH = "Отчёты"
         private const val EXCEL_NAME = "Отчёт.xlsx"
 
         private val logger = KotlinLogging.logger {  }

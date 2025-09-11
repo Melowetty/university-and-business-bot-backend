@@ -98,6 +98,7 @@ class VisitService(
         return DetailedVisit(this, type)
     }
 
+    @Transactional
     fun markUserAsVisitedActivity(activityId: Long, userCode: String): Activity {
         val user = userStorage.findUserByCode(userCode)
             ?: throw BadArgumentException("WRONG_USER_CODE", "Wrong user code")
@@ -106,6 +107,7 @@ class VisitService(
             ?: throw ActivityByIdNotFoundException(activityId)
 
         visitStorage.addActivityVisit(user.id, activityId)
+        userStorage.addPointsToUser(user.id, 5)
 
         val notification = UserVisitNotification(
             DetailedVisit(

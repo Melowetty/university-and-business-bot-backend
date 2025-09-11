@@ -25,4 +25,7 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
 
     @Query("SELECT tgId FROM UserEntity WHERE id IN (:ids)")
     fun findTelegramIdsByIds(ids: List<Long>): List<Long>
+
+    @Query("UPDATE User u SET u.points = u.points + :amount WHERE u.id = :userId")
+    fun addPointsToUser(userId: Long, points: Int)
 }

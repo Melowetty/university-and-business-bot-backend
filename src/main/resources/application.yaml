@@ -11,7 +11,7 @@ security:
     password: ${SECURITY_BOT_PASSWORD:test}
 
 jobs:
-  collect-data-to-yandex-disk: 0 0/5 * * * ?
+  collect-data-to-file-storage: 0 0/5 * * * ?
 
 conference:
   count-for-complete: 3

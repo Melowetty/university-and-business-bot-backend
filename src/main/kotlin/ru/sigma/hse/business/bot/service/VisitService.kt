@@ -107,7 +107,7 @@ class VisitService(
             ?: throw ActivityByIdNotFoundException(activityId)
 
         visitStorage.addActivityVisit(user.id, activityId)
-        userStorage.addPointsToUser(user.id, 5)
+        userStorage.addPointsToUser(user.id, activity.points) // Добавление очков к счету пользователя
 
         val notification = UserVisitNotification(
             DetailedVisit(

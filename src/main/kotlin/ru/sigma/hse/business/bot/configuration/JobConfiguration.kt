@@ -6,7 +6,6 @@ import org.quartz.JobDetail
 import org.quartz.Scheduler
 import org.quartz.Trigger
 import org.quartz.TriggerBuilder
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -29,11 +28,8 @@ class JobConfiguration {
     }
 
     @Bean
-    fun collectDataToYaDiskJobTrigger(
-        @Qualifier("collectDataToYaDiskJobDetail")
-        collectDataToYaDiskJobDetail: JobDetail
-    ): Trigger {
-        return TriggerBuilder.newTrigger().forJob(collectDataToYaDiskJobDetail)
+    fun collectDataToYaDiskJobTrigger(): Trigger {
+        return TriggerBuilder.newTrigger().forJob(collectDataToYaDiskJobDetail())
             .withIdentity("CollectDataToYaDiskJobTrigger")
             .withSchedule(CronScheduleBuilder.cronSchedule(collectDataToYaDiskCron))
             .build()

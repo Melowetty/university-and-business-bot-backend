@@ -1,4 +1,4 @@
-package ru.sigma.hse.business.bot.scheduled
+package ru.sigma.hse.business.bot.configuration
 
 import org.quartz.CronScheduleBuilder
 import org.quartz.JobBuilder
@@ -9,8 +9,9 @@ import org.quartz.TriggerBuilder
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.jdbc.support.JdbcTransactionManager
 import org.springframework.scheduling.quartz.SchedulerFactoryBean
+import org.springframework.transaction.PlatformTransactionManager
+import ru.sigma.hse.business.bot.job.CollectDataToYaDiskJob
 
 @Configuration
 class JobConfiguration {
@@ -40,12 +41,13 @@ class JobConfiguration {
     @Bean
     fun scheduler(
         triggers: List<Trigger>,
-        factory: SchedulerFactoryBean
+        factory: SchedulerFactoryBean,
+        transactionManager: PlatformTransactionManager
     ): Scheduler {
         factory.setWaitForJobsToCompleteOnShutdown(true)
         val scheduler = factory.scheduler
         factory.setOverwriteExistingJobs(true)
-        factory.setTransactionManager(JdbcTransactionManager())
+        factory.setTransactionManager(transactionManager)
         rescheduleTriggers(triggers, scheduler)
         scheduler.start()
         return scheduler

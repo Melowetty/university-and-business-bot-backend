@@ -27,9 +27,6 @@ data class CreateActivityRequest(
     @Schema(description = "Время окончания (часовой пояс Перми)", example = "10:30")
     @JsonFormat(pattern = Constants.TIME_FORMAT)
     val endTime: LocalTime,
-    @field:Positive(message = "Wrong activity event id format")
-    @Schema(description = "Id связанного ивента", example = "3")
-    val eventId: Long?,
     @field:NotBlank(message = "Wrong activity keyWord format")
     @Schema(description = "Ключевое слово ивента", example = "Веном")
     val keyWord: String,

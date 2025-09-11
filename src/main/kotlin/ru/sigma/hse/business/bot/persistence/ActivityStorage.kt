@@ -15,7 +15,6 @@ interface ActivityStorage {
         location: String,
         startTime: LocalTime,
         endTime: LocalTime,
-        eventId: Long?,
         keyWord: String?,
         points: Int
     ): Activity

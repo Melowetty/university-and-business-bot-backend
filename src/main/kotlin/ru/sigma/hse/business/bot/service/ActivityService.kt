@@ -24,7 +24,6 @@ class ActivityService(
             location = request.location,
             startTime = request.startTime,
             endTime = request.endTime,
-            eventId = request.eventId,
             keyWord = request.keyWord,
             points = request.points
         )

@@ -21,8 +21,8 @@ class JdbcVisitStorage(
     private val jdbcActivityStorage: JdbcActivityStorage,
     private val jdbcUserStorage: JdbcUserStorage,
 ) {
-    fun getVisits(limit: Int, token: Long): Pageable<UserVisit> {
-        val visits = visitRepository.findAllByIdGreaterThanOrderByTimeAsc(token, limit)
+    fun getVisits(limit: Int, token: Long = 0): Pageable<UserVisit> {
+        val visits = visitRepository.findAllByIdGreaterThanOrderByIdAsc(token, limit)
 
         val companiesById = visits.filter { it.targetType == VisitTarget.COMPANY }.map { it.targetId }
             .let { jdbcCompanyStorage.getCompanies(it) }.associateBy { it.id }
@@ -59,6 +59,20 @@ class JdbcVisitStorage(
         )
     }
 
+    fun getVisitsByTargetId(targetId: Long, limit: Int, token: Long = 0): Pageable<Visit> {
+        val data = visitRepository.findAllByTargetIdAndIdGreaterThanOrderByIdAsc(targetId, token, limit)
+        val nextToken = if (data.size < limit) {
+            0L
+        } else {
+            data.last().id()
+        }
+
+        return Pageable(
+            data = data.map { it.toVisit() },
+            nextToken = nextToken
+        )
+    }
+
     fun addCompanyVisit(userId: Long, companyId: Long): Visit {
         validateUser(userId)
         val company = jdbcCompanyStorage.getCompany(companyId)
@@ -74,6 +88,7 @@ class JdbcVisitStorage(
                 userId = userId,
                 targetId = company.id,
                 targetType = VisitTarget.COMPANY,
+                //isGotExtraReward = false,
                 time = LocalDateTime.now()
             )
         )
@@ -98,6 +113,7 @@ class JdbcVisitStorage(
                 userId = userId,
                 targetId = activity.id,
                 targetType = VisitTarget.ACTIVITY,
+                //isGotExtraReward = false,
                 time = LocalDateTime.now()
             )
         )

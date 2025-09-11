@@ -1,5 +1,6 @@
-package ru.sigma.hse.business.bot.scheduled
+package ru.sigma.hse.business.bot.job
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.quartz.DisallowConcurrentExecution
 import org.quartz.JobExecutionContext
 import org.quartz.PersistJobDataAfterExecution
@@ -20,6 +21,7 @@ class CollectDataToYaDiskJob(
 
     override fun executeInternal(context: JobExecutionContext) {
         collectDataAndUploadToYaDisk()
+        logger.info { "Collected data and uploaded to YaDisk" }
     }
 
     private fun collectDataAndUploadToYaDisk() {
@@ -59,5 +61,7 @@ class CollectDataToYaDiskJob(
     companion object {
         private const val YA_DISK_PATH = "Отчёты"
         private const val EXCEL_NAME = "Отчёт.xlsx"
+
+        private val logger = KotlinLogging.logger {  }
     }
 }

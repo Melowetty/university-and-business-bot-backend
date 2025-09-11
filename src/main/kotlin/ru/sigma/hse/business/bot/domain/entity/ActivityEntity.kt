@@ -27,9 +27,6 @@ class ActivityEntity(
     var endTime: LocalTime,
 
     @Column(nullable = true)
-    var eventId: Long?,
-
-    @Column(nullable = true)
     var keyWord: String?,
 
     @Column(nullable = true)

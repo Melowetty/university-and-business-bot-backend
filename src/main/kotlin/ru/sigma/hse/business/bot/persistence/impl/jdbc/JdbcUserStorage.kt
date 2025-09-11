@@ -119,6 +119,10 @@ class JdbcUserStorage(
          return userRepository.findByCode(code)?.toUser()
     }
 
+    fun getTelegramIdsByIds(userIds: List<Long>): List<Long> {
+        return userRepository.findTelegramIdsByIds(userIds)
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 

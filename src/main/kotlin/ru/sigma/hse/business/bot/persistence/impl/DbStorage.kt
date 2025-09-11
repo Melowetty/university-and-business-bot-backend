@@ -1,11 +1,12 @@
 package ru.sigma.hse.business.bot.persistence.impl
 
+import java.time.Duration
 import java.time.LocalTime
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.domain.model.Company
 import ru.sigma.hse.business.bot.domain.model.CompletedUserTask
-import ru.sigma.hse.business.bot.domain.model.Event
+import ru.sigma.hse.business.bot.domain.model.ActivityEvent
 import ru.sigma.hse.business.bot.domain.model.EventStatus
 import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.PreregistrationUser
@@ -26,7 +27,6 @@ import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcTaskStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcUserStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVisitStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcVoteStorage
-import java.time.Duration
 
 @Component
 class DbStorage(
@@ -79,6 +79,10 @@ class DbStorage(
         return jdbcUserStorage.getUserByCode(code)
     }
 
+    override fun getTelegramIdsByIds(ids: List<Long>): List<Long> {
+        return jdbcUserStorage.getTelegramIdsByIds(ids)
+    }
+
     override fun getCompany(id: Long): Company? {
         return jdbcCompanyStorage.getCompany(id)
     }
@@ -125,11 +129,10 @@ class DbStorage(
         location: String,
         startTime: LocalTime,
         endTime: LocalTime,
-        eventId: Long?,
         keyWord: String?,
         points: Int
     ): Activity {
-        return jdbcActivityStorage.createActivity(code, name, description, location, startTime, endTime, eventId, keyWord, points)
+        return jdbcActivityStorage.createActivity(code, name, description, location, startTime, endTime, keyWord, points)
     }
 
     override fun updateActivity(activity: Activity): Activity {
@@ -146,6 +149,14 @@ class DbStorage(
 
     override fun getVisits(limit: Int, token: Long): Pageable<UserVisit> {
         return jdbcVisitStorage.getVisits(limit, token)
+    }
+
+    override fun getVisitsByTargetId(
+        targetId: Long,
+        limit: Int,
+        token: Long
+    ): Pageable<Visit> {
+        return jdbcVisitStorage.getVisitsByTargetId(targetId, limit, token)
     }
 
     override fun addCompanyVisit(
@@ -182,20 +193,36 @@ class DbStorage(
         jdbcPreregistrationUserStorage.deletePreregistrationUser(tgId)
     }
 
-    override fun getEvent(id: Long): Event? {
-        return jdbcEventStorage.getEvent(id)
+    override fun getEvent(activityId: Long): ActivityEvent? {
+        return jdbcEventStorage.getEvent(activityId)
     }
 
-    override fun createEvent(answers: List<String>, rightAnswer: String?): Event {
-        return jdbcEventStorage.createEvent(answers, rightAnswer)
+    override fun createEvent(
+        activityId: Long,
+        name: String,
+        description: String,
+        duration: Duration?,
+        answers: List<String>,
+        rightAnswer: String?,
+        reward: Int
+    ): ActivityEvent {
+        return jdbcEventStorage.createEvent(
+            activityId,
+            name,
+            description,
+            duration,
+            answers,
+            rightAnswer,
+            reward,
+        )
     }
 
-    override fun updateEventStatus(id: Long, status: EventStatus): Event {
-        return jdbcEventStorage.updateEventStatus(id, status)
+    override fun updateEventStatus(activityId: Long, status: EventStatus): ActivityEvent {
+        return jdbcEventStorage.updateEventStatus(activityId, status)
     }
 
-    override fun deleteEvent(id: Long) {
-        return jdbcEventStorage.deleteEvent(id)
+    override fun deleteEvent(activityId: Long) {
+        return jdbcEventStorage.deleteEvent(activityId)
     }
 
     override fun getVote(id: Long): Vote? {

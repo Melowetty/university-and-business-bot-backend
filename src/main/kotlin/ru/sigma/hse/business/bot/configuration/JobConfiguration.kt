@@ -11,27 +11,27 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.quartz.SchedulerFactoryBean
 import org.springframework.transaction.PlatformTransactionManager
-import ru.sigma.hse.business.bot.job.CollectDataToYaDiskJob
+import ru.sigma.hse.business.bot.job.CollectDataToFileStorage
 
 @Configuration
 class JobConfiguration {
-    @Value("\${jobs.collect-data-to-yandex-disk}")
-    private lateinit var collectDataToYaDiskCron: String
+    @Value("\${jobs.collect-data-to-file-storage}")
+    private lateinit var collectDataToFileStorageCron: String
 
     @Bean
-    fun collectDataToYaDiskJobDetail(): JobDetail {
+    fun collectDataToFileStorageJobDetail(): JobDetail {
         return JobBuilder
-            .newJob(CollectDataToYaDiskJob::class.java).withIdentity("CollectDataToYaDiskJob")
+            .newJob(CollectDataToFileStorage::class.java).withIdentity("CollectDataToFileStorageJob")
             .requestRecovery(true)
             .storeDurably()
             .build()
     }
 
     @Bean
-    fun collectDataToYaDiskJobTrigger(): Trigger {
-        return TriggerBuilder.newTrigger().forJob(collectDataToYaDiskJobDetail())
-            .withIdentity("CollectDataToYaDiskJobTrigger")
-            .withSchedule(CronScheduleBuilder.cronSchedule(collectDataToYaDiskCron))
+    fun collectDataToFileStorageJobTrigger(): Trigger {
+        return TriggerBuilder.newTrigger().forJob(collectDataToFileStorageJobDetail())
+            .withIdentity("CollectDataToFileStorageJobTrigger")
+            .withSchedule(CronScheduleBuilder.cronSchedule(collectDataToFileStorageCron))
             .build()
 
     }

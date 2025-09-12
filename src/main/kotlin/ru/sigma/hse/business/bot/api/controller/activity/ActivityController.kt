@@ -17,7 +17,7 @@ import ru.sigma.hse.business.bot.service.VisitService
 
 @RestController
 @RequestMapping("/activities")
-@Tag(name = "Активности", description = "Управление активностями")
+@Tag(name = "Admin: Активности", description = "Управление активностями")
 class ActivityController(
     private val activityService: ActivityService,
     private val visitService: VisitService,

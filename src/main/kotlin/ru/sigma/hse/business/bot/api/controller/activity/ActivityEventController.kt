@@ -22,7 +22,7 @@ import ru.sigma.hse.business.bot.service.VoteService
 
 @RestController
 @RequestMapping("/activities/{activityId}/event")
-@Tag(name = "Ивенты", description = "Управление ивентами")
+@Tag(name = "Admin: Ивенты", description = "Управление ивентами")
 class ActivityEventController(
     private val activityEventService: ActivityEventService,
     private val telegramUserService: TelegramUserService,

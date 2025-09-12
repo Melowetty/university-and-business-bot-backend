@@ -4,10 +4,18 @@ import ru.sigma.hse.business.bot.notification.base.SimpleTextButtonNotification
 
 class BeRealStartedNotification(
     val taskId: Long,
-    val description: String
+    val description: String,
+    private val durationInMinutes: Int,
 ) : SimpleTextButtonNotification {
     override fun getMessageText(): String {
-        return "BeReal!\n\nСуть задания:\n\n$description\n\nНажмите на кнопку ниже, чтобы отправить решение. У вас есть 5 минут!"
+        return "BeReal!" +
+                "\n\n" +
+                "Суть задания:" +
+                "\n\n" +
+                description +
+                "\n\n" +
+                "Нажмите на кнопку ниже, чтобы отправить решение. " +
+                "У вас есть $durationInMinutes минут!"
     }
 
     override fun getButtonText(): String {

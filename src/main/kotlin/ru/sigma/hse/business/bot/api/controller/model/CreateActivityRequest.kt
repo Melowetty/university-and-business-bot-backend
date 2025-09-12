@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.FutureOrPresent
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Positive
+import ru.sigma.hse.business.bot.domain.model.ActivityType
 import java.time.LocalTime
 import ru.sigma.hse.business.bot.utils.Constants
 
@@ -19,6 +20,8 @@ data class CreateActivityRequest(
     @field:NotBlank(message = "Wrong activity location format")
     @Schema(description = "Место проведение активности", example = "Актовый зал")
     val location: String,
+    @Schema(description = "Тип активности", example = "WORKSHOP")
+    val type: ActivityType,
     @field:FutureOrPresent(message = "Wrong activity start time format (must be present or future)")
     @Schema(description = "Время начала (часовой пояс Перми)", example = "10:00")
     @JsonFormat(pattern = Constants.TIME_FORMAT)

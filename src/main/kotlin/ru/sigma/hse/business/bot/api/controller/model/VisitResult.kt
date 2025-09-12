@@ -10,7 +10,4 @@ data class VisitResult(
 
     @Schema(description = "Тип посещенного объекта", example = "COMPANY")
     val targetType: VisitTarget,
-
-    @Schema(description = "Флаг, указывающий, что пользователь только что завершил конференцию")
-    val isCompleteConference: Boolean
 )

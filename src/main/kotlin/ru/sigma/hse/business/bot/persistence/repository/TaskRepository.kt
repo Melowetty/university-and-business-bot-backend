@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import ru.sigma.hse.business.bot.domain.entity.TaskEntity
 import ru.sigma.hse.business.bot.domain.model.TaskStatus
-import java.time.LocalTime
 
 @Repository
 interface TaskRepository : JpaRepository<TaskEntity, Long> {
@@ -17,5 +16,8 @@ interface TaskRepository : JpaRepository<TaskEntity, Long> {
     @Modifying
     @Query("update TaskEntity t set t.status = ?1 where t.id = ?2")
     fun updateTaskStatus(status: TaskStatus, id: Long)
+
+    @Query("from TaskEntity t where t.status = ?1")
+    fun getAllByStatus(status: TaskStatus): List<TaskEntity>
 
 }

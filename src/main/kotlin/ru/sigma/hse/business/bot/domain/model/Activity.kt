@@ -13,6 +13,9 @@ data class Activity(
     @Schema(description = "Описание активности", example = "Важное собрание для первокурсников")
     override val description: String,
 
+    @Schema(description = "Тип активности", example = "LECTURE")
+    val activityType: ActivityType,
+
     @Schema(description = "Место проведения активности", example = "Актовый зал")
     var location: String,
 

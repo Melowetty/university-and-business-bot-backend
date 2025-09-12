@@ -10,15 +10,21 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.sigma.hse.business.bot.api.controller.model.CreateTaskRequest
+import ru.sigma.hse.business.bot.api.controller.model.task.CreateTaskRequest
+import ru.sigma.hse.business.bot.api.controller.model.task.TaskStatus
+import ru.sigma.hse.business.bot.api.controller.model.task.UpdateTaskStatusRequest
+import ru.sigma.hse.business.bot.domain.model.CompletedUserTask
 import ru.sigma.hse.business.bot.domain.model.Task
+import ru.sigma.hse.business.bot.exception.base.BadArgumentException
 import ru.sigma.hse.business.bot.service.TaskService
+import ru.sigma.hse.business.bot.service.TelegramUserService
 
 @RestController
 @RequestMapping("/tasks")
-@Tag(name = "Задания", description = "Работа с заданиями")
+@Tag(name = "Admin: Задания", description = "Работа с заданиями")
 class TaskController(
     private val taskService: TaskService,
+    private val telegramUserService: TelegramUserService,
 ) {
     @PostMapping(
         produces = ["application/json"]
@@ -29,7 +35,7 @@ class TaskController(
     )
     @ApiResponse(responseCode = "200", description = "Создано новое задание")
     fun createTask(
-        @Parameter(description = "Уникальный код задания")
+        @Parameter(description = "ID задания")
         @RequestBody request: CreateTaskRequest
     ): Task {
         return taskService.createTask(request)
@@ -45,26 +51,66 @@ class TaskController(
     )
     @ApiResponse(responseCode = "200", description = "Информация о задании")
     fun getTask(
-        @Parameter(description = "Уникальный код задания")
+        @Parameter(description = "ID задания")
         @PathVariable("taskId") taskId: Long
     ): Task {
         return taskService.getTask(taskId)
     }
 
     @PostMapping(
-        "/{taskId}/start",
+        "/all/status",
+    )
+    @Operation(
+        summary = "Изменить статус всех заданий (можно только завершить)",
+        description = "Изменить статус всех заданий (можно только завершить)"
+    )
+    fun changeAllTasksStatus(
+        @RequestBody status: UpdateTaskStatusRequest
+    ) {
+        return when(status.status) {
+            TaskStatus.RUN -> throw BadArgumentException("ILLEGAL_UPDATE_STATUS_REQUEST", "Cannot change status of all tasks to RUN")
+            TaskStatus.END -> taskService.endAllTasks()
+        }
+    }
+
+    @PostMapping(
+        "/{taskId}/status",
         produces = ["application/json"]
     )
     @Operation(
-        summary = "Начать задание",
-        description = "Начать задание"
+        summary = "Изменить статус задания",
+        description = "Изменить статус задания"
     )
-    @ApiResponse(responseCode = "200", description = "Стартовать задание")
-    fun startTask(
-        @Parameter(description = "Уникальный код задания")
-        @PathVariable("taskId") taskId: Long
+    @ApiResponse(responseCode = "200", description = "Измененное задание")
+    fun changeTaskStatus(
+        @Parameter(description = "ID задания")
+        @PathVariable("taskId") taskId: Long,
+        @RequestBody status: UpdateTaskStatusRequest
     ): Task {
-        return taskService.startTask(taskId)
+        return when(status.status) {
+            TaskStatus.RUN -> taskService.startTask(taskId)
+            TaskStatus.END -> taskService.endTask(taskId)
+        }
+    }
+
+    @PostMapping(
+        "/{taskId}/submit/{telegramId}",
+        produces = ["application/json"]
+    )
+    @Operation(
+        summary = "Выполнить задание",
+        description = "Сделать отметку выполнения задания"
+    )
+    @ApiResponse(responseCode = "200", description = "Пользователь выполнил новое задание")
+    @ApiResponse(responseCode = "409", description = "Пользователь уже выполнил это задание")
+    fun completeTask(
+        @Parameter(description = "Telegram ID пользователя")
+        @PathVariable("telegramId") telegramId: Long,
+        @Parameter(description = "ID задания")
+        @PathVariable("taskId") taskId: Long
+    ): CompletedUserTask {
+        val userId = telegramUserService.getUser(telegramId).id
+        return taskService.completeTask(userId, taskId)
     }
 
 }

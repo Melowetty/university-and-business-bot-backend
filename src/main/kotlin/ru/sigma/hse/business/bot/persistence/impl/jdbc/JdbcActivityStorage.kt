@@ -6,6 +6,7 @@ import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.ActivityEntity
 import ru.sigma.hse.business.bot.domain.model.Activity
+import ru.sigma.hse.business.bot.domain.model.ActivityType
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.ActivityRepository
 
@@ -36,6 +37,7 @@ class JdbcActivityStorage(
         code: String,
         name: String,
         description: String,
+        type: ActivityType,
         location: String,
         startTime: LocalTime,
         endTime: LocalTime,
@@ -46,6 +48,7 @@ class JdbcActivityStorage(
             code = code,
             name = name,
             description = description,
+            type = type,
             location = location,
             startTime = startTime,
             endTime = endTime,
@@ -103,6 +106,7 @@ class JdbcActivityStorage(
                 id = this.id(),
                 name = this.name,
                 description = this.description,
+                activityType = this.type,
                 location = this.location,
                 startTime = this.startTime,
                 endTime = this.endTime,

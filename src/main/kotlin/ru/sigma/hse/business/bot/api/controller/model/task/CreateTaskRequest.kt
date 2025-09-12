@@ -1,4 +1,4 @@
-package ru.sigma.hse.business.bot.api.controller.model
+package ru.sigma.hse.business.bot.api.controller.model.task
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
@@ -20,5 +20,5 @@ class CreateTaskRequest(
     val points: Int,
     @field:Positive(message = "Wrong task duration format (must be positive)")
     @Schema(description = "Время длительности задания в минутах", example = "3")
-    val duration: Long
+    val duration: Long?
 )

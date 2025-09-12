@@ -5,20 +5,13 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
 import ru.sigma.hse.business.bot.api.controller.model.VisitResult
-import ru.sigma.hse.business.bot.domain.model.Activity
-import ru.sigma.hse.business.bot.domain.model.Company
-import ru.sigma.hse.business.bot.domain.model.DetailedVisit
-import ru.sigma.hse.business.bot.domain.model.VisitTarget
-import ru.sigma.hse.business.bot.domain.model.Visitable
+import ru.sigma.hse.business.bot.domain.model.*
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
-import ru.sigma.hse.business.bot.exception.base.BadArgumentException
-import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.visit.BadVisitCodeException
 import ru.sigma.hse.business.bot.notification.NotificationService
 import ru.sigma.hse.business.bot.notification.model.UserVisitNotification
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
 import ru.sigma.hse.business.bot.persistence.CompanyStorage
-import ru.sigma.hse.business.bot.persistence.UserStorage
 import ru.sigma.hse.business.bot.persistence.VisitStorage
 import ru.sigma.hse.business.bot.service.qr.QrCodeGenerator
 
@@ -28,11 +21,8 @@ class VisitService(
     private val companyStorage: CompanyStorage,
     private val activityStorage: ActivityStorage,
     private val qrCodeGenerator: QrCodeGenerator,
-    private val userStorage: UserStorage,
+    private val userService: UserService,
     private val notificationService: NotificationService,
-
-    @Value("\${conference.count-for-complete}")
-    private val countForCompleteConference: Int,
 ) {
     @Value("\${integrations.telegram.link}")
     private lateinit var telegramBotLink: String
@@ -61,21 +51,9 @@ class VisitService(
             else -> throw BadVisitCodeException()
         }
 
-        val visitsCount = visitStorage.getCountVisitsByUserId(userId)
-
-        val user = userStorage.getUser(userId)
-            ?: throw UserByIdNotFoundException(userId)
-
-        var completeConference = false
-        if (visitsCount >= countForCompleteConference && !user.isCompleteConference) {
-            userStorage.markUserAsCompletedConference(userId)
-            completeConference = true
-        }
-
         return VisitResult(
             target = visit.target,
             targetType = visit.type,
-            isCompleteConference = completeConference
         )
     }
 
@@ -100,14 +78,13 @@ class VisitService(
 
     @Transactional
     fun markUserAsVisitedActivity(activityId: Long, userCode: String): Activity {
-        val user = userStorage.findUserByCode(userCode)
-            ?: throw BadArgumentException("WRONG_USER_CODE", "Wrong user code")
+        val user = userService.getUserByCode(userCode)
 
         val activity = activityStorage.getActivity(activityId)
             ?: throw ActivityByIdNotFoundException(activityId)
 
         visitStorage.addActivityVisit(user.id, activityId)
-        userStorage.addPointsToUser(user.id, activity.points) // Добавление очков к счету пользователя
+        userService.addPointsToUserScore(user.id, activity.points)
 
         val notification = UserVisitNotification(
             DetailedVisit(

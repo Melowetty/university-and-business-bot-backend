@@ -41,3 +41,4 @@ out/
 
 ### Environment ###
 .env
+/.gigaide/gigaide.properties

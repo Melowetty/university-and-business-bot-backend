@@ -16,7 +16,7 @@ import ru.sigma.hse.business.bot.service.CompanyService
 
 @RestController
 @RequestMapping("/companies")
-@Tag(name = "Компании", description = "Управление компаниями")
+@Tag(name = "Admin: Компании", description = "Управление компаниями")
 class CompanyController(
     private val companyService: CompanyService
 ) {

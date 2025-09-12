@@ -21,6 +21,7 @@ class ActivityService(
             code = code,
             name = request.name,
             description = request.description,
+            type = request.type,
             location = request.location,
             startTime = request.startTime,
             endTime = request.endTime,

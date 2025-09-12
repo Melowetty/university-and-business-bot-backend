@@ -14,7 +14,7 @@ jobs:
   collect-data-to-file-storage: 0 0/5 * * * ?
 
 conference:
-  count-for-complete: 3
+  score-for-complete: 30
 
 integrations:
   yandex-disk:

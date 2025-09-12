@@ -2,6 +2,7 @@ package ru.sigma.hse.business.bot.persistence
 
 import java.time.LocalTime
 import ru.sigma.hse.business.bot.domain.model.Activity
+import ru.sigma.hse.business.bot.domain.model.ActivityType
 
 interface ActivityStorage {
     fun getActivity(id: Long): Activity?
@@ -12,6 +13,7 @@ interface ActivityStorage {
         code: String,
         name: String,
         description: String,
+        type: ActivityType,
         location: String,
         startTime: LocalTime,
         endTime: LocalTime,

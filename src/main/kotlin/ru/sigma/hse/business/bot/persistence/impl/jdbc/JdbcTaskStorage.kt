@@ -16,6 +16,11 @@ import java.time.Duration
 class JdbcTaskStorage(
     private val taskRepository: TaskRepository
 ) {
+    fun getRanTasks(): List<Task> {
+        return taskRepository.getAllByStatus(TaskStatus.IN_PROCESS)
+            .map { it.toTask() }
+    }
+
     fun getTask(id: Long): Task? {
         val task = taskRepository.findById(id).getOrNull()
             ?: run {
@@ -32,7 +37,7 @@ class JdbcTaskStorage(
         type: TaskType,
         description: String,
         points: Int,
-        duration: Duration
+        duration: Duration?
     ): Task {
         val taskEntity = TaskEntity(
             name = name,

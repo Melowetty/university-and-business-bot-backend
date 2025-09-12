@@ -3,20 +3,7 @@ package ru.sigma.hse.business.bot.persistence.impl
 import java.time.Duration
 import java.time.LocalTime
 import org.springframework.stereotype.Component
-import ru.sigma.hse.business.bot.domain.model.Activity
-import ru.sigma.hse.business.bot.domain.model.Company
-import ru.sigma.hse.business.bot.domain.model.CompletedUserTask
-import ru.sigma.hse.business.bot.domain.model.ActivityEvent
-import ru.sigma.hse.business.bot.domain.model.EventStatus
-import ru.sigma.hse.business.bot.domain.model.Pageable
-import ru.sigma.hse.business.bot.domain.model.PreregistrationUser
-import ru.sigma.hse.business.bot.domain.model.Task
-import ru.sigma.hse.business.bot.domain.model.TaskStatus
-import ru.sigma.hse.business.bot.domain.model.TaskType
-import ru.sigma.hse.business.bot.domain.model.User
-import ru.sigma.hse.business.bot.domain.model.UserVisit
-import ru.sigma.hse.business.bot.domain.model.Visit
-import ru.sigma.hse.business.bot.domain.model.Vote
+import ru.sigma.hse.business.bot.domain.model.*
 import ru.sigma.hse.business.bot.persistence.Storage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcActivityStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompanyStorage
@@ -130,13 +117,14 @@ class DbStorage(
         code: String,
         name: String,
         description: String,
+        type: ActivityType,
         location: String,
         startTime: LocalTime,
         endTime: LocalTime,
         keyWord: String?,
         points: Int
     ): Activity {
-        return jdbcActivityStorage.createActivity(code, name, description, location, startTime, endTime, keyWord, points)
+        return jdbcActivityStorage.createActivity(code, name, description, type, location, startTime, endTime, keyWord, points)
     }
 
     override fun updateActivity(activity: Activity): Activity {
@@ -240,11 +228,16 @@ class DbStorage(
     override fun deleteVote(id: Long) {
         return jdbcVoteStorage.deleteVote(id)
     }
+
+    override fun getRanTasks(): List<Task> {
+        return jdbcTaskStorage.getRanTasks()
+    }
+
     override fun getTask(id: Long): Task? {
         return jdbcTaskStorage.getTask(id)
     }
 
-    override fun createTask(name: String, type: TaskType, description: String, points: Int, duration: Duration): Task {
+    override fun createTask(name: String, type: TaskType, description: String, points: Int, duration: Duration?): Task {
         return jdbcTaskStorage.createTask(name, type, description, points, duration)
     }
 

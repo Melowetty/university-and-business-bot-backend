@@ -4,7 +4,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.quartz.DisallowConcurrentExecution
 import org.quartz.Job
 import org.quartz.JobExecutionContext
-import org.quartz.PersistJobDataAfterExecution
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.persistence.FileStorage
 import ru.sigma.hse.business.bot.persistence.Storage
@@ -12,7 +11,6 @@ import ru.sigma.hse.business.bot.utils.ExcelGenerator
 import ru.sigma.hse.business.bot.utils.Paginator
 
 @Component
-@PersistJobDataAfterExecution
 @DisallowConcurrentExecution
 class CollectDataToFileStorage(
     private val storage: Storage,

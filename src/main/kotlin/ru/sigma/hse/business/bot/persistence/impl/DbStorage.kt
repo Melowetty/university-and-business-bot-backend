@@ -165,6 +165,10 @@ class DbStorage(
         return jdbcVisitStorage.addActivityVisit(userId, activityId)
     }
 
+    override fun getAllActivities(): List<Activity> {
+        return jdbcActivityStorage.getAllActivities()
+    }
+
     override fun getVisitsByUserId(userId: Long): List<Visit> {
         return jdbcVisitStorage.getVisitsByUserId(userId)
     }
@@ -264,4 +268,9 @@ class DbStorage(
     override fun getCompletedUserTasksByUserId(userId: Long): List<CompletedUserTask> {
         return jdbcCompletedUserTaskStorage.getCompletedUserTasksByUserId(userId)
     }
+
+    override fun existUserCompleteActivity(userId: Long, taskId: Long): Boolean {
+        return jdbcCompletedUserTaskStorage.getByUserIdTaskId(userId, taskId)
+    }
+
 }

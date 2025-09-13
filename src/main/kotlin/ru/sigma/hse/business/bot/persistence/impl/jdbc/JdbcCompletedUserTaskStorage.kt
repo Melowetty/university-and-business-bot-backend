@@ -52,7 +52,11 @@ class JdbcCompletedUserTaskStorage(
     fun getCompletedUserTasksByUserId(userId: Long): List<CompletedUserTask> {
         return completedUserTaskRepository.findByUserId(userId).map {it.toCompletedUserTask()}
     }
-    
+
+    fun getByUserIdTaskId(userId: Long, taskId: Long): Boolean {
+        return completedUserTaskRepository.existByUserIdTaskId(userId, taskId)
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 

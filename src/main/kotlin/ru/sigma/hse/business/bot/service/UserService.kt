@@ -87,7 +87,7 @@ class UserService(
         val user = userStorage.getUser(userId)
             ?: throw UserByIdNotFoundException(userId)
 
-        if (user.score >= scoreForCompleteConference) {
+        if (!user.isCompleteConference && user.score >= scoreForCompleteConference) {
             userStorage.markUserAsCompletedConference(userId)
 
             val payload = mapOf("userId" to userId.toString())

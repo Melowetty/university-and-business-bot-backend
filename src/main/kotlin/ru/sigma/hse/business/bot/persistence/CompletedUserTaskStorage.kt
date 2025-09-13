@@ -14,4 +14,6 @@ interface CompletedUserTaskStorage {
     fun deleteCompletedUserTask(id: Long)
 
     fun getCompletedUserTasksByUserId(userId: Long): List<CompletedUserTask>
+
+    fun existUserCompleteActivity(userId: Long, taskId: Long): Boolean
 }

@@ -2,14 +2,14 @@ package ru.sigma.hse.business.bot.api.controller
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestControllerAdvice
 import ru.sigma.hse.business.bot.exception.base.AlreadyExistsException
 import ru.sigma.hse.business.bot.exception.base.BadArgumentException
 import ru.sigma.hse.business.bot.exception.base.NotFoundException
 
-@ControllerAdvice
+@RestControllerAdvice
 class ExceptionController {
     @ExceptionHandler(produces = ["application/json"])
     @ResponseStatus(HttpStatus.NOT_FOUND)

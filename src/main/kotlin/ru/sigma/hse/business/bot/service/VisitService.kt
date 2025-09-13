@@ -7,6 +7,7 @@ import org.springframework.web.util.UriComponentsBuilder
 import ru.sigma.hse.business.bot.api.controller.model.VisitResult
 import ru.sigma.hse.business.bot.domain.model.*
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.visit.BadVisitCodeException
 import ru.sigma.hse.business.bot.notification.NotificationService
 import ru.sigma.hse.business.bot.notification.model.UserVisitNotification
@@ -31,12 +32,17 @@ class VisitService(
     fun visit(userId: Long, code: String): VisitResult {
         val type = code.substring(0, 3)
 
+        val user = userService.getUser(userId)
+
         val visit = when (type) {
             "UNC" -> {
                 val company = companyStorage.getCompanyByCode(code)
                     ?: throw BadVisitCodeException()
 
+                val companyVisitPoints = 2
+
                 visitStorage.addCompanyVisit(userId, company.id)
+                userService.addPointsToUserScore(user.id, companyVisitPoints)
                 company.toDetailedVisit()
             }
 
@@ -45,6 +51,7 @@ class VisitService(
                     ?: throw BadVisitCodeException()
 
                 visitStorage.addActivityVisit(userId, activity.id).targetId
+                userService.addPointsToUserScore(user.id, activity.points)
                 activity.toDetailedVisit()
             }
 

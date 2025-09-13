@@ -70,4 +70,16 @@ class ActivityController(
         return visitService.markUserAsVisitedActivity(activityId, userCode)
     }
 
+    @GetMapping(
+        produces = ["application/json"]
+    )
+    @Operation(
+        summary = "Получить все активности",
+        description = "Выдает все активности"
+    )
+    @ApiResponse(responseCode = "200", description = "Информация об активностях")
+    fun getAllActivities(
+    ): List<Activity> {
+        return activityService.getAllActivities()
+    }
 }

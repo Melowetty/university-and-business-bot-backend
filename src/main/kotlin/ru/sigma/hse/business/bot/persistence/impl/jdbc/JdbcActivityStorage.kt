@@ -98,6 +98,10 @@ class JdbcActivityStorage(
         return activityEntity?.toActivity()
     }
 
+    fun  getAllActivities(): List<Activity> {
+        return activityRepository.findAll().map { it.toActivity() }
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 

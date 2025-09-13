@@ -37,4 +37,8 @@ class ActivityService(
         return activityStorage.getActivity(activityId)
             ?: throw ActivityByIdNotFoundException(activityId)
     }
+
+    fun getAllActivities(): List<Activity> {
+        return activityStorage.getAllActivities()
+    }
 }

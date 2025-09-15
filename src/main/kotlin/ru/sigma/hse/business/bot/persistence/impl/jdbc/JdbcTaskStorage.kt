@@ -1,9 +1,9 @@
 package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import jakarta.transaction.Transactional
 import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import ru.sigma.hse.business.bot.domain.entity.TaskEntity
 import ru.sigma.hse.business.bot.domain.model.Task
 import ru.sigma.hse.business.bot.domain.model.TaskStatus

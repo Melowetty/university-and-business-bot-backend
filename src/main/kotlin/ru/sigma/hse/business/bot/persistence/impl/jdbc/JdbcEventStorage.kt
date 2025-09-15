@@ -1,10 +1,10 @@
 package ru.sigma.hse.business.bot.persistence.impl.jdbc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import jakarta.transaction.Transactional
 import java.time.Duration
 import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import ru.sigma.hse.business.bot.domain.entity.ActivityEventEntity
 import ru.sigma.hse.business.bot.domain.model.ActivityEvent
 import ru.sigma.hse.business.bot.domain.model.EventStatus

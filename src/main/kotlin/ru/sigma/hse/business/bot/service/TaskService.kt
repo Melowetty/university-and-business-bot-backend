@@ -1,7 +1,7 @@
 package ru.sigma.hse.business.bot.service
 
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import ru.sigma.hse.business.bot.api.controller.model.task.CreateTaskRequest
 import ru.sigma.hse.business.bot.domain.model.CompletedUserTask
 import ru.sigma.hse.business.bot.domain.model.Task

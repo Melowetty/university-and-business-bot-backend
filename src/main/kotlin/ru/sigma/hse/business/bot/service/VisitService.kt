@@ -1,13 +1,12 @@
 package ru.sigma.hse.business.bot.service
 
-import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.util.UriComponentsBuilder
 import ru.sigma.hse.business.bot.api.controller.model.VisitResult
 import ru.sigma.hse.business.bot.domain.model.*
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
-import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.visit.BadVisitCodeException
 import ru.sigma.hse.business.bot.notification.NotificationService
 import ru.sigma.hse.business.bot.notification.model.UserVisitNotification

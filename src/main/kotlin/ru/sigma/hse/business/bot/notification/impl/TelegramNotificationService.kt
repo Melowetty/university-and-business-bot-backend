@@ -55,8 +55,14 @@ class TelegramNotificationService(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T : Notification> getProcessor(notification: T): NotificationProcessor<T>? {
-        return processorMap[notification::class.java] as? NotificationProcessor<T>
+        val exactProcessor = processorMap[notification::class.java] as? NotificationProcessor<T>
+        if (exactProcessor != null) return exactProcessor
+        
+        return processorMap.entries
+            .firstOrNull { (clazz, _) -> clazz.isInstance(notification) }
+            ?.value as? NotificationProcessor<T>
     }
 
     companion object {

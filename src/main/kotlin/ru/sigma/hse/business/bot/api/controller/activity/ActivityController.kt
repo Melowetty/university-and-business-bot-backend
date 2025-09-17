@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import ru.sigma.hse.business.bot.api.controller.model.ActivityRequest
 import ru.sigma.hse.business.bot.api.controller.model.CreateActivityRequest
 import ru.sigma.hse.business.bot.domain.model.Activity
+import ru.sigma.hse.business.bot.extension.toDto
 import ru.sigma.hse.business.bot.service.ActivityService
 import ru.sigma.hse.business.bot.service.VisitService
 
@@ -33,8 +35,8 @@ class ActivityController(
     fun createActivity(
         @Parameter(description = "Объект с полной информацией об активности")
         @RequestBody newActivity: CreateActivityRequest
-    ): Activity {
-        return activityService.createActivity(newActivity)
+    ): ActivityRequest {
+        return activityService.createActivity(newActivity).toDto()
     }
 
     @GetMapping(
@@ -49,8 +51,8 @@ class ActivityController(
     fun getActivity(
         @Parameter(description = "ID активности")
         @PathVariable activityId: Long
-    ): Activity {
-        return activityService.getActivity(activityId)
+    ): ActivityRequest {
+        return activityService.getActivity(activityId).toDto()
     }
 
     @PostMapping(
@@ -66,8 +68,8 @@ class ActivityController(
         @PathVariable activityId: Long,
         @Parameter(description = "Код пользователя")
         @PathVariable userCode: String
-    ) : Activity {
-        return visitService.markUserAsVisitedActivity(activityId, userCode)
+    ) : ActivityRequest {
+        return visitService.markUserAsVisitedActivity(activityId, userCode).toDto()
     }
 
     @GetMapping(
@@ -79,7 +81,7 @@ class ActivityController(
     )
     @ApiResponse(responseCode = "200", description = "Информация об активностях")
     fun getAllActivities(
-    ): List<Activity> {
-        return activityService.getAllActivities()
+    ): List<ActivityRequest> {
+        return activityService.getAllActivities().map { it.toDto() }
     }
 }

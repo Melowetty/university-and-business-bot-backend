@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.UserEntity
 import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.User
+import ru.sigma.hse.business.bot.domain.model.UserRole
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.UserRepository
 
@@ -61,6 +62,8 @@ class JdbcUserStorage(
             UserEntity(
                 tgId = tgId,
                 code = code,
+                role = UserRole.USER,
+                authCode = null,
                 fullName = fullName,
                 course = course,
                 program = program,
@@ -132,12 +135,23 @@ class JdbcUserStorage(
         return userRepository.addPointsToUser(userId, points)
     }
 
+    fun addRoleToUser(userId: Long, role: UserRole, code: String){
+        if (!userRepository.existsById(userId)) {
+            logger.warn { "User with id $userId does not exist" }
+            throw UserByIdNotFoundException(userId)
+        }
+
+        userRepository.addRoleToUser(userId, role ,code)
+        logger.info { "User $userId now has $role role with code $code" }
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
 
         fun UserEntity.toUser(): User {
             return User(
                 id = this.id(),
+                role = this.role,
                 code = this.code,
                 tgId = this.tgId,
                 fullName = this.fullName,

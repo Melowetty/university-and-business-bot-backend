@@ -1,0 +1,7 @@
+-- changeset knbdan:1758054907000-1
+ALTER TABLE users ADD COLUMN role VARCHAR(31) NOT NULL DEFAULT 'USER';
+-- changeset knbdan:1758054907000-2
+ALTER TABLE users ADD COLUMN auth_code VARCHAR(255);
+-- changeset knbdan:1758054907000-3
+CREATE TABLE auth_code (code VARCHAR(255) NOT NULL, role VARCHAR(31) NOT NULL, CONSTRAINT pk_auth_code PRIMARY KEY (code));
+

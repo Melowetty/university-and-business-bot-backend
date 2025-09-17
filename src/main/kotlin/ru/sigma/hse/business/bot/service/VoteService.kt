@@ -9,15 +9,18 @@ import ru.sigma.hse.business.bot.persistence.VoteStorage
 class VoteService(
     private val voteStorage: VoteStorage,
     private val userService: UserService,
+    private val eventService: ActivityEventService,
 ) {
 
     @Transactional
     fun addAnswer(activityId: Long, userId: Long, answer: String): Vote {
         val user = userService.getUser(userId)
-        val votePoints = 5
-        userService.addPointsToUserScore(user.id, votePoints)
+        val event = eventService.getEvent(activityId)
 
-        // TODO: validate answer
+        if (eventService.isCorrectAnswer(activityId, answer)) {
+            userService.addPointsToUserScore(user.id, event.reward)
+        }
+
         return voteStorage.createVote(activityId, answer, userId)
     }
 }

@@ -2,7 +2,10 @@ package ru.sigma.hse.business.bot.domain.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
+import ru.sigma.hse.business.bot.domain.model.UserRole
 import java.time.LocalDateTime
 
 @Entity
@@ -10,6 +13,13 @@ import java.time.LocalDateTime
 class UserEntity(
     @Column(nullable = false, unique = true)
     var tgId: Long,
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    var role: UserRole = UserRole.USER,
+
+    @Column(nullable = true)
+    var authCode: String?,
 
     @Column(nullable = false, unique = true, updatable = false)
     var code: String,

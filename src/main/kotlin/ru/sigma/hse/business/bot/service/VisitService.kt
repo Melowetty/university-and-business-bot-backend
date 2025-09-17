@@ -21,6 +21,7 @@ class VisitService(
     private val visitStorage: VisitStorage,
     private val companyStorage: CompanyStorage,
     private val activityStorage: ActivityStorage,
+    private val activityService: ActivityService,
     private val qrCodeGenerator: QrCodeGenerator,
     private val userService: UserService,
     private val notificationService: NotificationService,
@@ -86,9 +87,7 @@ class VisitService(
     @Transactional
     fun markUserAsVisitedActivity(activityId: Long, userCode: String): Activity {
         val user = userService.getUserByCode(userCode)
-
-        val activity = activityStorage.getActivity(activityId)
-            ?: throw ActivityByIdNotFoundException(activityId)
+        val activity = activityService.getActivity(activityId)
 
         visitStorage.addActivityVisit(user.id, activityId)
         userService.addPointsToUserScore(user.id, activity.points)

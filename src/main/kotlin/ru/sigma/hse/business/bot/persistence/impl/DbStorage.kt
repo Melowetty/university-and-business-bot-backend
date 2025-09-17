@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.model.*
 import ru.sigma.hse.business.bot.persistence.Storage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcActivityStorage
+import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcAuthCodeStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompanyStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcCompletedUserTaskStorage
 import ru.sigma.hse.business.bot.persistence.impl.jdbc.JdbcEventStorage
@@ -25,7 +26,8 @@ class DbStorage(
     private val jdbcCompletedUserTaskStorage: JdbcCompletedUserTaskStorage,
     private val jdbcEventStorage: JdbcEventStorage,
     private val jdbcVoteStorage: JdbcVoteStorage,
-    private val jdbcTaskStorage: JdbcTaskStorage
+    private val jdbcTaskStorage: JdbcTaskStorage,
+    private val jdbcAuthCodeStorage: JdbcAuthCodeStorage,
 ) : Storage {
     override fun getUsers(limit: Int, token: Long): Pageable<User> {
         return jdbcUserStorage.getUsers(limit, token)
@@ -56,6 +58,10 @@ class DbStorage(
 
     override fun addPointsToUser(userId: Long, points: Int) {
         return jdbcUserStorage.addPointsToUser(userId, points)
+    }
+
+    override fun addRoleToUser(userId: Long, role: UserRole, code: String) {
+        return jdbcUserStorage.addRoleToUser(userId, role, code)
     }
 
     override fun markUserAsCompletedConference(userId: Long) {
@@ -273,4 +279,18 @@ class DbStorage(
         return jdbcCompletedUserTaskStorage.getByUserIdTaskId(userId, taskId)
     }
 
+    override fun createRole(code: String, role: UserRole): AuthCode {
+        return jdbcAuthCodeStorage.createRole(code, role)
+    }
+
+    override fun deleteRole(code: String) {
+    }
+
+    override fun getRole(code: String): UserRole? {
+        return jdbcAuthCodeStorage.getRole(code)
+    }
+
+    override fun getRoleAndDelete(code: String): UserRole? {
+        return jdbcAuthCodeStorage.getRoleAndDelete(code)
+    }
 }

@@ -1,5 +1,6 @@
 package ru.sigma.hse.business.bot.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -43,6 +44,7 @@ class UserService(
         return GetUserInfoRequest(
             userId = userId,
             name = user.fullName,
+            role = user.role,
             course = user.course,
             program = user.program,
             email = user.email
@@ -62,10 +64,11 @@ class UserService(
             program = newUser.program,
             email = newUser.email,
         )
-
+        logger.info { "User ${user.id} created" }
         return GetUserInfoRequest(
             userId = user.id,
             name = user.fullName,
+            role = user.role,
             course = user.course,
             program = user.program,
             email = user.email
@@ -96,6 +99,11 @@ class UserService(
                 payload,
                 SendConferenceCompleteNotificationJob::class.java
             )
+            logger.info { "Given $points points to user $userId" }
         }
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {  }
     }
 }

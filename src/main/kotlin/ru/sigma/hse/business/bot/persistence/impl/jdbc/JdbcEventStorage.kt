@@ -51,6 +51,7 @@ class JdbcEventStorage(
         return savedEntity.toEvent()
     }
 
+
     @Transactional
     fun updateEventStatus(
         id: Long,
@@ -87,6 +88,8 @@ class JdbcEventStorage(
                 status = status,
                 answers = answers,
                 duration = duration,
+                rightAnswer = rightAnswer,
+                reward = reward
             )
         }
     }

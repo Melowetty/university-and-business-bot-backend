@@ -4,21 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.Duration
 
 data class ActivityEvent (
-    @Schema(description = "ID активности", example = "1")
     val id: Long,
-
-    @Schema(description = "Название ивента", example = "Голосование за проект")
     val name: String,
-
-    @Schema(description = "Описание ивента", example = "Проголосуйте за проект, который больше всего Вам понравился")
     val description: String,
-
-    @Schema(description = "Длительность ивента", example = "P10m")
     val duration: Duration?,
-
-    @Schema(description = "Статус ивента", example = "ENDED")
     var status: EventStatus,
-
-    @Schema(description = "Ответы ивента", example = "['раз','двас','три3']")
-    val answers: List<String>
+    val answers: List<String>,
+    val rightAnswer: String?,
+    val reward: Int,
 )

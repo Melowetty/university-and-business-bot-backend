@@ -19,7 +19,7 @@ class AuthCodeService(
     fun generateAuthCode(roles: CreateAuthCodeRequest): List<String> {
         val codeList = mutableListOf<String>()
 
-        for (i in 0..(roles.count)){
+        for (i in 1 ..(roles.count)){
             val authCode = when (roles.type) {
                 UserRole.ADMIN -> authCodeStorage.createAuthCode(codeGenerator.generateAuthCode(), UserRole.ADMIN)
                 UserRole.VOLUNTEER -> authCodeStorage.createAuthCode(codeGenerator.generateAuthCode(), UserRole.VOLUNTEER)

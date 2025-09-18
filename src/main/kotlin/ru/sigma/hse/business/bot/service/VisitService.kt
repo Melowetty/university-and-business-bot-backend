@@ -1,5 +1,6 @@
 package ru.sigma.hse.business.bot.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -8,12 +9,14 @@ import ru.sigma.hse.business.bot.api.controller.model.VisitResult
 import ru.sigma.hse.business.bot.domain.model.*
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.visit.BadVisitCodeException
+import ru.sigma.hse.business.bot.exception.visit.VisitAlreadyExistsException
 import ru.sigma.hse.business.bot.notification.NotificationService
 import ru.sigma.hse.business.bot.notification.model.UserVisitNotification
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
 import ru.sigma.hse.business.bot.persistence.CompanyStorage
 import ru.sigma.hse.business.bot.persistence.VisitStorage
 import ru.sigma.hse.business.bot.service.qr.QrCodeGenerator
+import ru.sigma.hse.business.bot.utils.Paginator
 
 @Service
 class VisitService(
@@ -103,6 +106,40 @@ class VisitService(
         return activity
     }
 
+    fun copyVisits(fromActivityId: Long, toActivityId: Long) {
+        Thread.startVirtualThread {
+            val toActivity = activityService.getActivity(toActivityId)
+            logger.info { "Copying visits from $fromActivityId to $toActivityId" }
+            Paginator.fetchPageable(
+                fetchFunction = { limit, token ->
+                    visitStorage.getVisitsByTargetId(fromActivityId, limit, token)
+                }
+            ) { visits ->
+                visits.forEach {
+                    try {
+                        visitStorage.addActivityVisit(it.userId, toActivityId)
+                    } catch (_: VisitAlreadyExistsException) {
+                        // do nothing
+                    }
+
+                    userService.addPointsToUserScore(it.userId, toActivity.points)
+
+                    val notification = UserVisitNotification(
+                        DetailedVisit(
+                            target = toActivity,
+                            type = VisitTarget.ACTIVITY
+                        )
+                    )
+
+                    val user = userService.getUser(it.userId)
+                    notificationService.notify(user.tgId, notification)
+                }
+            }
+
+            logger.info { "Ended copy visits from $fromActivityId to $toActivityId" }
+        }
+    }
+
     fun getUserVisits(userId: Long): List<DetailedVisit> {
         val allVisits = visitStorage.getVisitsByUserId(userId)
 
@@ -120,5 +157,9 @@ class VisitService(
         }.map { it.toDetailedVisit() }
 
         return detailedVisits
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {  }
     }
 }

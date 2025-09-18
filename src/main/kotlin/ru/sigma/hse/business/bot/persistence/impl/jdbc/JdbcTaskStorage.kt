@@ -16,6 +16,10 @@ import java.time.Duration
 class JdbcTaskStorage(
     private val taskRepository: TaskRepository
 ) {
+    fun getAllTasks(): List<Task> {
+        return taskRepository.findAll().map { it.toTask() }
+    }
+
     fun getRanTasks(): List<Task> {
         return taskRepository.getAllByStatus(TaskStatus.IN_PROCESS)
             .map { it.toTask() }

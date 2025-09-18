@@ -84,4 +84,21 @@ class ActivityController(
     ): List<ActivityRequest> {
         return activityService.getAllActivities().map { it.toDto() }
     }
+
+    @PostMapping(
+        "/{activityId}/visit-copy/{toActivityId}"
+    )
+    @Operation(
+        summary = "Скопировать посещения активности",
+        description = "Скопировать посещения активности"
+    )
+    @ApiResponse(responseCode = "200", description = "Скопированы посещения")
+    fun copyVisits(
+        @Parameter(description = "ID активности-источника")
+        @PathVariable activityId: Long,
+        @Parameter(description = "ID активности-цели")
+        @PathVariable toActivityId: Long
+    ) {
+        visitService.copyVisits(activityId, toActivityId)
+    }
 }

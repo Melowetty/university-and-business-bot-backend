@@ -12,6 +12,6 @@ data class CreateCompanyRequest(
     @Schema(description = "Описание компании", example = "Вкусная курочка каждый день только у нас")
     val description: String,
     @field:URL(message = "Wrong company vacancies link format")
-    @Schema(description = "Ссылка на вакансию", example = "https://rabora/rostics")
-    val vacanciesLink: String
+    @Schema(description = "Ссылка на сайт", example = "https://rabora/rostics")
+    val siteUrl: String?
 )

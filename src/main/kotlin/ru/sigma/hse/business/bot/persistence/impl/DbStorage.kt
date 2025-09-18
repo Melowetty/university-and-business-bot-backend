@@ -92,9 +92,9 @@ class DbStorage(
         code: String,
         name: String,
         description: String,
-        vacanciesLink: String
+        siteUrl: String?
     ): Company {
-        return jdbcCompanyStorage.createCompany(code, name, description, vacanciesLink)
+        return jdbcCompanyStorage.createCompany(code, name, description, siteUrl)
     }
 
     override fun updateCompany(

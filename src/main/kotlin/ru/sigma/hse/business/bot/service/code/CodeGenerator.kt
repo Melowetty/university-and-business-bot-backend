@@ -17,7 +17,11 @@ class CodeGenerator {
         return "UNU" + generateCode()
     }
 
-    fun generateCode(): String {
+    fun generateRoleCode(): String {
+        return generateCode()
+    }
+
+    private fun generateCode(): String {
         return buildString {
             repeat(CODE_LENGTH) {
                 append(CHARACTERS[random.nextInt(CHARACTERS.length)])

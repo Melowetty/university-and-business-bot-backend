@@ -63,14 +63,27 @@ class ActivityEventService(
         logger.info { "Event $activityId ended" }
     }
 
+    fun isCorrectAnswer(activityId: Long, answer: String): Boolean {
+        val event = eventStorage.getEvent(activityId)
+            ?: throw EventByIdNotFoundException(activityId)
+        if (event.rightAnswer == null) {
+            return true
+        }
+        if (event.rightAnswer.uppercase().equals(answer.uppercase())) {
+            return true
+        }
+        return false
+    }
+
     private fun getEventOrThrow(activityId: Long): ActivityEvent {
         return eventStorage.getEvent(activityId)
             ?: throw BadArgumentException("BAD_ACTIVITY", "Activity has no event")
     }
 
     fun getEvent(activityId: Long): ActivityEvent {
-        return eventStorage.getEvent(activityId)
+        val event = eventStorage.getEvent(activityId)
             ?: throw EventByIdNotFoundException(activityId)
+        return event
     }
 
     companion object {

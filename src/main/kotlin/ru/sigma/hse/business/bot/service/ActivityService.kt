@@ -1,5 +1,6 @@
 package ru.sigma.hse.business.bot.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import ru.sigma.hse.business.bot.api.controller.model.CreateActivityRequest
@@ -30,15 +31,21 @@ class ActivityService(
         )
 
         eventPublisher.publishEvent(CreatedVisitableObjectEvent(activity, code))
+        logger.info { "Activity with id ${activity.id} created" }
         return activity
     }
 
     fun getActivity(activityId: Long): Activity {
-        return activityStorage.getActivity(activityId)
+        val activity = activityStorage.getActivity(activityId)
             ?: throw ActivityByIdNotFoundException(activityId)
+        return activity
     }
 
     fun getAllActivities(): List<Activity> {
         return activityStorage.getAllActivities()
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {  }
     }
 }

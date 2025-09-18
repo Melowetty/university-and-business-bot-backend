@@ -36,7 +36,7 @@ class PrettyQrCodeGenerator : QrCodeGenerator {
             graphics.fillRect(0, 0, matrixWidth, matrixWidth)
 
             // Основной цвет QR-кода
-            graphics.color = Color(46, 180, 133)
+            graphics.color = Color(13,21,60)
 
             // Рисуем QR-код
             for (i in 0 until matrixWidth) {

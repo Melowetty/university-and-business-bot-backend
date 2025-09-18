@@ -3,6 +3,7 @@ package ru.sigma.hse.business.bot.domain.model
 data class User(
     val id: Long,
     var tgId: Long,
+    var role: UserRole,
     var code: String,
     val fullName: String,
     val course: Int,

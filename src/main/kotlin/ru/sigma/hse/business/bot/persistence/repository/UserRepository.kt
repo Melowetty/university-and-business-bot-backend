@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import ru.sigma.hse.business.bot.domain.entity.UserEntity
+import ru.sigma.hse.business.bot.domain.model.UserRole
 
 @Repository
 interface UserRepository : JpaRepository<UserEntity, Long> {
@@ -29,4 +30,8 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     @Query("UPDATE UserEntity u SET u.currentScore = u.currentScore + :points WHERE u.id = :userId")
     @Modifying
     fun addPointsToUser(userId: Long, points: Int)
+
+    @Query("UPDATE UserEntity u SET u.role = :role, u.authCode = :authCode WHERE u.id = :userId")
+    @Modifying
+    fun addRoleToUser(userId: Long, role: UserRole, authCode: String)
 }

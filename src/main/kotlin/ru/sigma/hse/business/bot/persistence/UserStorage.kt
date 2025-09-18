@@ -2,6 +2,7 @@ package ru.sigma.hse.business.bot.persistence
 
 import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.User
+import ru.sigma.hse.business.bot.domain.model.UserRole
 
 interface UserStorage {
     fun getUsers(
@@ -43,4 +44,6 @@ interface UserStorage {
     fun getTelegramIdsByIds(ids: List<Long>): List<Long>
 
     fun addPointsToUser(userId: Long, points: Int)
+
+    fun addRoleToUser(userId: Long, role: UserRole, code: String)
 }

@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RestController
 import ru.sigma.hse.business.bot.api.controller.model.CreateEventRequest
 import ru.sigma.hse.business.bot.api.controller.model.CreateVoteRequest
 import ru.sigma.hse.business.bot.api.controller.model.EventChangeStatus
+import ru.sigma.hse.business.bot.api.controller.model.ActivityEventRequest
 import ru.sigma.hse.business.bot.api.controller.model.UpdateEventStatusRequest
-import ru.sigma.hse.business.bot.domain.model.ActivityEvent
 import ru.sigma.hse.business.bot.domain.model.Vote
+import ru.sigma.hse.business.bot.extension.toDto
 import ru.sigma.hse.business.bot.service.ActivityEventService
 import ru.sigma.hse.business.bot.service.TelegramUserService
 import ru.sigma.hse.business.bot.service.VoteService
@@ -41,8 +42,8 @@ class ActivityEventController(
         @PathVariable activityId: Long,
         @Parameter(description = "Объект с полной информацией об ивенте")
         @RequestBody newEvent: CreateEventRequest
-    ): ActivityEvent {
-        return activityEventService.createEvent(activityId, newEvent)
+    ): ActivityEventRequest {
+        return activityEventService.createEvent(activityId, newEvent).toDto()
     }
 
     @GetMapping(
@@ -56,8 +57,8 @@ class ActivityEventController(
     fun getEvent(
         @Parameter(description = "ID активности")
         @PathVariable activityId: Long,
-    ): ActivityEvent {
-        return activityEventService.getEvent(activityId)
+    ): ActivityEventRequest {
+        return activityEventService.getEvent(activityId).toDto()
     }
 
     @PostMapping(

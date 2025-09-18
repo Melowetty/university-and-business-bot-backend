@@ -21,7 +21,7 @@ class CompanyService(
             code = code,
             name = request.name,
             description = request.description,
-            vacanciesLink = request.vacanciesLink
+            siteUrl = request.siteUrl
         )
 
         eventPublisher.publishEvent(CreatedVisitableObjectEvent(company, code))

@@ -35,14 +35,14 @@ class JdbcCompanyStorage(
         code: String,
         name: String,
         description: String,
-        vacanciesLink: String
+        siteUrl: String?
     ): Company {
         val entity = companyRepository.save(
             CompanyEntity(
                 code = code,
                 name = name,
                 description = description,
-                vacanciesLink = vacanciesLink
+                siteUrl = siteUrl
             )
         )
 
@@ -62,7 +62,7 @@ class JdbcCompanyStorage(
         val updatedCompany = existingCompany.apply {
             name = company.name
             description = company.description
-            vacanciesLink = company.vacanciesLink
+            siteUrl = company.siteUrl
         }
 
         logger.info { "Updated company with id ${updatedCompany.id()}" }
@@ -92,7 +92,7 @@ class JdbcCompanyStorage(
                 id = this.id(),
                 name = this.name,
                 description = this.description,
-                vacanciesLink = this.vacanciesLink
+                siteUrl = this.siteUrl
             )
         }
     }

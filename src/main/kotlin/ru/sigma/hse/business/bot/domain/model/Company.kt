@@ -9,6 +9,6 @@ data class Company(
     override val name: String,
     @Schema(description = "Описание компании", example = "Прикольная компания со вкусной курочкой")
     override val description: String,
-    @Schema(description = "Ссылка на вакансию", example = "https://ростикс.ком")
-    val vacanciesLink: String
+    @Schema(description = "Ссылка на сайт", example = "https://ростикс.ком")
+    val siteUrl: String?
 ) : Visitable(id, name, description)

@@ -11,7 +11,7 @@ interface CompanyStorage {
         code: String,
         name: String,
         description: String,
-        vacanciesLink: String
+        siteUrl: String?
     ): Company
 
     fun updateCompany(

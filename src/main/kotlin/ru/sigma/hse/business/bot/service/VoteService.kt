@@ -1,7 +1,7 @@
 package ru.sigma.hse.business.bot.service
 
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import ru.sigma.hse.business.bot.domain.model.Vote
 import ru.sigma.hse.business.bot.persistence.VoteStorage
 

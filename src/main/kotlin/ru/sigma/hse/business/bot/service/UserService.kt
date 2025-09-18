@@ -4,6 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import ru.sigma.hse.business.bot.api.controller.model.CreateUserRequest
 import ru.sigma.hse.business.bot.api.controller.model.GetUserInfoRequest
 import ru.sigma.hse.business.bot.domain.model.User

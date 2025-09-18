@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Positive
 import ru.sigma.hse.business.bot.domain.model.UserRole
 
-class CreateRoleRequest(
+class CreateAuthCodeRequest(
     @field:Positive(message = "Wrong role count format (must be positive)")
-    @Schema(description = "Количество генерируемых ролей", example = "3")
+    @Schema(description = "Количество генерируемых кодов и ролей", example = "3")
     val count: Int,
     @field:NotBlank(message = "Wrong role type format")
     @Schema(description = "Тип роли", example = "ADMIN")

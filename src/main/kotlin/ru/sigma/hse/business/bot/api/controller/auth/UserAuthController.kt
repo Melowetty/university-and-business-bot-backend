@@ -1,4 +1,4 @@
-package ru.sigma.hse.business.bot.api.controller.role
+package ru.sigma.hse.business.bot.api.controller.auth
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -9,16 +9,15 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.sigma.hse.business.bot.api.controller.model.AddRoleToUserRequest
-import ru.sigma.hse.business.bot.api.controller.model.CreateRoleRequest
-import ru.sigma.hse.business.bot.domain.model.User
+import ru.sigma.hse.business.bot.api.controller.model.CreateAuthCodeRequest
 import ru.sigma.hse.business.bot.service.AuthCodeService
 import ru.sigma.hse.business.bot.service.TelegramUserService
 
 @RestController
 @RequestMapping("/auth/code")
 @Tag(name = "Роли", description = "Управление ролями пользователей")
-class UserRoleController(
-    private val roleService: AuthCodeService,
+class UserAuthController(
+    private val authCodeService: AuthCodeService,
     private val telegramUserService: TelegramUserService
 ) {
     @PostMapping(
@@ -32,9 +31,9 @@ class UserRoleController(
     @ApiResponse(responseCode = "200", description = "Новый роли успешно созданы")
     fun createRoles(
         @Parameter(description = "Объект с количеством и типом ролей")
-        @RequestBody roles: CreateRoleRequest
+        @RequestBody request: CreateAuthCodeRequest
     ): List<String> {
-        return roleService.generateRole(roles)
+        return authCodeService.generateAuthCode(request)
     }
 
     @PostMapping(
@@ -51,6 +50,6 @@ class UserRoleController(
         @RequestBody addUserRole: AddRoleToUserRequest
     ) {
         val user = telegramUserService.getUser(addUserRole.tgId)
-        roleService.addRole(user.id,addUserRole.code)
+        authCodeService.addRole(user.id,addUserRole.code)
     }
 }

@@ -13,5 +13,6 @@ fun Activity.toDto(): ActivityRequest {
         location = location,
         startTime = startTime,
         endTime = endTime,
+        hasEvent = hasEvent,
     )
 }

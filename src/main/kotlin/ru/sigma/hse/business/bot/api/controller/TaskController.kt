@@ -26,6 +26,17 @@ class TaskController(
     private val taskService: TaskService,
     private val telegramUserService: TelegramUserService,
 ) {
+    @GetMapping(
+        produces = ["application/json"]
+    )
+    @Operation(
+        summary = "Получить все задания",
+        description = "Получить все задания"
+    )
+    fun getAllTasks(): List<Task> {
+        return taskService.getAllTasks()
+    }
+
     @PostMapping(
         produces = ["application/json"]
     )

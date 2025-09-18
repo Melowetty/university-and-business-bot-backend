@@ -6,6 +6,8 @@ import ru.sigma.hse.business.bot.domain.model.TaskType
 import java.time.Duration
 
 interface TaskStorage {
+    fun getTasks(): List<Task>
+
     fun getRanTasks(): List<Task>
 
     fun getTask(id: Long): Task?

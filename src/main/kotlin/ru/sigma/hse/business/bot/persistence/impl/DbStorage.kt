@@ -239,6 +239,10 @@ class DbStorage(
         return jdbcVoteStorage.deleteVote(id)
     }
 
+    override fun getTasks(): List<Task> {
+        return jdbcTaskStorage.getAllTasks()
+    }
+
     override fun getRanTasks(): List<Task> {
         return jdbcTaskStorage.getRanTasks()
     }

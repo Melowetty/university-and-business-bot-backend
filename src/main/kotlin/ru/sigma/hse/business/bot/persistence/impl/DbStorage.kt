@@ -279,18 +279,16 @@ class DbStorage(
         return jdbcCompletedUserTaskStorage.getByUserIdTaskId(userId, taskId)
     }
 
-    override fun createRole(code: String, role: UserRole): AuthCode {
-        return jdbcAuthCodeStorage.createRole(code, role)
+    override fun createAuthCode(code: String, role: UserRole): AuthCode {
+        return jdbcAuthCodeStorage.createAuthCode(code, role)
     }
 
     override fun deleteRole(code: String) {
+        jdbcAuthCodeStorage.deleteRole(code)
     }
 
     override fun getRole(code: String): UserRole? {
         return jdbcAuthCodeStorage.getRole(code)
     }
 
-    override fun getRoleAndDelete(code: String): UserRole? {
-        return jdbcAuthCodeStorage.getRoleAndDelete(code)
-    }
 }

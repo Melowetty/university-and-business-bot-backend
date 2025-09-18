@@ -17,7 +17,7 @@ class CodeGenerator {
         return "UNU" + generateCode()
     }
 
-    fun generateRoleCode(): String {
+    fun generateAuthCode(): String {
         return generateCode()
     }
 

@@ -58,9 +58,6 @@ class PrettyQrCodeGenerator : QrCodeGenerator {
             val outputStream = ByteArrayOutputStream()
             ImageIO.write(image, "PNG", outputStream)
 
-            val file = File("qrcode.png")
-            ImageIO.write(image, "PNG", file)
-
             outputStream.toByteArray()
 
         } catch (e: Exception) {

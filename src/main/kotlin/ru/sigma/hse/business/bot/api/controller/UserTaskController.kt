@@ -16,8 +16,8 @@ import ru.sigma.hse.business.bot.service.UserTaskService
 @RequestMapping("/users/{telegramId}/tasks")
 @Tag(name = "Выполнение заданий пользователями", description = "Работа с отметкой выполнения заданий пользователями")
 class UserTaskController(
-    private val taskService: UserTaskService,
-    private val telegramUserService: TelegramUserService
+    private val userTaskService: UserTaskService,
+    private val telegramUserService: TelegramUserService,
 ) {
     @GetMapping(
         produces = ["application/json"]
@@ -32,7 +32,7 @@ class UserTaskController(
         @PathVariable("telegramId") telegramId: Long
     ): List<UserTask> {
         val userId = telegramUserService.getUser(telegramId).id
-        return taskService.getAvailableUserTasks(userId)
+        return userTaskService.getAvailableUserTasks(userId)
     }
 
     @GetMapping(
@@ -52,6 +52,6 @@ class UserTaskController(
         @PathVariable("taskId") taskId: Long
     ) : UserTask {
         val userId = telegramUserService.getUser(telegramId).id
-        return taskService.getTask(userId, taskId)
+        return userTaskService.getTask(userId, taskId)
     }
 }

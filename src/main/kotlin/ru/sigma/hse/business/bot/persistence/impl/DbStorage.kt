@@ -175,12 +175,20 @@ class DbStorage(
         return jdbcActivityStorage.getAllActivities()
     }
 
+    override fun getActivityByKeyWord(keyWord: String): Activity {
+        return jdbcActivityStorage.getActivityByKeyWord(keyWord)
+    }
+
     override fun getVisitsByUserId(userId: Long): List<Visit> {
         return jdbcVisitStorage.getVisitsByUserId(userId)
     }
 
     override fun getCountVisitsByUserId(userId: Long): Long {
         return jdbcVisitStorage.getVisitsCountByUserId(userId)
+    }
+
+    override fun getVisitByUserIdTargetId(userid: Long, activityId: Long): Visit {
+        return jdbcVisitStorage.getVisitByUserIdTargetId(userid, activityId)
     }
 
     override fun getPreregistrationUser(tgId: Long): PreregistrationUser? {

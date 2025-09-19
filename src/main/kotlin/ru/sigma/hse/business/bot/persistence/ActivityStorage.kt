@@ -30,4 +30,6 @@ interface ActivityStorage {
     fun getActivityByCode(code: String): Activity?
 
     fun getAllActivities(): List<Activity>
+
+    fun getActivityByKeyWord(keyWord: String): Activity
 }

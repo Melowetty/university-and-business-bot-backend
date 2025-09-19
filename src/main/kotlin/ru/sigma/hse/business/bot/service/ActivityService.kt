@@ -8,6 +8,7 @@ import ru.sigma.hse.business.bot.domain.event.CreatedVisitableObjectEvent
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
+import ru.sigma.hse.business.bot.persistence.VisitStorage
 import ru.sigma.hse.business.bot.service.code.CodeGenerator
 
 @Service
@@ -15,6 +16,8 @@ class ActivityService(
     private val codeGenerator: CodeGenerator,
     private val activityStorage: ActivityStorage,
     private val eventPublisher: ApplicationEventPublisher,
+    private val userService: UserService,
+    private val visitStorage: VisitStorage,
 ) {
     fun createActivity(request: CreateActivityRequest): Activity {
         val code = codeGenerator.generateActivityCode()
@@ -43,6 +46,16 @@ class ActivityService(
 
     fun getAllActivities(): List<Activity> {
         return activityStorage.getAllActivities()
+    }
+
+    fun checkKeyWord(
+        userId: Long,
+        keyWord: String
+    ) {
+        val user = userService.getUser(userId)
+        val trueKeyWord = keyWord.replace(" ","").uppercase()
+        val activity = activityStorage.getActivityByKeyWord(trueKeyWord)
+        visitStorage.getVisitByUserIdTargetId(user.id, activity.id)
     }
 
     companion object {

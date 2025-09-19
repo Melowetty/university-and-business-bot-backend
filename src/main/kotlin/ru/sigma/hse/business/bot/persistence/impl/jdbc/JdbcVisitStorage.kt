@@ -12,6 +12,7 @@ import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundExceptio
 import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.visit.VisitAlreadyExistsException
+import ru.sigma.hse.business.bot.exception.visit.VisitByUserIdTargetIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.VisitRepository
 
 @Component
@@ -136,6 +137,12 @@ class JdbcVisitStorage(
     fun getVisitsCountByUserId(userId: Long): Long {
         validateUser(userId)
         return visitRepository.countByUserId(userId)
+    }
+
+    fun getVisitByUserIdTargetId(userId: Long, activityId: Long): Visit {
+        val visit = visitRepository.getVisitByUserIdAndTargetId(userId, activityId)
+            ?: throw VisitByUserIdTargetIdNotFoundException(userId, activityId)
+        return visit.toVisit()
     }
 
     private fun validateUser(userId: Long) {

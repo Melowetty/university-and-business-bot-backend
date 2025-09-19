@@ -8,6 +8,7 @@ import ru.sigma.hse.business.bot.domain.entity.ActivityEntity
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.domain.model.ActivityType
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.activity.ActivityByKeyWordNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.ActivityRepository
 
 @Component
@@ -44,6 +45,10 @@ class JdbcActivityStorage(
         keyWord: String?,
         points: Int
     ): Activity {
+        var trueKeyWord = keyWord
+        if (keyWord != null){
+             trueKeyWord = keyWord.replace(" ","").uppercase()
+        }
         val activityEntity = ActivityEntity(
             code = code,
             name = name,
@@ -52,7 +57,7 @@ class JdbcActivityStorage(
             location = location,
             startTime = startTime,
             endTime = endTime,
-            keyWord = keyWord,
+            keyWord = trueKeyWord,
             points = points
         )
 
@@ -100,6 +105,12 @@ class JdbcActivityStorage(
 
     fun  getAllActivities(): List<Activity> {
         return activityRepository.findAll().map { it.toActivity() }
+    }
+
+    fun getActivityByKeyWord(keyWord: String): Activity {
+        val activity = activityRepository.getActivityByKeyWord(keyWord)
+            ?: throw ActivityByKeyWordNotFoundException(keyWord)
+        return activity.toActivity()
     }
 
     companion object {

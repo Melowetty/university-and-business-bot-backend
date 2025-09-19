@@ -35,6 +35,12 @@ interface VisitRepository : JpaRepository<VisitEntity, Long> {
         @Param("targetType") targetType: VisitTarget = VisitTarget.ACTIVITY
     ): List<VisitEntity>
 
+    @Query("SELECT v FROM VisitEntity v WHERE v.userId = :userId AND v.targetId = :targetId")
+    fun getVisitByUserIdAndTargetId(
+        userId: Long,
+        targetId: Long
+    ): VisitEntity?
+
     @Query("SELECT v FROM VisitEntity v WHERE v.id > :id ORDER BY v.id ASC LIMIT :limit")
     fun findAllByIdGreaterThanOrderByIdAsc(id: Long, limit: Int): List<VisitEntity>
 

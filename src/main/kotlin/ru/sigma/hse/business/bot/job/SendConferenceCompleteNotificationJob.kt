@@ -4,14 +4,12 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.quartz.DisallowConcurrentExecution
 import org.quartz.Job
 import org.quartz.JobExecutionContext
-import org.quartz.PersistJobDataAfterExecution
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.notification.NotificationService
 import ru.sigma.hse.business.bot.notification.model.ConferenceCompleteNotification
 import ru.sigma.hse.business.bot.persistence.UserStorage
 
 @Component
-@PersistJobDataAfterExecution
 @DisallowConcurrentExecution
 class SendConferenceCompleteNotificationJob(
     private val userStorage: UserStorage,

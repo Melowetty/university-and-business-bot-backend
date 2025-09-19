@@ -1,6 +1,7 @@
 package ru.sigma.hse.business.bot.job
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.quartz.DisallowConcurrentExecution
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.springframework.stereotype.Component
@@ -12,6 +13,7 @@ import ru.sigma.hse.business.bot.service.ActivityEventService
 import ru.sigma.hse.business.bot.utils.Paginator
 
 @Component
+@DisallowConcurrentExecution
 class SendNotificationsForActivityEventJob(
     private val activityEventService: ActivityEventService,
     private val visitStorage: VisitStorage,
@@ -19,17 +21,17 @@ class SendNotificationsForActivityEventJob(
     private val userStorage: UserStorage,
 ) : Job {
     override fun execute(context: JobExecutionContext) {
-        val targetId = context.mergedJobDataMap.getLongValue("targetId")
-        val event = activityEventService.getEvent(targetId)
+        val activityId = context.mergedJobDataMap.getLongValue("activityId")
+        val event = activityEventService.getEvent(activityId)
         val notification = ActivityEventNotification(event)
 
         Paginator.fetchPageable(
             limit = 200,
             fetchFunction = { limit, token ->
-                visitStorage.getVisitsByTargetId(targetId, limit, token)
+                visitStorage.getVisitsByTargetId(activityId, limit, token)
             }
         ) { visits ->
-            logger.info { "Fetch batch visits for event $targetId to send activity event notification" }
+            logger.info { "Fetch batch visits for event $activityId to send activity event notification" }
             val userIds = visits.map { it.userId }
             val telegramIds = userStorage.getTelegramIdsByIds(userIds)
             batchNotificationService.notify(telegramIds, notification)

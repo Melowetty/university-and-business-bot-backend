@@ -25,6 +25,10 @@ class TaskService(
     private val scheduleJobService: ScheduleJobService,
     private val userService: UserService,
 ) {
+    fun getAllTasks(): List<Task> {
+        return taskStorage.getTasks()
+    }
+
     fun createTask(request: CreateTaskRequest): Task {
         return taskStorage.createTask(
             name = request.name,

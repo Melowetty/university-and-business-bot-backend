@@ -104,4 +104,21 @@ class ActivityController(
         val user = telegramUserService.getUser(request.tgId)
         activityService.checkKeyWord(user.id, request.keyWord)
     }
+    
+    @PostMapping(
+        "/{activityId}/visit-copy/{toActivityId}"
+    )
+    @Operation(
+        summary = "Скопировать посещения активности",
+        description = "Скопировать посещения активности"
+    )
+    @ApiResponse(responseCode = "200", description = "Скопированы посещения")
+    fun copyVisits(
+        @Parameter(description = "ID активности-источника")
+        @PathVariable activityId: Long,
+        @Parameter(description = "ID активности-цели")
+        @PathVariable toActivityId: Long
+    ) {
+        visitService.copyVisits(activityId, toActivityId)
+    }
 }

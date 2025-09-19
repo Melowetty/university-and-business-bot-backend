@@ -10,6 +10,7 @@ import ru.sigma.hse.business.bot.domain.model.User
 import ru.sigma.hse.business.bot.exception.base.BadArgumentException
 import ru.sigma.hse.business.bot.exception.user.UserAlreadyExistsByTelegramIdException
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.user.UserGetSurveyRewardAlreadyExistsException
 import ru.sigma.hse.business.bot.job.SendConferenceCompleteNotificationJob
 import ru.sigma.hse.business.bot.persistence.UserStorage
 import ru.sigma.hse.business.bot.service.code.CodeGenerator
@@ -101,6 +102,17 @@ class UserService(
             )
             logger.info { "Given $points points to user $userId" }
         }
+    }
+
+    @Transactional
+    fun giveSurveyReward(userId: Long) {
+        val user = userStorage.getUser(userId)
+            ?:throw UserByIdNotFoundException(userId)
+        if (user.isGotSurveyReward) {
+            logger.info { "User ${user.id} already got survey reward" }
+            throw UserGetSurveyRewardAlreadyExistsException(user.id)
+        }
+        userStorage.giveSurveyReward(user.id)
     }
 
     companion object {

@@ -39,6 +39,8 @@ interface UserStorage {
         userId: Long
     )
 
+    fun giveSurveyReward(userId: Long)
+
     fun findUserByCode(code: String): User?
 
     fun getTelegramIdsByIds(ids: List<Long>): List<Long>

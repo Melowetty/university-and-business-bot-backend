@@ -35,16 +35,15 @@ class VisitService(
         val type = code.substring(0, 3)
 
         val user = userService.getUser(userId)
+        val baseVisitPoints = 2 // Количество очков за посещение компании или активности
 
         val visit = when (type) {
             "UNC" -> {
                 val company = companyStorage.getCompanyByCode(code)
                     ?: throw BadVisitCodeException()
 
-                val companyVisitPoints = 2
-
                 visitStorage.addCompanyVisit(userId, company.id)
-                userService.addPointsToUserScore(user.id, companyVisitPoints)
+                userService.addPointsToUserScore(user.id, baseVisitPoints)
                 company.toDetailedVisit()
             }
 
@@ -53,7 +52,7 @@ class VisitService(
                     ?: throw BadVisitCodeException()
 
                 visitStorage.addActivityVisit(userId, activity.id).targetId
-                userService.addPointsToUserScore(user.id, activity.points)
+                userService.addPointsToUserScore(user.id, baseVisitPoints)
                 activity.toDetailedVisit()
             }
 

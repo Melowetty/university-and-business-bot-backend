@@ -73,4 +73,21 @@ class UserController(
         val qr = userService.getUserQr(userId)
         return qr
     }
+
+    @PostMapping(
+        "{telegramId}/survey",
+        produces = ["application/json"]
+    )
+    @Operation(
+        summary = "Указать что пользователь прошел опрос",
+        description = ""
+    )
+    @ApiResponse(responseCode = "200", description = "Новый пользователь успешно создан")
+    fun giveSurveyReward(
+        @Parameter(description = "Телеграмм ID пользователя")
+        @PathVariable telegramId: Long
+    ) {
+        var user = telegramUserService.getUser(telegramId)
+        return userService.giveSurveyReward(user.id)
+    }
 }

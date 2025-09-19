@@ -72,6 +72,10 @@ class DbStorage(
         jdbcUserStorage.deleteUser(userId)
     }
 
+    override fun giveSurveyReward(userId: Long) {
+        jdbcUserStorage.giveSurveyReward(userId)
+    }
+
     override fun findUserByCode(code: String): User? {
         return jdbcUserStorage.getUserByCode(code)
     }

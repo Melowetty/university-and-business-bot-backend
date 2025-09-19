@@ -43,5 +43,8 @@ class UserEntity(
     val creationDate: LocalDateTime,
 
     @Column(nullable = false)
-    var currentScore: Int = 0
+    var currentScore: Int = 0,
+
+    @Column(nullable = false)
+    var isGotSurveyReward: Boolean = false,
 ) : BaseEntity()

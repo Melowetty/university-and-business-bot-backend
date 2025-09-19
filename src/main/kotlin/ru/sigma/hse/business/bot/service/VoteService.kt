@@ -20,6 +20,10 @@ class VoteService(
         if (eventService.isCorrectAnswer(activityId, answer)) {
             userService.addPointsToUserScore(user.id, event.reward)
         }
+        else {
+            val rewardByWrongAnswer = 2
+            userService.addPointsToUserScore(user.id, rewardByWrongAnswer)
+        }
 
         return voteStorage.createVote(activityId, answer, userId)
     }

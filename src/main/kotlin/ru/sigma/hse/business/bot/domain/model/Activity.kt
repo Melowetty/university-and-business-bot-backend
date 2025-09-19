@@ -10,5 +10,6 @@ data class Activity(
     var location: String,
     var startTime: LocalTime,
     var endTime: LocalTime,
-    val points: Int
+    val points: Int,
+    val hasEvent: Boolean,
 ) : Visitable(id, name, description)

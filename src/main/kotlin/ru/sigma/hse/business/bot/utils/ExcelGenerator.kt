@@ -68,7 +68,7 @@ class ExcelGenerator {
         val sheet = getOrCreateSheet(USERS_SHEET_NAME)
 
         if (currentUsersRowIndex == 0) {
-            val header = listOf("ID", "ФИО", "Курс", "Email")
+            val header = listOf("ID", "ФИО", "Курс", "Email", "Баллы")
             sheet.addHeader(header)
             currentUsersRowIndex++
         }
@@ -77,7 +77,8 @@ class ExcelGenerator {
                 it.id.toString(),
                 it.fullName,
                 it.course.toString(),
-                it.email ?: ""
+                it.email ?: "",
+                it.score.toString(),
             )
         }
 

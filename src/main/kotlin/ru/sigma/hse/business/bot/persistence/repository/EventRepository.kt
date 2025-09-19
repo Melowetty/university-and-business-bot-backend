@@ -10,8 +10,6 @@ import ru.sigma.hse.business.bot.domain.model.EventStatus
 
 @Repository
 interface EventRepository : JpaRepository<ActivityEventEntity, Long> {
-
-
     @Transactional
     @Modifying
     @Query("update ActivityEventEntity e set e.status = ?1 where e.id = ?2")

@@ -10,10 +10,12 @@ import ru.sigma.hse.business.bot.domain.model.ActivityType
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.activity.ActivityByKeyWordNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.ActivityRepository
+import ru.sigma.hse.business.bot.persistence.repository.EventRepository
 
 @Component
 class JdbcActivityStorage(
     private val activityRepository: ActivityRepository,
+    private val activityEventRepository: EventRepository,
 ) {
     fun getActivity(id: Long): Activity? {
         val activity = activityRepository.findById(id).getOrNull()
@@ -112,21 +114,24 @@ class JdbcActivityStorage(
             ?: throw ActivityByKeyWordNotFoundException(keyWord)
         return activity.toActivity()
     }
+    
+    private fun ActivityEntity.toActivity(): Activity {
+        val hasEvent = activityEventRepository.existsById(this.id())
+
+        return Activity(
+            id = this.id(),
+            name = this.name,
+            description = this.description,
+            activityType = this.type,
+            location = this.location,
+            startTime = this.startTime,
+            endTime = this.endTime,
+            points = this.points,
+            hasEvent = hasEvent,
+        )
+    }
 
     companion object {
         private val logger = KotlinLogging.logger {  }
-
-        private fun ActivityEntity.toActivity(): Activity {
-            return Activity(
-                id = this.id(),
-                name = this.name,
-                description = this.description,
-                activityType = this.type,
-                location = this.location,
-                startTime = this.startTime,
-                endTime = this.endTime,
-                points = this.points
-            )
-        }
     }
 }

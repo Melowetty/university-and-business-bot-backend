@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.sigma.hse.business.bot.api.controller.model.ActivityRequest
+import ru.sigma.hse.business.bot.api.controller.model.AddKeyWordAnwerRequest
 import ru.sigma.hse.business.bot.api.controller.model.CreateActivityRequest
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.extension.toDto
 import ru.sigma.hse.business.bot.service.ActivityService
+import ru.sigma.hse.business.bot.service.TelegramUserService
+import ru.sigma.hse.business.bot.service.UserService
 import ru.sigma.hse.business.bot.service.VisitService
 
 @RestController
@@ -23,6 +26,7 @@ import ru.sigma.hse.business.bot.service.VisitService
 class ActivityController(
     private val activityService: ActivityService,
     private val visitService: VisitService,
+    private val  telegramUserService: TelegramUserService
 ) {
     @PostMapping(
         produces = ["application/json"]
@@ -85,6 +89,22 @@ class ActivityController(
         return activityService.getAllActivities().map { it.toDto() }
     }
 
+    @PostMapping(
+        "/key-word"
+    )
+    @Operation(
+        summary = "Посетить активность участиком",
+        description = "Создание нового посещения активности участником"
+    )
+    @ApiResponse(responseCode = "200", description = "Новое посещение активности успешно создано")
+    fun visitActivity(
+        @Parameter(description = "Объект с информацией кто и какое слово написал")
+        @RequestBody request: AddKeyWordAnwerRequest
+    ) {
+        val user = telegramUserService.getUser(request.tgId)
+        activityService.checkKeyWord(user.id, request.keyWord)
+    }
+    
     @PostMapping(
         "/{activityId}/visit-copy/{toActivityId}"
     )

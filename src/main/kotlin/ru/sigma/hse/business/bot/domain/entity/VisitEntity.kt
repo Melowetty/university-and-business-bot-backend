@@ -21,8 +21,8 @@ class VisitEntity(
     @Enumerated(EnumType.STRING)
     val targetType: VisitTarget,
 
-//    @Column(name = "is_got_extra_reward", nullable = false)
-//    val isGotExtraReward: Boolean,
+    @Column(name = "is_got_extra_reward", nullable = false)
+    val isGotExtraReward: Boolean,
 
     @Column(updatable = false, nullable = false)
     val time: LocalDateTime,

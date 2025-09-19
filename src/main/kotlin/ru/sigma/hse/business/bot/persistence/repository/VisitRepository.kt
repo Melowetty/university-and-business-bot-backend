@@ -1,6 +1,7 @@
 package ru.sigma.hse.business.bot.persistence.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import ru.sigma.hse.business.bot.domain.entity.VisitEntity
@@ -34,6 +35,16 @@ interface VisitRepository : JpaRepository<VisitEntity, Long> {
         @Param("activityId") activityId: Long,
         @Param("targetType") targetType: VisitTarget = VisitTarget.ACTIVITY
     ): List<VisitEntity>
+
+    @Query("SELECT v FROM VisitEntity v WHERE v.userId = :userId AND v.targetId = :targetId")
+    fun getVisitByUserIdAndTargetId(
+        userId: Long,
+        targetId: Long
+    ): VisitEntity?
+
+    @Query("UPDATE VisitEntity v SET v.isGotExtraReward = true WHERE v.id = :visitId")
+    @Modifying
+    fun setIsGotExtraReward(visitId: Long)
 
     @Query("SELECT v FROM VisitEntity v WHERE v.id > :id ORDER BY v.id ASC LIMIT :limit")
     fun findAllByIdGreaterThanOrderByIdAsc(id: Long, limit: Int): List<VisitEntity>

@@ -12,6 +12,8 @@ import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundExceptio
 import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.user.UserByIdNotFoundException
 import ru.sigma.hse.business.bot.exception.visit.VisitAlreadyExistsException
+import ru.sigma.hse.business.bot.exception.visit.VisitByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.visit.VisitByUserIdTargetIdNotFoundException
 import ru.sigma.hse.business.bot.persistence.repository.VisitRepository
 
 @Component
@@ -88,7 +90,7 @@ class JdbcVisitStorage(
                 userId = userId,
                 targetId = company.id,
                 targetType = VisitTarget.COMPANY,
-                //isGotExtraReward = false,
+                isGotExtraReward = false,
                 time = LocalDateTime.now()
             )
         )
@@ -113,7 +115,7 @@ class JdbcVisitStorage(
                 userId = userId,
                 targetId = activity.id,
                 targetType = VisitTarget.ACTIVITY,
-                //isGotExtraReward = false,
+                isGotExtraReward = false,
                 time = LocalDateTime.now()
             )
         )
@@ -138,6 +140,20 @@ class JdbcVisitStorage(
         return visitRepository.countByUserId(userId)
     }
 
+    fun getVisitByUserIdTargetId(userId: Long, activityId: Long): Visit {
+        val visit = visitRepository.getVisitByUserIdAndTargetId(userId, activityId)
+            ?: throw VisitByUserIdTargetIdNotFoundException(userId, activityId)
+        return visit.toVisit()
+    }
+
+    fun setIsGotExtraReward(visitId: Long) {
+        if (!visitRepository.existsById(visitId)){
+            logger.info { "Visit with id $visitId does not exist" }
+            throw VisitByIdNotFoundException(visitId)
+        }
+        visitRepository.setIsGotExtraReward(visitId)
+    }
+
     private fun validateUser(userId: Long) {
         if (!jdbcUserStorage.existsById(userId)) {
             logger.warn { "User with id $userId does not exist" }
@@ -150,10 +166,12 @@ class JdbcVisitStorage(
 
         private fun VisitEntity.toVisit(): Visit {
             return Visit(
+                id = this.id(),
                 userId = this.userId,
                 targetId = this.targetId,
                 targetType = this.targetType,
-                time = this.time
+                time = this.time,
+                isGotExtraReward = this.isGotExtraReward
             )
         }
     }

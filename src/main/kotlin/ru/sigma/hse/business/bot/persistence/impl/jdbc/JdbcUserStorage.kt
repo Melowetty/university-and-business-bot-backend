@@ -105,6 +105,16 @@ class JdbcUserStorage(
         userRepository.deleteById(userId)
     }
 
+    fun giveSurveyReward(userId: Long) {
+        if (!userRepository.existsById(userId)) {
+            logger.warn { "User with id $userId does not exist" }
+            throw UserByIdNotFoundException(userId)
+        }
+
+        userRepository.giveSurveyReward(userId)
+        logger.info { "User $userId got survey reward and double own points" }
+    }
+
     fun existsById(userId: Long): Boolean {
         return userRepository.existsById(userId)
     }
@@ -159,7 +169,8 @@ class JdbcUserStorage(
                 program = this.program,
                 email = this.email,
                 isCompleteConference = this.isCompleteConference,
-                score = this.currentScore
+                score = this.currentScore,
+                isGotSurveyReward = this.isGotSurveyReward
             )
         }
     }

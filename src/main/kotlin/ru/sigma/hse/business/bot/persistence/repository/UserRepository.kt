@@ -31,6 +31,10 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     @Modifying
     fun addPointsToUser(userId: Long, points: Int)
 
+    @Query("UPDATE UserEntity u SET u.isGotSurveyReward = true WHERE u.id = :userId")
+    @Modifying
+    fun giveSurveyReward(userId: Long)
+
     @Query("UPDATE UserEntity u SET u.role = :role, u.authCode = :authCode WHERE u.id = :userId")
     @Modifying
     fun addRoleToUser(userId: Long, role: UserRole, authCode: String)

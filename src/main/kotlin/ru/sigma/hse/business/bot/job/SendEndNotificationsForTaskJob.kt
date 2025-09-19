@@ -4,13 +4,11 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.quartz.DisallowConcurrentExecution
 import org.quartz.Job
 import org.quartz.JobExecutionContext
-import org.quartz.PersistJobDataAfterExecution
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.notification.model.BeRealEndedNotification
 import ru.sigma.hse.business.bot.service.MailingService
 
 @Component
-@PersistJobDataAfterExecution
 @DisallowConcurrentExecution
 class SendEndNotificationsForTaskJob(
     private val mailingService: MailingService,

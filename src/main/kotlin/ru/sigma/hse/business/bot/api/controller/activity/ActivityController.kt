@@ -82,7 +82,7 @@ class ActivityController(
     @ApiResponse(responseCode = "200", description = "Информация об активностях")
     fun getAllActivities(
     ): List<ActivityRequest> {
-        return activityService.getAllActivities().map { it.toDto() }
+        return activityService.getAllActivities().map { it.toDto() }.sortedBy { it.startTime }
     }
 
     @PostMapping(

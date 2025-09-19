@@ -191,6 +191,10 @@ class DbStorage(
         return jdbcVisitStorage.getVisitByUserIdTargetId(userid, activityId)
     }
 
+    override fun setIsGotExtraReward(visitId: Long) {
+        return jdbcVisitStorage.setIsGotExtraReward(visitId)
+    }
+
     override fun getPreregistrationUser(tgId: Long): PreregistrationUser? {
         return jdbcPreregistrationUserStorage.getPreregistrationUser(tgId)
     }

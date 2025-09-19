@@ -3,10 +3,12 @@ package ru.sigma.hse.business.bot.service
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import ru.sigma.hse.business.bot.api.controller.model.CreateActivityRequest
 import ru.sigma.hse.business.bot.domain.event.CreatedVisitableObjectEvent
 import ru.sigma.hse.business.bot.domain.model.Activity
 import ru.sigma.hse.business.bot.exception.activity.ActivityByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.visit.UserExtraRewardByActivityAlreadyExist
 import ru.sigma.hse.business.bot.persistence.ActivityStorage
 import ru.sigma.hse.business.bot.persistence.VisitStorage
 import ru.sigma.hse.business.bot.service.code.CodeGenerator
@@ -48,6 +50,7 @@ class ActivityService(
         return activityStorage.getAllActivities()
     }
 
+    @Transactional
     fun checkKeyWord(
         userId: Long,
         keyWord: String
@@ -55,7 +58,13 @@ class ActivityService(
         val user = userService.getUser(userId)
         val trueKeyWord = keyWord.replace(" ","").uppercase()
         val activity = activityStorage.getActivityByKeyWord(trueKeyWord)
-        visitStorage.getVisitByUserIdTargetId(user.id, activity.id)
+        val visit = visitStorage.getVisitByUserIdTargetId(user.id, activity.id)
+        if (visit.isGotExtraReward) {
+            throw UserExtraRewardByActivityAlreadyExist(user.id, activity.id)
+        }
+        val extraReward = 9
+        userService.addPointsToUserScore(user.id, extraReward)
+        visitStorage.setIsGotExtraReward(visit.id)
     }
 
     companion object {

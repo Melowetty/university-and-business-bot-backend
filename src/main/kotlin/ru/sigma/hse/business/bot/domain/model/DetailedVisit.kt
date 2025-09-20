@@ -6,5 +6,5 @@ data class DetailedVisit(
     @Schema(description = "Посещенный объект")
     val target: Visitable,
     @Schema(description = "Тип посещенного объекта", example = "COMPANY")
-    val type: VisitTarget,
+    val targetType: VisitTarget,
 )

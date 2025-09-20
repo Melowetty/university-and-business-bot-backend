@@ -44,7 +44,7 @@ class UserService(
 
         return GetUserInfoRequest(
             userId = userId,
-            name = user.fullName,
+            fullName = user.fullName,
             role = user.role,
             course = user.course,
             program = user.program,
@@ -68,7 +68,7 @@ class UserService(
         logger.info { "User ${user.id} created" }
         return GetUserInfoRequest(
             userId = user.id,
-            name = user.fullName,
+            fullName = user.fullName,
             role = user.role,
             course = user.course,
             program = user.program,

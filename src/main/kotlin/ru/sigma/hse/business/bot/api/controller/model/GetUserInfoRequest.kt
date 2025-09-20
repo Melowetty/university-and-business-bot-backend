@@ -7,7 +7,7 @@ class GetUserInfoRequest(
     @Schema(description = "Id пользователя", example = "1")
     val userId: Long,
     @Schema(description = "Имя пользователя", example = "Павел")
-    val name: String,
+    val fullName: String,
     @Schema(description = "Роль пользователя", example = "ADMIN")
     val role: UserRole,
     @Schema(description = "Курс пользователя", example = "1")

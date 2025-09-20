@@ -61,7 +61,7 @@ class VisitService(
 
         return VisitResult(
             target = visit.target,
-            targetType = visit.type,
+            targetType = visit.targetType,
         )
     }
 
@@ -95,7 +95,7 @@ class VisitService(
         val notification = UserVisitNotification(
             DetailedVisit(
                 target = activity,
-                type = VisitTarget.ACTIVITY
+                targetType = VisitTarget.ACTIVITY
             )
         )
 
@@ -125,7 +125,7 @@ class VisitService(
                     val notification = UserVisitNotification(
                         DetailedVisit(
                             target = toActivity,
-                            type = VisitTarget.ACTIVITY
+                            targetType = VisitTarget.ACTIVITY
                         )
                     )
 

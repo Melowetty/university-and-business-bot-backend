@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.domain.entity.VoteEntity
 import ru.sigma.hse.business.bot.domain.model.Vote
 import ru.sigma.hse.business.bot.exception.vote.VoteByIdNotFoundException
+import ru.sigma.hse.business.bot.exception.vote.VoteByUserIdEventIdAlreadyExistException
 import ru.sigma.hse.business.bot.persistence.repository.VoteRepository
 
 @Component
@@ -28,6 +29,10 @@ class JdbcVoteStorage(
         answer: String,
         userId: Long
     ): Vote {
+        if (voteRepository.existByUserIdAndEventId(userId, eventId)) {
+            logger.info { "User $userId has already voted in the event $eventId" }
+            throw VoteByUserIdEventIdAlreadyExistException(userId, eventId)
+        }
         val voteEntity = VoteEntity(
             eventId = eventId,
             answer = answer,

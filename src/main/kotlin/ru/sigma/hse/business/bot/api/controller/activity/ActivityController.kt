@@ -93,10 +93,10 @@ class ActivityController(
         "/key-word"
     )
     @Operation(
-        summary = "Посетить активность участиком",
-        description = "Создание нового посещения активности участником"
+        summary = "Дать кодовое слово от пользователя",
+        description = "Дает ответ пользователя на кодовое слово активности"
     )
-    @ApiResponse(responseCode = "200", description = "Новое посещение активности успешно создано")
+    @ApiResponse(responseCode = "200", description = "Ответ принят")
     fun visitActivity(
         @Parameter(description = "Объект с информацией кто и какое слово написал")
         @RequestBody request: AddKeyWordAnwerRequest

@@ -87,8 +87,8 @@ class ActivityEventController(
         produces = ["application/json"]
     )
     @Operation(
-        summary = "Добавить ответа пользователя",
-        description = "Внесение ответа пользователя"
+        summary = "Добавить ответ пользователя",
+        description = "Внесение ответ пользователя"
     )
     @ApiResponse(responseCode = "200", description = "Ответ пользователя учтён")
     fun addAnswerToEvent(

@@ -8,7 +8,7 @@ class BeRealStartedNotification(
     private val durationInMinutes: Int,
 ) : SimpleTextButtonNotification {
     override fun getMessageText(): String {
-        return "🔔 BeReal!" +
+        return "🔔 *BeReal!*" +
                 "\n\n" +
                 "Суть задания:" +
                 "\n\n" +

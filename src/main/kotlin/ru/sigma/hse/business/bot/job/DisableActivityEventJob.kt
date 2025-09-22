@@ -4,12 +4,10 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.quartz.DisallowConcurrentExecution
 import org.quartz.Job
 import org.quartz.JobExecutionContext
-import org.quartz.PersistJobDataAfterExecution
 import org.springframework.stereotype.Component
 import ru.sigma.hse.business.bot.service.ActivityEventService
 
 @Component
-@PersistJobDataAfterExecution
 @DisallowConcurrentExecution
 class DisableActivityEventJob(
     private val activityEventService: ActivityEventService,

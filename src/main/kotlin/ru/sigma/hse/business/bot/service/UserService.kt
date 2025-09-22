@@ -48,7 +48,8 @@ class UserService(
             role = user.role,
             course = user.course,
             program = user.program,
-            email = user.email
+            email = user.email,
+            isCompleteConference = user.isCompleteConference
         )
     }
 
@@ -72,7 +73,8 @@ class UserService(
             role = user.role,
             course = user.course,
             program = user.program,
-            email = user.email
+            email = user.email,
+            isCompleteConference = user.isCompleteConference
         )
     }
 

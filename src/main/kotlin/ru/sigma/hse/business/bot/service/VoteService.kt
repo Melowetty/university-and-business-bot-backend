@@ -16,6 +16,7 @@ class VoteService(
     fun addAnswer(activityId: Long, userId: Long, answer: String): Vote {
         val user = userService.getUser(userId)
         val event = eventService.getEvent(activityId)
+        val vote = voteStorage.createVote(activityId, answer, userId)
 
         if (eventService.isCorrectAnswer(activityId, answer)) {
             userService.addPointsToUserScore(user.id, event.reward)
@@ -25,6 +26,6 @@ class VoteService(
             userService.addPointsToUserScore(user.id, rewardByWrongAnswer)
         }
 
-        return voteStorage.createVote(activityId, answer, userId)
+        return vote
     }
 }

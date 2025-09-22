@@ -25,27 +25,12 @@ class TelegramNotificationService(
     private val processorMap: Map<Class<out Notification>, NotificationProcessor<out Notification>> =
         processors.associateBy { it.getNotificationType() }
 
-    @Deprecated("Remove 23.09.2025")
-    private val whiteList = listOf(
-        774471737L,
-        823397841L,
-        743056572L,
-        351259027L,
-        646596194L
-    )
-
     override fun notify(telegramId: Long, notification: Notification) {
         val processor = getProcessor(notification)
             ?: run {
                 logger.warn { "No processor for notification ${notification.javaClass.simpleName}" }
                 return
             }
-
-        @Deprecated("Remove 23.09.2025")
-        if (!whiteList.contains(telegramId)) {
-            logger.warn { "Notification ${notification.javaClass.simpleName} temporary is not allowed for $telegramId" }
-            return
-        }
 
         internalProcess(processor, telegramId, notification)
         logger.info { "Sent ${notification.javaClass.simpleName} notification to $telegramId" }

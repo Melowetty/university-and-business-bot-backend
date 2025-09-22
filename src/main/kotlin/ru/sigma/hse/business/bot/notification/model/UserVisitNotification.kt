@@ -7,6 +7,6 @@ class UserVisitNotification(
     val visit: DetailedVisit
 ): SimpleTextNotification {
     override fun getMessageText(): String {
-        return "Вы успешно зарегистрированы на мероприятие ${visit.target.name}!"
+        return "🎊 Вы успешно зарегистрированы на мероприятие ${visit.target.name}!"
     }
 }

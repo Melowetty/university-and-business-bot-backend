@@ -63,7 +63,7 @@ class ActivityService(
             throw UserExtraRewardByActivityAlreadyExist(user.id, activity.id)
         }
         logger.info { "User ${user.id} give right answer to activity ${activity.id}" }
-        val extraReward = 9
+        val extraReward = 10
         userService.addPointsToUserScore(user.id, extraReward)
         visitStorage.setIsGotExtraReward(visit.id)
     }

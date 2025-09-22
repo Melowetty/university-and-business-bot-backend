@@ -15,7 +15,7 @@ class BeRealStartedNotification(
                 description +
                 "\n\n" +
                 "Нажмите на кнопку ниже, чтобы отправить решение. " +
-                "⏳ У вас есть $durationInMinutes минут! ⏳"
+                "У вас есть $durationInMinutes минут! ⏳"
     }
 
     override fun getButtonText(): String {

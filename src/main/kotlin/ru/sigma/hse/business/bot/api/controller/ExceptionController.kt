@@ -15,7 +15,7 @@ class ExceptionController {
     @ExceptionHandler(produces = ["application/json"])
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleEntityNotFound(ex: NotFoundException): ErrorResponse {
-        logger.warn(ex) { "Handled entity found exception" }
+        logger.warn(ex) { "Handled entity not found exception" }
         return ErrorResponse(
                 ex.errorType,
                 ex.message

@@ -15,5 +15,8 @@ class GetUserInfoRequest(
     @Schema(description = "Программа пользователя", example = "РИС")
     val program: String,
     @Schema(description = "Email пользователя", example = "example@ex.pl")
-    val email: String?
+    val email: String?,
+    @Schema(description = "Указатель, Что пользователь имеет право получить награду за активность в конференции", example = "true")
+    val isCompleteConference: Boolean
+
 )

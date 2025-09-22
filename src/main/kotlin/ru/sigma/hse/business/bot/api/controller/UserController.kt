@@ -25,6 +25,7 @@ class UserController(
     private val userService: UserService,
     private val telegramUserService: TelegramUserService
 ) {
+    @GetMapping
     fun getUsersTgIds(@RequestParam size: Int, @RequestParam token: Long): Pageable<Long> {
         return userService.getPageableUsersTelegramId(token, size)
     }

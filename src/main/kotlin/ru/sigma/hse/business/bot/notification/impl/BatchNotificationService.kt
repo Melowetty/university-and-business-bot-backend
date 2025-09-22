@@ -26,6 +26,19 @@ class BatchNotificationService(
         CompletableFuture.allOf(*tasks.toTypedArray()).join()
     }
 
+    fun notify(notifications: List<Pair<Long, Notification>>) {
+        val tasks = notifications.map { (telegramId, notification) ->
+            CompletableFuture.supplyAsync({
+                notificationService.notify(telegramId, notification)
+            }, executor
+            ).exceptionally {
+                logger.error(it) { "Failed to send batch notification to $telegramId" }
+            }
+        }
+
+        CompletableFuture.allOf(*tasks.toTypedArray()).join()
+    }
+
     companion object {
         private val logger = KotlinLogging.logger {  }
     }

@@ -15,6 +15,7 @@ jobs:
 
 conference:
   score-for-complete: 30
+  survey: https://forms.yandex.ru/u/68ce8480f47e73a8199c7ea9
 
 integrations:
   yandex-disk:

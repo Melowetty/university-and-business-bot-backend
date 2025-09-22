@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.sigma.hse.business.bot.api.controller.model.CreateUserRequest
 import ru.sigma.hse.business.bot.api.controller.model.GetUserInfoRequest
+import ru.sigma.hse.business.bot.domain.model.Pageable
 import ru.sigma.hse.business.bot.domain.model.User
 import ru.sigma.hse.business.bot.exception.base.BadArgumentException
 import ru.sigma.hse.business.bot.exception.user.UserAlreadyExistsByTelegramIdException
@@ -26,6 +27,18 @@ class UserService(
 ) {
     @Value("\${conference.score-for-complete}")
     private var scoreForCompleteConference: Int = 0
+
+    fun getPageableUsersTelegramId(token: Long, size: Int): Pageable<Long> {
+        logger.info { "Get pageable users by token $token with limit $size" }
+        val users = userStorage.getUsers(size, token)
+        val tgIds = users.data.map { it.tgId }
+
+        return Pageable(tgIds, users.nextToken)
+    }
+
+    fun getPageableUsers(token: Long, size: Int): Pageable<User> {
+        return userStorage.getUsers(size, token)
+    }
 
     fun getUser(userId: Long): User {
         val user = userStorage.getUser(userId)
@@ -109,7 +122,8 @@ class UserService(
     @Transactional
     fun giveSurveyReward(userId: Long) {
         val user = userStorage.getUser(userId)
-            ?:throw UserByIdNotFoundException(userId)
+            ?: throw UserByIdNotFoundException(userId)
+
         if (user.isGotSurveyReward) {
             logger.info { "User ${user.id} already got survey reward" }
             throw UserGetSurveyRewardAlreadyExistsException(user.id)

@@ -1,6 +1,21 @@
 name: Backend CI
 
 on:
+  push:
+    branches: [test-update]
+    paths:
+      - 'src/main/**'
+      - 'src/test/**'
+      - 'tests/postman/**'
+      - 'docker-compose.lab5.yml'
+      - 'Dockerfile'
+      - 'qr-service/**'
+      - 'build.gradle*'
+      - 'settings.gradle*'
+      - 'gradle.properties'
+      - 'gradle/wrapper/gradle-wrapper.properties'
+      - 'scripts/**'
+      - '.github/workflows/**'
   pull_request:
     branches: [master, dev]
     paths:

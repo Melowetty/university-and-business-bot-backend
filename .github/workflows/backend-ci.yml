@@ -6,6 +6,10 @@ on:
     paths:
       - 'src/main/**'
       - 'src/test/**'
+      - 'tests/postman/**'
+      - 'docker-compose.lab5.yml'
+      - 'Dockerfile'
+      - 'qr-service/**'
       - 'build.gradle*'
       - 'settings.gradle*'
       - 'gradle.properties'
@@ -75,3 +79,55 @@ jobs:
       - name: Run tests with build cache
         run: |
           ./gradlew check --build-cache
+
+  postman-integration:
+    name: "Run Postman integration tests"
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and start lab5 containers
+        run: docker compose -f docker-compose.lab5.yml up -d --build
+
+      - name: Wait for backend API
+        run: |
+          for i in $(seq 1 60); do
+            code=$(curl -u test:test -s -o /dev/null -w "%{http_code}" http://localhost:8082/users/1 || true)
+            if [ "$code" != "000" ]; then
+              echo "Backend is reachable with HTTP code $code"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Backend is not reachable in time"
+          docker compose -f docker-compose.lab5.yml logs
+          exit 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Newman
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Run Postman collection
+        run: |
+          mkdir -p newman
+          newman run tests/postman/tg-bot-cub.postman_collection.json \
+            --reporters cli,htmlextra,junit \
+            --reporter-htmlextra-export newman/report.html \
+            --reporter-junit-export newman/report.xml
+
+      - name: Upload Newman artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-report
+          path: newman
+
+      - name: Stop lab5 containers
+        if: always()
+        run: docker compose -f docker-compose.lab5.yml down -v

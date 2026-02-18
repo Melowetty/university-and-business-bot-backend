@@ -1,0 +1,282 @@
+﻿{
+  "info": {
+    "_postman_id": "f88404c5-5df2-47a8-8ad7-40e87a5e2c11",
+    "name": "tg bot cub - lab5 simple",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.collectionVariables.get('runRand')) {",
+          "  const now = Date.now();",
+          "  pm.collectionVariables.set('runRand', String(now));",
+          "  pm.collectionVariables.set('runTgId', String(700000000 + (now % 100000000)));",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8082" },
+    { "key": "username", "value": "test" },
+    { "key": "password", "value": "test" },
+    { "key": "runRand", "value": "1" },
+    { "key": "runTgId", "value": "700000001" },
+    { "key": "companyId", "value": "1" },
+    { "key": "activityId", "value": "1" },
+    { "key": "taskId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "01 POST /users",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Response has userId', function () { pm.expect(pm.response.json()).to.have.property('userId'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"tgId\": {{runTgId}},\n  \"fullName\": \"Lab User {{runRand}}\",\n  \"course\": 1,\n  \"program\": \"RIS\",\n  \"email\": \"lab{{runRand}}@example.com\"\n}" },
+        "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] }
+      },
+      "response": []
+    },
+    {
+      "name": "02 GET /users/{telegramId}",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Response has userId', function () { pm.expect(pm.response.json()).to.have.property('userId'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/users/{{runTgId}}", "host": ["{{baseUrl}}"], "path": ["users", "{{runTgId}}"] }
+      },
+      "response": []
+    },
+    {
+      "name": "03 POST /preregistration/users",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"tgId\": {{runTgId}}\n}" },
+        "url": { "raw": "{{baseUrl}}/preregistration/users", "host": ["{{baseUrl}}"], "path": ["preregistration", "users"] }
+      },
+      "response": []
+    },
+    {
+      "name": "04 GET /preregistration/users/{telegramId}",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/preregistration/users/{{runTgId}}", "host": ["{{baseUrl}}"], "path": ["preregistration", "users", "{{runTgId}}"] }
+      },
+      "response": []
+    },
+    {
+      "name": "05 POST /companies",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "const body = pm.response.json();",
+        "pm.collectionVariables.set('companyId', String(body.id));",
+        "pm.test('Response has id', function () { pm.expect(body).to.have.property('id'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Lab Company {{runRand}}\",\n  \"description\": \"Company created by Postman test\",\n  \"siteUrl\": \"https://example.com/company/{{runRand}}\"\n}" },
+        "url": { "raw": "{{baseUrl}}/companies", "host": ["{{baseUrl}}"], "path": ["companies"] }
+      },
+      "response": []
+    },
+    {
+      "name": "06 GET /companies/{companyId}",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Response has id', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/companies/{{companyId}}", "host": ["{{baseUrl}}"], "path": ["companies", "{{companyId}}"] }
+      },
+      "response": []
+    },
+    {
+      "name": "07 POST /activities",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "const body = pm.response.json();",
+        "pm.collectionVariables.set('activityId', String(body.id));",
+        "pm.test('Response has id', function () { pm.expect(body).to.have.property('id'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Lab Activity {{runRand}}\",\n  \"description\": \"Activity created by Postman test\",\n  \"location\": \"Hall A\",\n  \"type\": \"WORKSHOP\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"10:30\",\n  \"keyWord\": \"KEY{{runRand}}\",\n  \"points\": 15\n}" },
+        "url": { "raw": "{{baseUrl}}/activities", "host": ["{{baseUrl}}"], "path": ["activities"] }
+      },
+      "response": []
+    },
+    {
+      "name": "08 GET /activities/{activityId}",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Response has id', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/activities/{{activityId}}", "host": ["{{baseUrl}}"], "path": ["activities", "{{activityId}}"] }
+      },
+      "response": []
+    },
+    {
+      "name": "09 POST /tasks",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "const body = pm.response.json();",
+        "pm.collectionVariables.set('taskId', String(body.id));",
+        "pm.test('Response has id', function () { pm.expect(body).to.have.property('id'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Lab Task {{runRand}}\",\n  \"type\": \"TEMP\",\n  \"description\": \"Task created by Postman test\",\n  \"points\": 10,\n  \"duration\": 3\n}" },
+        "url": { "raw": "{{baseUrl}}/tasks", "host": ["{{baseUrl}}"], "path": ["tasks"] }
+      },
+      "response": []
+    },
+    {
+      "name": "10 GET /tasks/{taskId}",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Response has id', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/tasks/{{taskId}}", "host": ["{{baseUrl}}"], "path": ["tasks", "{{taskId}}"] }
+      },
+      "response": []
+    },
+    {
+      "name": "11 POST /activities/{activityId}/event",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Response has id', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Lab Event {{runRand}}\",\n  \"description\": \"Event created by Postman test\",\n  \"duration\": \"PT5M\",\n  \"answers\": [\"A\", \"B\"],\n  \"rightAnswer\": \"A\",\n  \"reward\": 10\n}" },
+        "url": { "raw": "{{baseUrl}}/activities/{{activityId}}/event", "host": ["{{baseUrl}}"], "path": ["activities", "{{activityId}}", "event"] }
+      },
+      "response": []
+    },
+    {
+      "name": "12 GET /activities/{activityId}/event",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Response has id', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/activities/{{activityId}}/event", "host": ["{{baseUrl}}"], "path": ["activities", "{{activityId}}", "event"] }
+      },
+      "response": []
+    },
+    {
+      "name": "13 POST /tasks/{taskId}/status",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"RUN\"\n}" },
+        "url": { "raw": "{{baseUrl}}/tasks/{{taskId}}/status", "host": ["{{baseUrl}}"], "path": ["tasks", "{{taskId}}", "status"] }
+      },
+      "response": []
+    },
+    {
+      "name": "14 GET /tasks/{taskId} after status",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+        "pm.test('Response has status', function () { pm.expect(pm.response.json()).to.have.property('status'); });"
+      ]}}],
+      "request": {
+        "auth": { "type": "basic", "basic": [
+          { "key": "username", "value": "{{username}}", "type": "string" },
+          { "key": "password", "value": "{{password}}", "type": "string" }
+        ]},
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/tasks/{{taskId}}", "host": ["{{baseUrl}}"], "path": ["tasks", "{{taskId}}"] }
+      },
+      "response": []
+    }
+  ]
+}

@@ -4,6 +4,10 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PutMapping
+import ru.sigma.hse.business.bot.api.controller.model.UpdateCompanyRequest
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -49,5 +53,40 @@ class CompanyController(
         @PathVariable companyId: Long
     ): Company {
         return companyService.getCompany(companyId)
+    }
+
+
+    @PutMapping(
+        "/{companyId}",
+        produces = ["application/json"]
+    )
+    @Operation(
+        summary = "Update company information",
+        description = "Updates company details"
+    )
+    @ApiResponse(responseCode = "200", description = "Company updated")
+    fun updateCompany(
+        @Parameter(description = "Company ID")
+        @PathVariable companyId: Long,
+        @Parameter(description = "Company data for update")
+        @RequestBody updateCompany: UpdateCompanyRequest
+    ): Company {
+        return companyService.updateCompany(companyId, updateCompany)
+    }
+
+    @DeleteMapping(
+        "/{companyId}"
+    )
+    @Operation(
+        summary = "Delete company",
+        description = "Deletes company"
+    )
+    @ApiResponse(responseCode = "200", description = "Company deleted")
+    fun deleteCompany(
+        @Parameter(description = "Company ID")
+        @PathVariable companyId: Long
+    ): ResponseEntity<Unit> {
+        companyService.deleteCompany(companyId)
+        return ResponseEntity.ok().build()
     }
 }

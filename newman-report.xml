@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="tg bot cub - lab5 simple" tests="14" time="1.454">
+  <testsuite name="01 POST /users" id="70a3e944-ae8f-44be-9460-cd695b472248" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.168">
+    <testcase name="Status code is 200" time="0.168" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has userId" time="0.168" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="02 GET /users/{telegramId}" id="230cde89-99ea-4115-a0cc-8bc2dc84be9c" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.100">
+    <testcase name="Status code is 200" time="0.100" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has userId" time="0.100" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="03 POST /preregistration/users" id="de4687b9-211e-472d-aee0-a0a8d45f9e9d" timestamp="2026-02-18T09:59:48.486Z" tests="1" failures="0" errors="0" time="0.090">
+    <testcase name="Status code is 200" time="0.090" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="04 GET /preregistration/users/{telegramId}" id="0d8329e7-9b0e-498b-9465-c8ff3e524ee0" timestamp="2026-02-18T09:59:48.486Z" tests="1" failures="0" errors="0" time="0.085">
+    <testcase name="Status code is 200" time="0.085" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="05 POST /companies" id="64bc2826-cd73-4a56-8484-7782e53efc72" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.089">
+    <testcase name="Status code is 200" time="0.089" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has id" time="0.089" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="06 GET /companies/{companyId}" id="4c5bf44c-90ec-41d5-9c3a-027ce1b7b454" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.086">
+    <testcase name="Status code is 200" time="0.086" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has id" time="0.086" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="07 POST /activities" id="0a4b95e9-9ad0-47f0-bc8b-d3c9b6a21e45" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.091">
+    <testcase name="Status code is 200" time="0.091" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has id" time="0.091" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="08 GET /activities/{activityId}" id="135eaaec-e26f-4dc9-bc13-a73dfd5ca75a" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.090">
+    <testcase name="Status code is 200" time="0.090" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has id" time="0.090" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="09 POST /tasks" id="d5f45669-5e0d-4771-8fc7-1584c658a4a8" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.086">
+    <testcase name="Status code is 200" time="0.086" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has id" time="0.086" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="10 GET /tasks/{taskId}" id="a3d11c80-2c9d-4f1a-9a36-e9243a13e00a" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.085">
+    <testcase name="Status code is 200" time="0.085" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has id" time="0.085" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="11 POST /activities/{activityId}/event" id="f3448b26-7ad9-4297-8dd1-2ab071f9dbbb" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.162">
+    <testcase name="Status code is 200" time="0.162" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has id" time="0.162" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="12 GET /activities/{activityId}/event" id="c085c3a9-d730-47dd-83ad-cea7f1c9a2d5" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.088">
+    <testcase name="Status code is 200" time="0.088" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has id" time="0.088" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="13 POST /tasks/{taskId}/status" id="e4fac49b-78b1-4bba-8e3a-0d9650274cc3" timestamp="2026-02-18T09:59:48.486Z" tests="1" failures="0" errors="0" time="0.149">
+    <testcase name="Status code is 200" time="0.149" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+  <testsuite name="14 GET /tasks/{taskId} after status" id="38ecc6ca-fb46-478a-b4eb-0dc831afb62d" timestamp="2026-02-18T09:59:48.486Z" tests="2" failures="0" errors="0" time="0.085">
+    <testcase name="Status code is 200" time="0.085" classname="TgBotCubLab5Simple"/>
+    <testcase name="Response has status" time="0.085" classname="TgBotCubLab5Simple"/>
+  </testsuite>
+</testsuites>

@@ -15,14 +15,14 @@ import ru.sigma.hse.business.bot.exception.user.UserGetSurveyRewardAlreadyExists
 import ru.sigma.hse.business.bot.job.SendConferenceCompleteNotificationJob
 import ru.sigma.hse.business.bot.persistence.UserStorage
 import ru.sigma.hse.business.bot.service.code.CodeGenerator
-import ru.sigma.hse.business.bot.service.qr.PrettyQrCodeGenerator
+import ru.sigma.hse.business.bot.service.qr.QrCodeGenerator
 import java.time.Duration
 
 @Service
 class UserService(
     private val userStorage: UserStorage,
     private val codeGenerator: CodeGenerator,
-    private val qrCodeGenerator: PrettyQrCodeGenerator,
+    private val qrCodeGenerator: QrCodeGenerator,
     private val scheduleJobService: ScheduleJobService,
 ) {
     @Value("\${conference.score-for-complete}")

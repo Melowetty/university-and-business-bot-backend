@@ -1,0 +1,61 @@
+services:
+  user-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: user-backend
+    depends_on:
+      db:
+        condition: service_healthy
+      qr-service:
+        condition: service_started
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: university-and-business-bot-backend
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      SECURITY_BOT_USERNAME: test
+      SECURITY_BOT_PASSWORD: test
+      QR_SERVICE_BASE_URL: http://qr-service:8090
+      SERVER_PORT: 8082
+    ports:
+      - "8082:8082"
+    networks:
+      - app-net
+
+  qr-service:
+    build:
+      context: ./qr-service
+      dockerfile: Dockerfile
+    container_name: qr-service
+    ports:
+      - "8090:8090"
+    networks:
+      - app-net
+
+  db:
+    image: postgres:17.6-alpine
+    container_name: ub-postgres
+    environment:
+      POSTGRES_DB: university-and-business-bot-backend
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d university-and-business-bot-backend"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5436:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+volumes:
+  db_data:
+
+networks:
+  app-net:
+    driver: bridge

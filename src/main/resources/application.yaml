@@ -3,7 +3,7 @@ database:
   port: 5432
   name: university-and-business-bot-backend
   username: postgres
-  password: postgres
+  password: 1234
 
 security:
   bot:
@@ -24,6 +24,8 @@ integrations:
   telegram:
     link: ${TELEGRAM_BOT_LINK:https://t.me/hse_cub_bot}
     token: ${TELEGRAM_BOT_TOKEN:false}
+  qr:
+    base-url: ${QR_SERVICE_BASE_URL:http://localhost:8090}
 
 spring:
   application:

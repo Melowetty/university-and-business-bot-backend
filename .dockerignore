@@ -1,0 +1,11 @@
+.git
+.github
+.gradle
+.idea
+build
+out
+*.iml
+*.log
+examples
+qrcode.png
+qr_Apple.png

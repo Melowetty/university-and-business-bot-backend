@@ -3,6 +3,7 @@ package ru.sigma.hse.business.bot.service
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import ru.sigma.hse.business.bot.api.controller.model.CreateCompanyRequest
+import ru.sigma.hse.business.bot.api.controller.model.UpdateCompanyRequest
 import ru.sigma.hse.business.bot.domain.event.CreatedVisitableObjectEvent
 import ru.sigma.hse.business.bot.domain.model.Company
 import ru.sigma.hse.business.bot.exception.company.CompanyByIdNotFoundException
@@ -31,5 +32,21 @@ class CompanyService(
     fun getCompany(companyId: Long): Company {
         return companyStorage.getCompany(companyId)
             ?: throw CompanyByIdNotFoundException(companyId)
+    }
+
+
+    fun updateCompany(companyId: Long, request: UpdateCompanyRequest): Company {
+        val updatedCompany = Company(
+            id = companyId,
+            name = request.name,
+            description = request.description,
+            siteUrl = request.siteUrl
+        )
+
+        return companyStorage.updateCompany(updatedCompany)
+    }
+
+    fun deleteCompany(companyId: Long) {
+        companyStorage.deleteCompany(companyId)
     }
 }

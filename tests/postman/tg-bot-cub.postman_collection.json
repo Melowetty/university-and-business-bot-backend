@@ -7,7 +7,7 @@
   "event": [
     {
       "listen": "prerequest",
-      "script": {
+      "script": { 
         "type": "text/javascript",
         "exec": [
           "if (!pm.collectionVariables.get('runRand')) {",
